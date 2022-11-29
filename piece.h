@@ -15,18 +15,18 @@ enum PieceName {
 
 class Piece {
     PieceName type;
-    Color color;
+    Colour color;
     int row;
     int col;
     bool isFirstMove;
 
     public:
-        Piece(PieceName type, Color color, int row, int col);
+        Piece(PieceName type, Colour color, int row, int col);
         virtual bool isValidMove(int row, int col) = 0;
         PieceName getType();
         int getRow();
         int getColumn();
-        Color getColor();
+        Colour getColor();
         ~Piece();
 
 };

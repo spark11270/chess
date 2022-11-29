@@ -1,11 +1,16 @@
 #include "rook.h"
 
 
-Rook::Rook(Color color, int row, int col, bool isFirstMove) : color{color}, row{row}, col{col}, isFirstMove{false} {}
+bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) {
+    if (finalRow >= MAXCELL) return false; // check out of bounds
+    if (finalCol >= MAXCELL) return false; // check out of bounds
 
-isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) {
-    // if (initialRow == finalRow && initialCol == finalCol)
+    if ((initialRow == finalRow) && (initialCol == finalCol)) return false; // you cannot stay in the same position
+
     if (initialRow == finalRow) return true; //move horizontally
     if (initialCol == finalCol) return true; //move vertically
+    
     return false;
 }
+
+PieceName getType() {return PieceName::Rook;}

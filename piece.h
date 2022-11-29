@@ -13,20 +13,22 @@ enum PieceName {
     Pawn
 };
 
+const int MAXCELL = 8; // rows and columns are 0-7
+
 class Piece {
-    PieceName type;
-    Colour color;
+    PieceName type;   
+    Colour colour;
     int row;
     int col;
     bool isFirstMove;
 
     public:
-        Piece(PieceName type, Colour color, int row, int col);
+        Piece(Colour color, int row, int col);
         virtual bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) = 0;
-        PieceName getType();
+        virtual PieceName getType() = 0;
         int getRow();
         int getColumn();
-        Colour getColor();
+        Colour getColour();
         ~Piece();
 
 };

@@ -1,9 +1,11 @@
 #ifndef ROOK_H
 #define ROOK_H
 
+#include "piece.h"
+
 class Rook : public Piece {
-    Rook(Color color, int row, int col, bool isFirstMove);
     bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) override;
+    PieceName getType() override;
 
 };
 

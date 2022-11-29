@@ -12,6 +12,8 @@ class Cell : public Subject{
     Board *board;
     Piece *piece;
 
+public:
+
     Cell(int row, int col, Board *board, Piece *piece);
     
     void addPiece(Piece *p);

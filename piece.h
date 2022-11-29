@@ -2,8 +2,8 @@
 #define PIECE_H
 
 #include "colour.h"
-
 #include <string>;
+
 enum PieceName {
     King = 0, 
     Queen, 

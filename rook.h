@@ -1,7 +1,8 @@
 #ifndef ROOK_H
 #define ROOK_H
 
-class Rook {
+class Rook : public Piece {
+    
 
 };
 

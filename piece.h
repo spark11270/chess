@@ -22,7 +22,7 @@ class Piece {
 
     public:
         Piece(PieceName type, Colour color, int row, int col);
-        virtual bool isValidMove(int row, int col) = 0;
+        virtual bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) = 0;
         PieceName getType();
         int getRow();
         int getColumn();

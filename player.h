@@ -7,7 +7,16 @@
 class Player {
     std::string name;
     Colour colour;
+    int score;
 
+public:
+    Player(std::string name, Colour colour, int score);
+
+    std::string getName();
+    Colour getColour();
+    int getScore();
+
+    virtual ~Player() = 0;
 };
 
 #endif

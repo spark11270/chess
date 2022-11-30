@@ -1,5 +1,6 @@
 #include "knight.h"
 
+Knight::Knight(Colour c, int row, int col) : Piece(c, row, col) {}
 
 bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) {
     if (finalRow >= MAXCELL) return false; // check out of bounds

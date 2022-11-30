@@ -1,5 +1,6 @@
 #include "queen.h"
 
+Queen::Queen(Colour c, int row, int col) : Piece(c, row, col) {}
 
 bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
     if (finalRow >= MAXCELL) return false; // check out of bounds

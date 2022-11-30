@@ -1,9 +1,9 @@
 #include "rook.h"
 
 
-Rook::Rook(Color color, int row, int col, bool isFirstMove) : color{color}, row{row}, col{col}, isFirstMove{false} {}
+Rook::Rook(Colour c, int row, int col) : colour{colour}, row{row}, col{col}, isFirstMove{false} {}
 
-isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) {
+bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) {
     if (finalRow >= 8) return false;
     if (finalCol >= 8) return false;
     // if (initialRow == finalRow && initialCol == finalCol)
@@ -11,3 +11,5 @@ isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) {
     if (initialCol == finalCol) return true; //move vertically
     return false;
 }
+
+PieceName getType() {return PieceName::Rook;}

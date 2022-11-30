@@ -21,4 +21,10 @@ int Cell::getCol() {
     return col;
 }
 
+Piece* Cell::getPiece() {
+    return piece;
+}          
+
 Cell::~Cell() {}
+
+

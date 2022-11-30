@@ -17,6 +17,8 @@ public:
     Cell(int row, int col, Board *board, Piece *piece);
     Cell(int row, int col, Board *board);
     
+
+    Piece* getPiece();
     void addPiece(Piece *p);
     void removePiece();
     int getRow();

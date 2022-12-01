@@ -6,10 +6,14 @@ class Cell;
 class Piece;
 
 class Move {
-    std::vector<Cell> sequence;
-    std::vector<Piece> caught;
+    Piece* captured;
+    Piece* moving;
+    int c_t; // t = to and f = from
+    int r_t;
+    int c_f;
+    int r_f;
 
-    Move(std::vector<Cell> sequence, std::vector<Piece> caught);
+    Move(int c_f, int r_f, int c_t, int r_t, Piece* captured, Piece* moving);
 };
 
 #endif

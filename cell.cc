@@ -26,5 +26,3 @@ Piece* Cell::getPiece() {
 }          
 
 Cell::~Cell() {}
-
-

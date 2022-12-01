@@ -1,5 +1,7 @@
 #include "knight.h"
 
+using namespace std;
+
 Knight::Knight(Colour c, int row, int col) : Piece(c, row, col) {}
 
 bool Knight::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
@@ -12,6 +14,19 @@ bool Knight::isValidMove(int initialRow, int initialCol, int finalRow, int final
     if (((initialCol + 2) == finalCol) && (((initialRow + 1) == finalRow) || ((initialRow - 1) == finalRow))) return true;
     if (initialCol == finalCol) return true; //move vertically
     return false;
+}
+
+vector<pair<int, int>> Knight::getPosMoves() {
+    vector<pair<int, int>> moves;
+    moves.push_back(make_pair(row + 1, col + 2));
+    moves.push_back(make_pair(row + 1, col - 2));
+    moves.push_back(make_pair(row - 1, col + 2));
+    moves.push_back(make_pair(row - 1, col - 2));
+    moves.push_back(make_pair(row + 2, col + 1));
+    moves.push_back(make_pair(row + 2, col - 1));
+    moves.push_back(make_pair(row - 2, col + 1));
+    moves.push_back(make_pair(row - 2, col - 1));
+    return moves;
 }
 
 PieceName Knight::getType() {return PieceName::knight;}

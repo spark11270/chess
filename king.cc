@@ -16,4 +16,21 @@ bool King::isValidMove(int initialRow, int initialCol, int finalRow, int finalCo
     return false;
 }
 
+vector<pair<int, int>> King::getPosMoves() {
+    vector<pair<int, int>> moves;
+    // vertical
+    moves.push_back(make_pair(row + 1, col));
+    moves.push_back(make_pair(row - 1, col));
+    // horizontal
+    moves.push_back(make_pair(row, col + 1));
+    moves.push_back(make_pair(row, col - 1));
+    // forward diagonal
+    moves.push_back(make_pair(row + 1, col - 1));
+    moves.push_back(make_pair(row - 1, col + 1));
+    // backward diagonal
+    moves.push_back(make_pair(row + 1, col + 1));
+    moves.push_back(make_pair(row - 1, col - 1));
+    return moves;
+}
+
 PieceName King::getType() {return PieceName::king;}

@@ -13,4 +13,39 @@ bool Queen::isValidMove(int initialRow, int initialCol, int finalRow, int finalC
     return false;
 }
 
+vector<pair<int, int>> Queen::getPosMoves() {
+    vector<pair<int, int>> moves;
+    // vertical
+    for (int i = 1; i <= row; ++i) {
+        moves.push_back(make_pair(row - i, col));
+        // backward diagonal
+        if (col - i >= 0) {
+            moves.push_back(make_pair(row - i, col - i));
+        }
+    }
+    for (int i = 1; i <= MAXCELL - row; ++i) {
+        moves.push_back(make_pair(row + i, col));
+        // backward diagonal
+        if (col + i <= MAXCELL) {
+            moves.push_back(make_pair(row + i, col + i));
+        }
+    }
+    // horizontal
+    for (int i = 1; i <= col; ++i) {
+        moves.push_back(make_pair(row, col - i));
+        // forward diagonal
+        if (row - i >= 0) {
+            moves.push_back(make_pair(row - i, col - i));
+        }
+    }
+    for (int i = 1; i <= MAXCELL - col; ++i) {
+        moves.push_back(make_pair(row, col + i));
+        // forward diagonal
+        if (row + i <= MAXCELL) {
+            moves.push_back(make_pair(row + i, col + i));
+        }
+    }
+    return moves;
+}
+
 PieceName Queen::getType() {return PieceName::queen;}

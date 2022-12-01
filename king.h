@@ -9,8 +9,7 @@ public:
     King(Colour c, int row, int col);
 
     virtual bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) override;
-    //virtual bool isCheck() override;
-    //virtual bool isCheckmate() override;
+    virtual std::vector<pair<int, int>> getPosMoves() = 0;
     PieceName getType() override;
 
 };

@@ -24,11 +24,17 @@ class Piece {
     int col;
 
     public:
-        Piece(Colour colour, int row, int col);
-        virtual bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol) = 0;
+        Piece(Colour color, int row, int col);
+
+        virtual bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) = 0;
+        //virtual bool isCheck() = 0;
+        //virtual bool isCheckmate() = 0;
         virtual PieceName getType() = 0;
         int getRow();
         int getColumn();
         Colour getColour();
+
+        ~Piece();
+
 };
 #endif

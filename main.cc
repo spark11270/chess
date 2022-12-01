@@ -9,18 +9,23 @@ int main () {
   string command;
   
   Board *board;
+  TextDisplay *td;
 
   bool inGame = false;
   bool inSetup = false;
 
   // Still need to consider exception handling and mispelled commands
+  // There are many missing things in main but this should be enough to get started
   while (cin >> command) {
     if (inGame) {
       if (command == "move") {
         string from, to;
         cin >> from >> to;
         // move piece on board
-        // For pawn promotion we can take cin from the promotion function
+        // For pawn promotion we can take cin from the promotion function 
+
+        // Print board after each move
+        board->render();
       } else if (command == "resign") {
         // End game
         // Make sure board gets deleted
@@ -55,6 +60,8 @@ int main () {
 
       // Declare game board
       board = new Board();
+
+      td = new TextDisplay(board);
 
       // Render board (both text and graphically)
       board->render();

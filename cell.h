@@ -1,12 +1,11 @@
 #ifndef _CELL_H_
 #define _CELL_H_
 
-#include "subject.h"
 
 class Piece;
 class Board;
 
-class Cell : public Subject{
+class Cell {
     int row;
     int col;
     Board *board;

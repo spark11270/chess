@@ -2,23 +2,24 @@
 #define BOARD_H
 #include <string.h>
 #include "piece.h"
-#include "cell.h"
+#include "subject.h"
 
 class Board : public Subject {
-    std::vector<std::vector<Cell>> theBoard;
+    // I've changed theBoard to a matrix of Pieces 
+    // instead of a vector of vectors. Think this is easier to implement
+    // But feel free to change it back if required
+    Piece* theBoard[8][8];
     bool whosTurn; // true if white's turn and false if black's turn
 
 public:
     Board();
-    void move(std:string initial, std::string fianl);
+
+    void move(std::string initial, std::string final);
     void promote(std::string initial, std::string final, char promto);
     bool isWhiteTurn();
-    
-    // We probably won't have render 
-    // Instead use ostream operator to display the board 
-    // It's just there so that I get test if textdisplay is working
+
     void render();
-    Cell getCell(int row, int col); 
+    Piece* getPiece(int row, int col); 
 
 
 

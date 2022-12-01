@@ -6,10 +6,9 @@ class Subject;
 
 class Observer { 
 public:
-	virtual void notify(std::shared_ptr<Subject>  whoNotified) = 0;
 	virtual void notify() = 0;            
 
-	virtual ~Observer();          
+	virtual ~Observer() = default;          
 };
 
 #endif

@@ -1,7 +1,7 @@
 #include "piece.h"
 using namespace std;
 
-Piece::Piece(Colour color, int row, int col) : type{getType()}, colour{colour}, row{row}, col{col}, isFirstMove{false} {}
+Piece::Piece(Colour colour, int row, int col) : colour{colour}, row{row}, col{col} {}
 
 int Piece::getRow() {return row;}
 

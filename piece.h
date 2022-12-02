@@ -25,6 +25,7 @@ class Piece {
         virtual PieceName getType() = 0;
         std::pair<int, int> getCoords();
         void setCoords(int r, int c);
+        void modifyCoords(std::pair<int,int> &newCoords);
         Colour getColour();
 
         virtual ~Piece() = 0;

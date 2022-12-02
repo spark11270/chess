@@ -9,6 +9,11 @@ void Piece::setCoords(int r, int c) {
     coords = make_pair(r, c);
 }
 
+void Piece::modifyCoords(pair<int,int> &newCoords) {
+    coords.first = newCoords.first;
+    coords.second = newCoords.second;
+}
+
 Colour Piece::getColour() {return colour;}
 
 Piece::~Piece() {};

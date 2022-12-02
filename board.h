@@ -20,7 +20,7 @@ class Board : public Subject {
     Player *W; 
     Player *B;
     int rounds;
-    Colour whosTurn;
+    Colour whosTurn = Colour::White;
 
 public:
     Board();

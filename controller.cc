@@ -15,39 +15,9 @@ using namespace std;
 
 pair<int,int> convertPos(string &pos) {
     char c = pos[0] - ('a' - '0');
-    cout << c << endl;
-    switch(pos[1]) {
-        case 'a':
-            return make_pair(0, (int)pos[1]);
-            break;
-        case 'b':
-            return make_pair(1, (int)pos[1]);
-            break;
-        case 'c':
-            return make_pair(2, (int)pos[1]);
-            break;
-        case 'd':
-            return make_pair(3, (int)pos[1]);
-            break;
-        case 'e':
-            return make_pair(4, (int)pos[1]);
-            break;
-        case 'f':
-            return make_pair(5, (int)pos[1]);
-            break;
-        case 'g':
-            return make_pair(6, (int)pos[1]);
-            break;
-        case 'h':
-            return make_pair(7, (int)pos[1]);
-            break;
-        
-    }
-    // int row = (int)pos[1] - 1;
-    // char colInChar = pos[0] - 43;
-    // cout << colInChar;
-    // int col = (int)colInChar;
-    // return make_pair(row,col);
+    int col = c - '0';
+    int row = 7 - (pos[1] - '0' - 1);
+    return make_pair(row,col);
 }
 
 // -----------------------------------------------------------
@@ -201,10 +171,8 @@ void Controller::playGame() {
                 inGame = true;
                 string wPlayer, bPlayer;
                 cin >> wPlayer;
-                cout << wPlayer << endl;
                 initPlayer(wPlayer, Colour::White);
                 cin >> bPlayer;
-                cout << bPlayer << endl;
                 initPlayer(bPlayer, Colour::Black);
                 gameMoves();
             }
@@ -223,10 +191,13 @@ void Controller::gameMoves() {
     string command;
     string from;
     string to;
+    char prom;
+
+    getline(cin, line); //ignore one newline
     while (getline(cin, line)) {
+        try {
         istringstream ss{line};
         ss >> command;
-        try {
             if (command == "resign") {
                 if (board->isWhiteTurn()) {
                     // black resigns
@@ -236,6 +207,7 @@ void Controller::gameMoves() {
                     // white resigns
                     players[1]->updateScore();
                 }
+                board->render();
             }
             else if (command == "move") {
                 if (board->isWhiteTurn() == true) {
@@ -243,20 +215,31 @@ void Controller::gameMoves() {
                         // board->move();
                         // continue;
                     }
-                    cin >> from;
-                    pair<int, int> fromCoords = convertPos(from);
-                    cin >> to;
-                    pair<int, int> toCoords = convertPos(to);
-                    board->move(fromCoords, toCoords, Colour::White);
+                    else {
+                        ss >> from;
+                        pair<int, int> fromCoords = convertPos(from);
+                        ss >> to;
+                        pair<int, int> toCoords = convertPos(to);
+                        if (ss >> prom) {
+                            // handle promotion
+                            cout << prom << endl;
+                        }
+                        else {
+                            // no promotion
+                            board->move(fromCoords, toCoords, Colour::White);
+                        }
+
+                    }
                 }
                 else {
                     // black's turn
-                    cin >> from;
+                    ss >> from;
                     pair<int, int> fromCoords = convertPos(from);
-                    cin >> to;
+                    ss >> to;
                     pair<int, int> toCoords = convertPos(to);
                     board->move(fromCoords, toCoords, Colour::Black);
                 }
+                board->render();
             }
             else {
                 throw runtime_error("Please enter a valid command");

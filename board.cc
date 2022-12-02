@@ -132,9 +132,27 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
 
 void Board::move(pair<int, int> begin, pair<int, int> end, Colour c) {
     shared_ptr<Piece> p = theBoard[begin.first][begin.second];
-    if (p != nullptr && p->getColour() == c) {
-        if (p->isValidMove(begin, end)) {
+    if (c == Colour::White) {
+        // white's turn
+        cout << p->isValidMove(begin, end) << endl;
+        if (isWhiteTurn() && p->getColour() == c) {
             theBoard[end.first][end.second] = p;
+            p->modifyCoords(end);
+            theBoard[begin.first][begin.second] = nullptr;
+        }
+        else {
+            throw runtime_error("invalid move");
+        }
+    }
+    else {
+        // black's turn
+        if (!isWhiteTurn() && p->getColour() == c) {
+            theBoard[end.first][end.second] = p;
+            p->modifyCoords(end);
+            theBoard[begin.first][begin.second] = nullptr;
+        }
+        else {
+            throw runtime_error("invalid move");
         }
     }
 }

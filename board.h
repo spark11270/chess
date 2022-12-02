@@ -23,7 +23,10 @@ class Board : public Subject {
 
 public:
     Board();
+    void addPiece(std::pair<int, int> to, std::shared_ptr<Piece> p);
+    void removePiece(std::pair<int, int> from);
     void init();
+    void render();
     std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
     std::shared_ptr<Piece>getPiece(PieceName name);
     void move(int begin, int end);

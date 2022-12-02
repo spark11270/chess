@@ -19,6 +19,7 @@ public:
     Controller(Board* board);
     void initBoard();
     void initPlayers(const std::string, Colour colour);
+    void gameMoves();
     void playGame();
     void printScore();
 };

@@ -1,7 +1,7 @@
 #include "piece.h"
 using namespace std;
 
-Piece::Piece(Colour colour, int row, int col) : colour{colour}, coords{make_pair(row, col)} {}
+Piece::Piece(Colour colour, int row, int col, PieceName type) : colour{colour}, coords{make_pair(row, col)}, type{type} {}
 
 pair<int, int> Piece::getCoords() {return coords;}
 

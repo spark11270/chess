@@ -1,37 +1,40 @@
 #include "textdisplay.h"
+#include "piecename.h"
 #include "board.h"
 #include "colour.h"
+#include <iostream>
+using namespace std;
 
 
 // Changes enum piece class into characters representing each piece
 // Im sure theres a better way to do this
 char printPiece(PieceName n, Colour c) {
     if (c == Colour::White) {
-        if (n == PieceName::king) {
+        if (n == PieceName::King) {
             return 'K';
-        } else if (PieceName::queen) {
+        } else if (n == PieceName::Queen) {
             return 'Q';
-        } else if (PieceName::bishop) {
+        } else if (n == PieceName::Bishop) {
             return 'B';
-        } else if (PieceName::rook) {
+        } else if (n == PieceName::Rook) {
             return 'R'; 
-        } else if (PieceName::knight) {
+        } else if (n == PieceName::Knight) {
             return 'N';
-        } else if (PieceName::pawn) {
+        } else if (n == PieceName::Pawn) {
             return 'P';
         }
     } else {
-        if (n == PieceName::king) {
+        if (n == PieceName::King) {
             return 'k';
-        } else if (PieceName::queen) {
+        } else if (n == PieceName::Queen) {
             return 'q';
-        } else if (PieceName::bishop) {
+        } else if (n == PieceName::Bishop) {
             return 'b';
-        } else if (PieceName::rook) {
+        } else if (n == PieceName::Rook) {
             return 'r'; 
-        } else if (PieceName::knight) {
+        } else if (n == PieceName::Knight) {
             return 'n';
-        } else if (PieceName::pawn) {
+        } else if (n == PieceName::Pawn) {
             return 'p';
         }
     }
@@ -48,7 +51,7 @@ void TextDisplay::notify() {
         out << (8 - i) << ' ';
         for (int j = 0; j < 8; j++) {
             if (board->getBoard()[i][j] != nullptr) {
-                out << board->getBoard()[i][j]->getType(), board->getBoard()[i][j]->getColour();
+                out << printPiece(board->getBoard()[i][j]->getType(), board->getBoard()[i][j]->getColour());
             } else {
                 if ((i + j) % 2) {
                     out << '_';
@@ -59,7 +62,6 @@ void TextDisplay::notify() {
         }
         out << std::endl;
     }
-    out << std::endl;
     out << "  abcdefgh" << std::endl;
 }
 

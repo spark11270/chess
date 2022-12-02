@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Pawn::Pawn(Colour c, int row, int col) : Piece{c, row, col} {}
+Pawn::Pawn(Colour c, int row, int col) : Piece{c, row, col, PieceName::Pawn} {}
 
 bool Pawn::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
     if (finalRow >= MAXCELL) return false; // check out of bounds
@@ -28,4 +28,4 @@ vector<pair<int, int>> Pawn::getPosMoves() {
     return moves;
 }
 
-PieceName Pawn::getType() {return PieceName::pawn;}
+PieceName Pawn::getType() {return PieceName::Pawn;}

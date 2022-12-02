@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Rook::Rook(Colour c, int row, int col) : Piece{c, row, col} {}
+Rook::Rook(Colour c, int row, int col) : Piece{c, row, col, PieceName::Rook} {}
 
 bool Rook::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove)  {
     if (finalRow >= MAXCELL) return false;
@@ -33,4 +33,4 @@ vector<pair<int, int>> Rook::getPosMoves() {
     return moves;
 }
 
-PieceName Rook::getType() {return PieceName::rook;}
+PieceName Rook::getType() {return PieceName::Rook;}

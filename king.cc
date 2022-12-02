@@ -2,7 +2,7 @@
 
 using namespace std;
 
-King::King(Colour c, int row, int col) : Piece(c, row, col) {}
+King::King(Colour c, int row, int col) : Piece(c, row, col, PieceName::King) {}
 
 bool King::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
     if (finalRow >= MAXCELL) return false; // check out of bounds
@@ -35,4 +35,4 @@ vector<pair<int, int>> King::getPosMoves() {
     return moves;
 }
 
-PieceName King::getType() {return PieceName::king;}
+PieceName King::getType() {return PieceName::King;}

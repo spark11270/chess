@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Bishop::Bishop(Colour c, int row, int col) : Piece(c, row, col) {}
+Bishop::Bishop(Colour c, int row, int col) : Piece(c, row, col, PieceName::Bishop) {}
 
 bool Bishop::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
     if (finalRow >= MAXCELL) return false; // check out of bounds
@@ -34,4 +34,4 @@ vector<pair<int, int>> Bishop::getPosMoves() {
     return moves;
 }
 
-PieceName Bishop::getType() {return PieceName::bishop;}
+PieceName Bishop::getType() {return PieceName::Bishop;}

@@ -6,41 +6,55 @@
 #include "rook.h"
 #include "pawn.h"
 
+#include <iostream>
+
 using namespace std;
 
 Board::Board() : W{nullptr}, B{nullptr}, rounds{0} {
     // construct theBoard
-    for (int i = 0; i < MAXCELL; i++) {
-        for (int j = 0; j < MAXCELL; j++) {
+    for (int i = 0; i < MAXCELL; ++i) {
+        for (int j = 0; j < MAXCELL; ++j) {
             theBoard[i][j] = nullptr;
         }
     }
     // white/black pieces vector
-    for (int i = 0; i < 16; i++) {
+    for (int i = 0; i < 16; ++i) {
         whitePieces[i] = nullptr;
         blackPieces[i] = nullptr;
+    }
+}
+
+void Board::addPiece(pair<int, int> to, shared_ptr<Piece> p) {
+    if (theBoard[to.first][to.second] == nullptr) {
+        theBoard[to.first][to.second] = p;
+    }
+}
+
+void Board::removePiece(pair<int, int> from) {
+    if (theBoard[from.first][from.second] != nullptr) {
+        theBoard[from.first][from.second] = nullptr;
     }
 }
 
 void Board::init() {
     // white pieces
     theBoard[0][0] = make_shared<Rook>(Colour::White, 0, 0);
-    theBoard[1][0] = make_shared<Knight>(Colour::White, 1, 0);
-    theBoard[2][0] = make_shared<Bishop>(Colour::White, 2, 0);
-    theBoard[3][0] = make_shared<King>(Colour::White, 3, 0);
-    theBoard[4][0] = make_shared<Queen>(Colour::White, 4, 0);
-    theBoard[5][0] = make_shared<Bishop>(Colour::White, 5, 0);
-    theBoard[6][0] = make_shared<Knight>(Colour::White, 6, 0);
-    theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0);
+    theBoard[0][1] = make_shared<Knight>(Colour::White, 1, 0);
+    theBoard[0][2] = make_shared<Bishop>(Colour::White, 2, 0);
+    theBoard[0][3] = make_shared<King>(Colour::White, 3, 0);
+    theBoard[0][4] = make_shared<Queen>(Colour::White, 4, 0);
+    theBoard[0][5] = make_shared<Bishop>(Colour::White, 5, 0);
+    theBoard[0][6] = make_shared<Knight>(Colour::White, 6, 0);
+    theBoard[0][7] = make_shared<Rook>(Colour::White, 7, 0);
 
     // black pieces
-    theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 0);
-    theBoard[1][7] = make_shared<Knight>(Colour::Black, 1, 0);
-    theBoard[2][7] = make_shared<Bishop>(Colour::Black, 2, 0);
-    theBoard[3][7] = make_shared<King>(Colour::Black, 3, 0);
-    theBoard[4][7] = make_shared<Queen>(Colour::Black, 4, 0);
-    theBoard[5][7] = make_shared<Bishop>(Colour::Black, 5, 0);
-    theBoard[6][7] = make_shared<Knight>(Colour::Black, 6, 0);
+    theBoard[7][0] = make_shared<Rook>(Colour::Black, 0, 0);
+    theBoard[7][1] = make_shared<Knight>(Colour::Black, 1, 0);
+    theBoard[7][2] = make_shared<Bishop>(Colour::Black, 2, 0);
+    theBoard[7][3] = make_shared<King>(Colour::Black, 3, 0);
+    theBoard[7][4] = make_shared<Queen>(Colour::Black, 4, 0);
+    theBoard[7][5] = make_shared<Bishop>(Colour::Black, 5, 0);
+    theBoard[7][6] = make_shared<Knight>(Colour::Black, 6, 0);
     theBoard[7][7] = make_shared<Rook>(Colour::Black, 7, 0);
 
     for (int i = 0 ; i < MAXCELL; ++i) {
@@ -50,11 +64,15 @@ void Board::init() {
 
     // pawns
     for (int i = 0; i < MAXCELL; ++i) {
-        theBoard[i][1] = make_shared<Pawn>(Colour::White, i, 1);
-        theBoard[i][6] = make_shared<Pawn>(Colour::Black, i, 6);
+        theBoard[1][i] = make_shared<Pawn>(Colour::White, i, 1);
+        theBoard[6][i] = make_shared<Pawn>(Colour::Black, i, 6);
         whitePieces.push_back(theBoard[i][1]);
         blackPieces.push_back(theBoard[i][6]);
     }
+}
+
+void Board::render() {
+    notifyObservers();
 }
 
 vector<vector<shared_ptr<Piece>>> Board::getBoard() {
@@ -79,7 +97,7 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name) {
 
 bool Board::isCheck(pair<int, int> kingPos) {
     if (kingPos.first == -1) {
-        kingPos = getPiece(PieceName::king)->getCoords();
+        kingPos = getPiece(PieceName::King)->getCoords();
     }
     if (rounds % 2 == 0)   {
         for (auto &p : whitePieces) {
@@ -99,7 +117,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
 
 bool Board::isCheckmate() {
     if (isCheck()) {
-        for (auto &cells : getPiece(PieceName::king)->getPosMoves()) {
+        for (auto &cells : getPiece(PieceName::King)->getPosMoves()) {
             if (isCheck(cells)) {
                 return true;
             }

@@ -2,30 +2,30 @@
 
 using namespace std;
 
-Pawn::Pawn(Colour c, int row, int col) : Piece{c, row, col} {}
+Pawn::Pawn(Colour c, int row, int col) : Piece{c, row, col, PieceName::Pawn} {}
 
-bool Pawn::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
-    if (finalRow >= MAXCELL) return false; // check out of bounds
-    if (finalCol >= MAXCELL) return false; // check out of bounds
+bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
+    if (final.first >= MAXCELL) return false; // check out of bounds
+    if (final.second >= MAXCELL) return false; // check out of bounds
 
-    if ((initialRow == finalRow) && (initialCol == finalCol)) return false; // you cannot stay in the same position
+    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
 
     if (isFirstMove == true) { // can move 2 square forwards only if first move
-        if ((initialRow + 2) == finalRow) return true;
+        if ((initial.first + 2) == final.first) return true;
     }
 
-    if ((initialRow + 1) == finalRow) return true;
+    if ((initial.first + 1) == final.first) return true;
     
     return false;
 }
 
 vector<pair<int, int>> Pawn::getPosMoves() {
     vector<pair<int, int>> moves;
-    moves.push_back(make_pair(row + 1, col));
+    moves.push_back(make_pair(getCoords().first + 1, getCoords().second));
     if (isFirstMove == true) { // can move 2 square forwards only if first move
-        moves.push_back(make_pair(row + 2, col));
+        moves.push_back(make_pair(getCoords().first + 2, getCoords().second));
     }
     return moves;
 }
 
-PieceName Pawn::getType() {return PieceName::pawn;}
+PieceName Pawn::getType() {return PieceName::Pawn;}

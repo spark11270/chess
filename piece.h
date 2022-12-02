@@ -2,19 +2,11 @@
 #define PIECE_H
 
 #include "colour.h"
-#include "cell.h"
+#include "piecename.h"
 #include <string>
 #include <utility>
 #include <vector>
 
-enum PieceName {
-    king = 0, 
-    queen, 
-    bishop, 
-    rook, 
-    knight, 
-    pawn
-};
 
 const int MAXCELL = 8; // rows and columns are 0-7
 
@@ -22,22 +14,20 @@ const int MAXCELL = 8; // rows and columns are 0-7
 class Piece {
     PieceName type;   
     Colour colour;
-    int row;
-    int col;
+    std::pair<int, int> coords;
+    bool isFirstMove;
 
     public:
-        Piece(Colour color, int row, int col);
+        Piece(Colour color, int row, int col, PieceName type);
 
-        virtual bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) = 0;
-        virtual std::vector<pair<int, int>> getPosMoves() = 0;
-        virtual bool isCheck() = 0;
-        virtual bool isCheckmate() = 0;
+        virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) = 0;
+        virtual std::vector<std::pair<int, int>> getPosMoves() = 0;
         virtual PieceName getType() = 0;
-        int getRow();
-        int getColumn();
+        std::pair<int, int> getCoords();
+        void setCoords(int r, int c);
         Colour getColour();
 
-        ~Piece();
+        virtual ~Piece() = 0;
 
 };
 #endif

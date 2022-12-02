@@ -7,7 +7,6 @@
 
 class TextDisplay : public Observer {
 	Board *board;
-
 	std::ostream &out = std::cout;
 	
 	public:

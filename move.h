@@ -2,7 +2,6 @@
 #define _MOVE_H_
 #include <vector>
 
-class Cell;
 class Piece;
 
 class Move {

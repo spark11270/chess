@@ -1,90 +1,120 @@
 #include "controller.h"
-#include "player.h"
-#include <iostream>
-#include <string>
-#include <vector>
+#include "board.h"
+#include "king.h"
+#include "queen.h"
+#include "knight.h"
+#include "bishop.h"
+#include "rook.h"
+#include "pawn.h"
+#include "human.h"
+#include "computer.h"
 
 using namespace std;
 
 Controller::Controller(Board* board) : board{board} {}
 
-// ----------------------- Helper ----------------------------
-pair<int,int> convertPos(string &pos) {
-    int row = stoi(pos[1]) - 1;
-    char colInChar = pos[0] - (pos[0] - '0');
-    int col = stoi(colInChar);
-    return make_pair(row,col);
-    
-}
-
-
-void Controller::initPlayer(const string& player, Colour colour) {
+initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
-        if (player == "human") player.push_back(make_unique<Human>(Colour::White));
-        if (player == "computer1") player.push_back(make_unique<Computer>(Colour::White, 1));
-        if (player == "computer2") player.push_back(make_unique<Computer>(Colour::White, 2));
-        if (player == "computer3") player.push_back(make_unique<Computer>(Colour::White, 3));
-        if (player == "computer4") player.push_back(make_unique<Computer>(Colour::White, 4));
-    }
-    if (colour == Colour::Black) {
-        if (player == "human") player.push_back(make_unique<Human>(Colour::Black));
-        if (player == "computer1") player.push_back(make_unique<Computer>(Colour::Black, 1));
-        if (player == "computer2") player.push_back(make_unique<Computer>(Colour::Black, 2));
-        if (player == "computer3") player.push_back(make_unique<Computer>(Colour::Black, 3));
-        if (player == "computer4") player.push_back(make_unique<Computer>(Colour::Black, 4));
-    }
-    else {
+        if (player == "human") {
+            players.push_back(make_unique<Human>(Colour::White));
+        } else if (player == "computer1") {
+            players.push_back(make_unique<Computer>(Colour::White, 1));
+        } else if (player == "computer2") {
+            players.push_back(make_unique<Computer>(Colour::White, 2));
+        } else if (player == "computer3") {
+            players.push_back(make_unique<Computer>(Colour::White, 3));
+        } else {
+            if (player == "computer4") {
+            players.push_back(make_unique<Computer>(Colour::White, 4));
+            }
+        }
+    } else if (colour == Colour::Black) {
+        if (player == "human") {
+            players.push_back(make_unique<Human>(Colour::Black));
+        } else if (player == "computer1") {
+            players.push_back(make_unique<Computer>(Colour::Black, 1));
+        } else if (player == "computer2") {
+            players.push_back(make_unique<Computer>(Colour::Black, 2));
+        }
+        else if (player == "computer3") {
+            players.push_back(make_unique<Computer>(Colour::Black, 3));
+        }
+        else {
+            if (player == "computer4") {
+            players.push_back(make_unique<Computer>(Colour::Black, 4));
+            }
+        }
+    } else {
         throw runtime_error("Please enter a valid player: Human / Computer[1-4]");
     }
 }
 
-
-
 void Controller::playGame() {
-    string line;
     string command;
-    while(getline(cine, line)) {
+    while(cin >> command) {
         try {
-            istringstream ss{line};
-            ss >> command;
-            if (command == "game") {
-                string wPlayer, bPlayer;
-                ss >> wPlayer;
-                ss >> bPlayer;
-                initPlayer(wPlayer, Coluor::White);
-                initPlayer(bPlayer, Colour::Black);
-            }
             if (command == "setup") {
-                if (inGame) throw runtime_error("Game is currently running");
-                o.push_back(TextObserver(board));
-                o.push_back(GraphicsObesrver(board));
-                board->render;
+                try {
+                    cout << "IN SETUP MODE" << endl;
+                    if (inGame == true) {
+                    throw runtime_error("Game is currently running");
+                    }
+                    board->render();
+                    initGame();
+                }
+                catch (runtime_error &f) {
+                    cerr << f.what() << endl;
+                    break;
+
+                }     
+            }
+            else if (command == "game") {
+                if (doneSetup == false) board->init();
+                inGame = true;
+                string wPlayer, bPlayer;
+                cin >> wPlayer;
+                cout << wPlayer << endl;
+                initPlayer(wPlayer, Colour::White);
+                cin >> bPlayer;
+                cout << bPlayer << endl;
+                initPlayer(bPlayer, Colour::Black);
+                gameMoves();
+            }
+            else {
+                throw runtime_error("Please enter a valid command: " + command);
+            }
+        }
+        catch (runtime_error &f) {
+            cerr << f.what() << endl;
+        } 
+    }
+}
 
                 while(cin >> command) {
                     try {
-                        if (command == "+") {
-                            string piece;
-                            string pos;
-                            cin >> piece;
-                            cin >> pos;
-                            pair<int, int> coords = convertPos(pos);
-                            
 
-                        }
                     }
-                    
+                    cin >> from;
+                    pair<int, int> fromCoords = convertPos(from);
+                    cin >> to;
+                    pair<int, int> toCoords = convertPos(to);
+                    board->move(fromCoords, toCoords, Colour::White);
                 }
-
-                
+                else {
+                    // black's turn
+                    cin >> from;
+                    pair<int, int> fromCoords = convertPos(from);
+                    cin >> to;
+                    pair<int, int> toCoords = convertPos(to);
+                    board->move(fromCoords, toCoords, Colour::Black);
+                }
             }
-
+            else {
+                throw runtime_error("Please enter a valid command");
+            }
         }
-        
+        catch (runtime_error &f){
+            cerr << f.what() << endl;
+        }
     }
-    catch (runtime_error &f) {
-        cerr << f.what() << endl;
-    }
-    
-
-
-}
+        }

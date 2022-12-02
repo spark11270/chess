@@ -1,51 +1,53 @@
 #include "queen.h"
 
-Queen::Queen(Colour c, int row, int col) : Piece(c, row, col) {}
+using namespace std;
 
-bool Queen::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
-    if (finalRow >= MAXCELL) return false; // check out of bounds
-    if (finalCol >= MAXCELL) return false; // check out of bounds
-    if ((initialRow == finalRow) && (initialCol == finalCol)) return false; // you cannot stay in the same position
+Queen::Queen(Colour c, int row, int col) : Piece(c, row, col, PieceName::Queen) {}
 
-    if (initialRow == finalRow) return true; // move along same row
-    if (initialCol == finalCol) return true; // move along the same col
-    if ((finalCol - initialCol) == (finalRow - initialRow)) return true; // move diagnoally
+bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
+    if (final.first >= MAXCELL) return false; // check out of bounds
+    if (final.second >= MAXCELL) return false; // check out of bounds
+    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
+
+    if (initial.first == final.first) return true; // move along same row
+    if (initial.second == final.second) return true; // move along the same col
+    if ((final.second - initial.second) == (final.first - initial.first)) return true; // move diagnoally
     return false;
 }
 
 vector<pair<int, int>> Queen::getPosMoves() {
     vector<pair<int, int>> moves;
     // vertical
-    for (int i = 1; i <= row; ++i) {
-        moves.push_back(make_pair(row - i, col));
+    for (int i = 1; i <= getCoords().first; ++i) {
+        moves.push_back(make_pair(getCoords().first - i, getCoords().second));
         // backward diagonal
-        if (col - i >= 0) {
-            moves.push_back(make_pair(row - i, col - i));
+        if (getCoords().second - i >= 0) {
+            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
         }
     }
-    for (int i = 1; i <= MAXCELL - row; ++i) {
-        moves.push_back(make_pair(row + i, col));
+    for (int i = 1; i <= MAXCELL - getCoords().first; ++i) {
+        moves.push_back(make_pair(getCoords().first + i, getCoords().second));
         // backward diagonal
-        if (col + i <= MAXCELL) {
-            moves.push_back(make_pair(row + i, col + i));
+        if (getCoords().second + i <= MAXCELL) {
+            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
         }
     }
     // horizontal
-    for (int i = 1; i <= col; ++i) {
-        moves.push_back(make_pair(row, col - i));
+    for (int i = 1; i <= getCoords().second; ++i) {
+        moves.push_back(make_pair(getCoords().first, getCoords().second - i));
         // forward diagonal
-        if (row - i >= 0) {
-            moves.push_back(make_pair(row - i, col - i));
+        if (getCoords().first - i >= 0) {
+            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
         }
     }
-    for (int i = 1; i <= MAXCELL - col; ++i) {
-        moves.push_back(make_pair(row, col + i));
+    for (int i = 1; i <= MAXCELL - getCoords().second; ++i) {
+        moves.push_back(make_pair(getCoords().first, getCoords().second + i));
         // forward diagonal
-        if (row + i <= MAXCELL) {
-            moves.push_back(make_pair(row + i, col + i));
+        if (getCoords().first + i <= MAXCELL) {
+            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
         }
     }
     return moves;
 }
 
-PieceName Queen::getType() {return PieceName::queen;}
+PieceName Queen::getType() {return PieceName::Queen;}

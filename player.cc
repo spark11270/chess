@@ -3,18 +3,18 @@
 
 using namespace std;
 
-Player::Player(std::string name, Colour colour, int score) : name{name}, colour{colour}, score{score} {}
+Player::Player(Colour colour, int score) : colour{colour}, score{score} {}
     
-string Player::getName() {
-    return name;
-}
-
 Colour Player::getColour() {
     return colour;
 }
 
 int Player::getScore() {
     return score;
+}
+
+void Player::updateScore() {
+    ++score;
 }
 
 Player::~Player() {}

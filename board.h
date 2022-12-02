@@ -1,28 +1,44 @@
 #ifndef BOARD_H
 #define BOARD_H
-#include <string.h>
+
 #include "piece.h"
 #include "subject.h"
+#include "colour.h"
+
+#include <iostream>
+
+
+class Move;
+class Player;
+class Piece;
+class King;
 
 class Board : public Subject {
-    // I've changed theBoard to a matrix of Pieces 
-    // instead of a vector of vectors. Think this is easier to implement
-    // But feel free to change it back if required
-    Piece* theBoard[8][8];
-    bool whosTurn; // true if white's turn and false if black's turn
+    std::vector<std::vector<std::shared_ptr<Piece>>> theBoard{8, std::vector<std::shared_ptr<Piece>>{8}};
+    std::vector<std::shared_ptr<Piece>> whitePieces{std::vector<std::shared_ptr<Piece>>{16}};
+    std::vector<std::shared_ptr<Piece>> blackPieces{std::vector<std::shared_ptr<Piece>>{16}};
+    Player *W; 
+    Player *B;
+    int rounds;
+    Colour whosTurn;
 
 public:
     Board();
-
-    void move(std::string initial, std::string final);
-    void promote(std::string initial, std::string final, char promto);
     bool isWhiteTurn();
-
+    void setPlayerFirst(Colour colour);
+    bool uniqueKing();
+    bool validPawns();
+    void init();
     void render();
-    Piece* getPiece(int row, int col); 
-
-
-
+    std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
+    std::shared_ptr<Piece>getPiece(PieceName name, Colour colour);
+    void addPiece(std::shared_ptr<Piece> p);
+    void removePieceAt(std::pair<int, int> from);
+    void move(std::pair<int, int> begin, std::pair<int, int> end, Colour c);
+    bool isCheck(std::pair<int, int> kingPos = std::make_pair(-1, -1));
+    bool isCheckmate();
+    void clear();
+    ~Board();
 };
 
 #endif

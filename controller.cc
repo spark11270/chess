@@ -14,13 +14,40 @@ using namespace std;
 // ----------------------- Helper ----------------------------
 
 pair<int,int> convertPos(string &pos) {
-    int row = (int)pos[1] - 1;
-    cout << "row: " << row << endl;
-    char colInChar = pos[0] - (pos[0] - '0');
-    int col = (int)colInChar;
-    cout << "col: " << col << endl; 
-    return make_pair(row,col);
-    
+    char c = pos[0] - ('a' - '0');
+    cout << c << endl;
+    switch(pos[1]) {
+        case 'a':
+            return make_pair(0, (int)pos[1]);
+            break;
+        case 'b':
+            return make_pair(1, (int)pos[1]);
+            break;
+        case 'c':
+            return make_pair(2, (int)pos[1]);
+            break;
+        case 'd':
+            return make_pair(3, (int)pos[1]);
+            break;
+        case 'e':
+            return make_pair(4, (int)pos[1]);
+            break;
+        case 'f':
+            return make_pair(5, (int)pos[1]);
+            break;
+        case 'g':
+            return make_pair(6, (int)pos[1]);
+            break;
+        case 'h':
+            return make_pair(7, (int)pos[1]);
+            break;
+        
+    }
+    // int row = (int)pos[1] - 1;
+    // char colInChar = pos[0] - 43;
+    // cout << colInChar;
+    // int col = (int)colInChar;
+    // return make_pair(row,col);
 }
 
 // -----------------------------------------------------------
@@ -29,20 +56,36 @@ Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{fa
 
 void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
-        if (player == "human") players.push_back(make_unique<Human>(Colour::White));
-        if (player == "computer1") players.push_back(make_unique<Computer>(Colour::White, 1));
-        if (player == "computer2") players.push_back(make_unique<Computer>(Colour::White, 2));
-        if (player == "computer3") players.push_back(make_unique<Computer>(Colour::White, 3));
-        if (player == "computer4") players.push_back(make_unique<Computer>(Colour::White, 4));
-    }
-    if (colour == Colour::Black) {
-        if (player == "human") players.push_back(make_unique<Human>(Colour::Black));
-        if (player == "computer1") players.push_back(make_unique<Computer>(Colour::Black, 1));
-        if (player == "computer2") players.push_back(make_unique<Computer>(Colour::Black, 2));
-        if (player == "computer3") players.push_back(make_unique<Computer>(Colour::Black, 3));
-        if (player == "computer4") players.push_back(make_unique<Computer>(Colour::Black, 4));
-    }
-    else {
+        if (player == "human") {
+            players.push_back(make_unique<Human>(Colour::White));
+        } else if (player == "computer1") {
+            players.push_back(make_unique<Computer>(Colour::White, 1));
+        } else if (player == "computer2") {
+            players.push_back(make_unique<Computer>(Colour::White, 2));
+        } else if (player == "computer3") {
+            players.push_back(make_unique<Computer>(Colour::White, 3));
+        } else {
+            if (player == "computer4") {
+            players.push_back(make_unique<Computer>(Colour::White, 4));
+            }
+        }
+    } else if (colour == Colour::Black) {
+        if (player == "human") {
+            players.push_back(make_unique<Human>(Colour::Black));
+        } else if (player == "computer1") {
+            players.push_back(make_unique<Computer>(Colour::Black, 1));
+        } else if (player == "computer2") {
+            players.push_back(make_unique<Computer>(Colour::Black, 2));
+        }
+        else if (player == "computer3") {
+            players.push_back(make_unique<Computer>(Colour::Black, 3));
+        }
+        else {
+            if (player == "computer4") {
+            players.push_back(make_unique<Computer>(Colour::Black, 4));
+            }
+        }
+    } else {
         throw runtime_error("Please enter a valid player: Human / Computer[1-4]");
     }
 }
@@ -158,13 +201,15 @@ void Controller::playGame() {
                 inGame = true;
                 string wPlayer, bPlayer;
                 cin >> wPlayer;
-                cin >> bPlayer;
+                cout << wPlayer << endl;
                 initPlayer(wPlayer, Colour::White);
+                cin >> bPlayer;
+                cout << bPlayer << endl;
                 initPlayer(bPlayer, Colour::Black);
                 gameMoves();
             }
             else {
-                throw runtime_error("Please enter a valid command");
+                throw runtime_error("Please enter a valid command: " + command);
             }
         }
         catch (runtime_error &f) {

@@ -5,33 +5,33 @@
 
 // Changes enum piece class into characters representing each piece
 // Im sure theres a better way to do this
-char numToPiece(int n, Colour c) {
+char printPiece(PieceName n, Colour c) {
     if (c == Colour::White) {
-        if (n == 0) {
+        if (n == PieceName::king) {
             return 'K';
-        } else if (n == 1) {
+        } else if (PieceName::queen) {
             return 'Q';
-        } else if (n == 2) {
+        } else if (PieceName::bishop) {
             return 'B';
-        } else if (n == 3) {
+        } else if (PieceName::rook) {
             return 'R'; 
-        } else if (n == 4) {
-            return 'K';
-        } else if (n == 5) {
+        } else if (PieceName::knight) {
+            return 'N';
+        } else if (PieceName::pawn) {
             return 'P';
         }
     } else {
-        if (n == 0) {
+        if (n == PieceName::king) {
             return 'k';
-        } else if (n == 1) {
+        } else if (PieceName::queen) {
             return 'q';
-        } else if (n == 2) {
+        } else if (PieceName::bishop) {
             return 'b';
-        } else if (n == 3) {
+        } else if (PieceName::rook) {
             return 'r'; 
-        } else if (n == 4) {
-            return 'k';
-        } else if (n == 5) {
+        } else if (PieceName::knight) {
+            return 'n';
+        } else if (PieceName::pawn) {
             return 'p';
         }
     }
@@ -47,8 +47,8 @@ void TextDisplay::notify() {
 	for (int i = 0; i < 8; i++) {
         out << (8 - i) << ' ';
         for (int j = 0; j < 8; j++) {
-            if (board->getPiece(i, j)) {
-                out << numToPiece(board->getPiece(i, j)->getType(), board->getPiece(i, j)->getColour());
+            if (board->getBoard()[i][j] != nullptr) {
+                out << board->getBoard()[i][j]->getType(), board->getBoard()[i][j]->getColour();
             } else {
                 if ((i + j) % 2) {
                     out << '_';

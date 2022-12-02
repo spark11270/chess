@@ -24,7 +24,8 @@ class Board : public Subject {
 public:
     Board();
     void init();
-    Piece *getPiece(PieceName name);
+    std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
+    std::shared_ptr<Piece>getPiece(PieceName name);
     void move(int begin, int end);
     bool isCheck(std::pair<int, int> kingPos = std::make_pair(-1, -1));
     bool isCheckmate();

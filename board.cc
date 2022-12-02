@@ -1,4 +1,10 @@
 #include "board.h"
+#include "king.h"
+#include "queen.h"
+#include "knight.h"
+#include "bishop.h"
+#include "rook.h"
+#include "pawn.h"
 
 using namespace std;
 
@@ -51,8 +57,12 @@ void Board::init() {
     }
 }
 
-Piece *Board::getPiece(PieceName name) {
-    if (turns % 2 == 0)   {
+vector<vector<shared_ptr<Piece>>> Board::getBoard() {
+    return theBoard;
+}
+
+std::shared_ptr<Piece> Board::getPiece(PieceName name) {
+    if (rounds % 2 == 0)   {
         for (auto &p : blackPieces) {
             if (p->getType() == name) {
                 return p;
@@ -71,7 +81,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
     if (kingPos.first == -1) {
         kingPos = getPiece(PieceName::king)->getCoords();
     }
-    if (turns % 2 == 0)   {
+    if (rounds % 2 == 0)   {
         for (auto &p : whitePieces) {
             if (find(p->getPosMoves.begin(), p->getPosMoves.end(), kingPos) != p->getPosMoves.end()) {
                 return true;
@@ -89,7 +99,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
 
 bool Board::isCheckmate() {
     if (isCheck()) {
-        for (auto &cells : getKing()->getPosMoves) {
+        for (auto &cells : getPiece(PieceName::king)->getPosMoves) {
             if (isCheck(cells)) {
                 return true;
             }

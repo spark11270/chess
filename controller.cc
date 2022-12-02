@@ -13,7 +13,23 @@ using namespace std;
 
 Controller::Controller(Board* board) : board{board} {}
 
+<<<<<<< Updated upstream
 initPlayer(const string& player, Colour colour) {
+=======
+// ----------------------- Helper ----------------------------
+pair<int,int> convertPos(string &pos) {
+    int row = stoi(pos[1]) - 1;
+    char colInChar = pos[0] - (pos[0] - '0');
+    int col = stoi(colInChar);
+    return make_pair(row,col);
+    
+}
+
+// -----------------------------------------------------------
+
+
+void Controller::initPlayer(const string& player, Colour colour) {
+>>>>>>> Stashed changes
     if (colour == Colour::White) {
         if (player == "human") {
             players.push_back(make_unique<Human>(Colour::White));

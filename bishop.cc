@@ -1,5 +1,7 @@
 #include "bishop.h"
 
+using namespace std;
+
 Bishop::Bishop(Colour c, int row, int col) : Piece(c, row, col) {}
 
 bool Bishop::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
@@ -11,22 +13,22 @@ bool Bishop::isValidMove(int initialRow, int initialCol, int finalRow, int final
     return false;
 }
 
-vector<pair<int, int>> Pawn::getPosMoves() {
+vector<pair<int, int>> Bishop::getPosMoves() {
     vector<pair<int, int>> moves;
-    for (int i = 1; i <= row; ++i) {
-        if (col - i >= 0) {
+    for (int i = 1; i <= getCoords().first; ++i) {
+        if (getCoords().second - i >= 0) {
             // backward diagonal
-            moves.push_back(make_pair(row - i, col - i));
+            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
             // forward diagonal
-            moves.push_back(make_pair(row - i, col + i));
+            moves.push_back(make_pair(getCoords().first - i, getCoords().second + i));
         }
     }
-    for (int i = 1; i <= MAXCELL - row; ++i) {
-        if (col + i <= MAXCELL) {
+    for (int i = 1; i <= MAXCELL - getCoords().first; ++i) {
+        if (getCoords().second + i <= MAXCELL) {
             // forward diagonal
-            moves.push_back(make_pair(row + i, col - i));
+            moves.push_back(make_pair(getCoords().first + i, getCoords().second - i));
             // bckward diagonal
-            moves.push_back(make_pair(row + i, col + i));
+            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
         }
     }
     return moves;

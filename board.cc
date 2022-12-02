@@ -1,61 +1,110 @@
 #include "board.h"
-#include "piece.h"
-#include "iostream"
-#include <vector>
-#include "colour.h"
-#include "pawn.h"
-#include "rook.h"
-#include "knight.h"
-#include "bishop.h"
-#include "queen.h"
-#include "king.h"
 
-// Initialze the board for game. We may need an empty board for setup mode
-// Note that the cells with no pieces are uninitialized. 
-Board::Board() {
-    // Place Black Pieces on Board
-    theBoard[0][0] = new Rook(Colour::Black, 0, 0);
-    theBoard[0][7] = new Rook(Colour::Black, 0, 7);
-    theBoard[0][1] = new Knight(Colour::Black, 0, 1);
-    theBoard[0][6] = new Knight(Colour::Black, 0, 6);
-    theBoard[0][2] = new Bishop(Colour::Black, 0, 2);
-    theBoard[0][5] = new Bishop(Colour::Black, 0, 5);
-    theBoard[0][3] = new Queen(Colour::Black, 0, 3);
-    theBoard[0][4] = new King(Colour::Black, 0, 4);
-    for (int i = 1; i < 2; i++) {
-        for (int j = 0; j < 8; j++) {
-            theBoard[i][j] = new Pawn(Colour::Black, i, j);
-        }
-    }
+using namespace std;
 
-    // Place White Pieces on Board
-    theBoard[7][0] = new Rook(Colour::White, 0, 0);
-    theBoard[7][7] = new Rook(Colour::White, 0, 7);
-    theBoard[7][1] = new Knight(Colour::White, 0, 1);
-    theBoard[7][6] = new Knight(Colour::White, 0, 6);
-    theBoard[7][2] = new Bishop(Colour::White, 0, 2);
-    theBoard[7][5] = new Bishop(Colour::White, 0, 5);
-    theBoard[7][3] = new Queen(Colour::White, 0, 3);
-    theBoard[7][4] = new King(Colour::White, 0, 4);
-    for (int i = 6; i < 7; i++) {
-        for (int j = 0; j < 8; j++) {
-            theBoard[i][j] = new Pawn(Colour::White, i, j);
-        }
-    }
-
-    // ***** Create Empty Board *****
-    /*
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
+Board::Board() : W{nullptr}, B{nullptr}, rounds{0} {
+    // construct theBoard
+    for (int i = 0; i < MAXCELL; i++) {
+        for (int j = 0; j < MAXCELL; j++) {
             theBoard[i][j] = nullptr;
+        }
     }
-    */
+    // white/black pieces vector
+    for (int i = 0; i < 16; i++) {
+        whitePieces[i] = nullptr;
+        blackPieces[i] = nullptr;
+    }
 }
 
-void Board::render() {
-    notifyObservers();
+void Board::init() {
+    // white pieces
+    theBoard[0][0] = make_shared<Rook>(Colour::White, 0, 0);
+    theBoard[1][0] = make_shared<Knight>(Colour::White, 1, 0);
+    theBoard[2][0] = make_shared<Bishop>(Colour::White, 2, 0);
+    theBoard[3][0] = make_shared<King>(Colour::White, 3, 0);
+    theBoard[4][0] = make_shared<Queen>(Colour::White, 4, 0);
+    theBoard[5][0] = make_shared<Bishop>(Colour::White, 5, 0);
+    theBoard[6][0] = make_shared<Knight>(Colour::White, 6, 0);
+    theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0);
+
+    // black pieces
+    theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 0);
+    theBoard[1][7] = make_shared<Knight>(Colour::Black, 1, 0);
+    theBoard[2][7] = make_shared<Bishop>(Colour::Black, 2, 0);
+    theBoard[3][7] = make_shared<King>(Colour::Black, 3, 0);
+    theBoard[4][7] = make_shared<Queen>(Colour::Black, 4, 0);
+    theBoard[5][7] = make_shared<Bishop>(Colour::Black, 5, 0);
+    theBoard[6][7] = make_shared<Knight>(Colour::Black, 6, 0);
+    theBoard[7][7] = make_shared<Rook>(Colour::Black, 7, 0);
+
+    for (int i = 0 ; i < MAXCELL; ++i) {
+        whitePieces.push_back(theBoard[i][0]);
+        blackPieces.push_back(theBoard[i][7]);
+    }
+
+    // pawns
+    for (int i = 0; i < MAXCELL; ++i) {
+        theBoard[i][1] = make_shared<Pawn>(Colour::White, i, 1);
+        theBoard[i][6] = make_shared<Pawn>(Colour::Black, i, 6);
+        whitePieces.push_back(theBoard[i][1]);
+        blackPieces.push_back(theBoard[i][6]);
+    }
 }
 
-Piece* Board::getPiece(int row, int col) {
-    return theBoard[row][col];
+Piece *Board::getPiece(PieceName name) {
+    if (turns % 2 == 0)   {
+        for (auto &p : blackPieces) {
+            if (p->getType() == name) {
+                return p;
+            }
+        }
+    } else {
+        for (auto &p : whitePieces) {
+            if (p->getType() == name) {
+                return p;
+            }
+        }
+    }
 }
+
+bool Board::isCheck(pair<int, int> kingPos) {
+    if (kingPos.first == -1) {
+        kingPos = getPiece(PieceName::king)->getCoords();
+    }
+    if (turns % 2 == 0)   {
+        for (auto &p : whitePieces) {
+            if (find(p->getPosMoves.begin(), p->getPosMoves.end(), kingPos) != p->getPosMoves.end()) {
+                return true;
+            }
+        }
+    } else {
+        for (auto &p : blackPieces) {
+           if (find(p->getPosMoves.begin(), p->getPosMoves.end(), kingPos) != p->getPosMoves.end()) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool Board::isCheckmate() {
+    if (isCheck()) {
+        for (auto &cells : getKing()->getPosMoves) {
+            if (isCheck(cells)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void Board::clear() {
+    // construct theBoard
+    for (int i = 0; i < MAXCELL; i++) {
+        for (int j = 0; j < MAXCELL; j++) {
+            theBoard[i][j] = nullptr;
+        }
+    }
+}
+
+Board::~Board() {}

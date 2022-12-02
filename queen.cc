@@ -1,5 +1,7 @@
 #include "queen.h"
 
+using namespace std;
+
 Queen::Queen(Colour c, int row, int col) : Piece(c, row, col) {}
 
 bool Queen::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
@@ -16,33 +18,33 @@ bool Queen::isValidMove(int initialRow, int initialCol, int finalRow, int finalC
 vector<pair<int, int>> Queen::getPosMoves() {
     vector<pair<int, int>> moves;
     // vertical
-    for (int i = 1; i <= row; ++i) {
-        moves.push_back(make_pair(row - i, col));
+    for (int i = 1; i <= getCoords().first; ++i) {
+        moves.push_back(make_pair(getCoords().first - i, getCoords().second));
         // backward diagonal
-        if (col - i >= 0) {
-            moves.push_back(make_pair(row - i, col - i));
+        if (getCoords().second - i >= 0) {
+            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
         }
     }
-    for (int i = 1; i <= MAXCELL - row; ++i) {
-        moves.push_back(make_pair(row + i, col));
+    for (int i = 1; i <= MAXCELL - getCoords().first; ++i) {
+        moves.push_back(make_pair(getCoords().first + i, getCoords().second));
         // backward diagonal
-        if (col + i <= MAXCELL) {
-            moves.push_back(make_pair(row + i, col + i));
+        if (getCoords().second + i <= MAXCELL) {
+            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
         }
     }
     // horizontal
-    for (int i = 1; i <= col; ++i) {
-        moves.push_back(make_pair(row, col - i));
+    for (int i = 1; i <= getCoords().second; ++i) {
+        moves.push_back(make_pair(getCoords().first, getCoords().second - i));
         // forward diagonal
-        if (row - i >= 0) {
-            moves.push_back(make_pair(row - i, col - i));
+        if (getCoords().first - i >= 0) {
+            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
         }
     }
-    for (int i = 1; i <= MAXCELL - col; ++i) {
-        moves.push_back(make_pair(row, col + i));
+    for (int i = 1; i <= MAXCELL - getCoords().second; ++i) {
+        moves.push_back(make_pair(getCoords().first, getCoords().second + i));
         // forward diagonal
-        if (row + i <= MAXCELL) {
-            moves.push_back(make_pair(row + i, col + i));
+        if (getCoords().first + i <= MAXCELL) {
+            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
         }
     }
     return moves;

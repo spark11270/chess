@@ -18,14 +18,14 @@ bool Knight::isValidMove(int initialRow, int initialCol, int finalRow, int final
 
 vector<pair<int, int>> Knight::getPosMoves() {
     vector<pair<int, int>> moves;
-    moves.push_back(make_pair(row + 1, col + 2));
-    moves.push_back(make_pair(row + 1, col - 2));
-    moves.push_back(make_pair(row - 1, col + 2));
-    moves.push_back(make_pair(row - 1, col - 2));
-    moves.push_back(make_pair(row + 2, col + 1));
-    moves.push_back(make_pair(row + 2, col - 1));
-    moves.push_back(make_pair(row - 2, col + 1));
-    moves.push_back(make_pair(row - 2, col - 1));
+    moves.push_back(make_pair(getCoords().first + 1, getCoords().second + 2));
+    moves.push_back(make_pair(getCoords().first + 1, getCoords().second - 2));
+    moves.push_back(make_pair(getCoords().first - 1, getCoords().second + 2));
+    moves.push_back(make_pair(getCoords().first - 1, getCoords().second - 2));
+    moves.push_back(make_pair(getCoords().first + 2, getCoords().second + 1));
+    moves.push_back(make_pair(getCoords().first + 2, getCoords().second - 1));
+    moves.push_back(make_pair(getCoords().first - 2, getCoords().second + 1));
+    moves.push_back(make_pair(getCoords().first - 2, getCoords().second - 1));
     return moves;
 }
 

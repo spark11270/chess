@@ -17,18 +17,18 @@ bool Rook::isValidMove(int initialRow, int initialCol, int finalRow, int finalCo
 vector<pair<int, int>> Rook::getPosMoves() {
     vector<pair<int, int>> moves;
     // vertical
-    for (int i = 1; i <= row; ++i) {
-        moves.push_back(make_pair(row - i, col));
+    for (int i = 1; i <= getCoords().first; ++i) {
+        moves.push_back(make_pair(getCoords().first - i, getCoords().second));
     }
-    for (int i = 1; i <= MAXCELL - row; ++i) {
-        moves.push_back(make_pair(row + i, col));
+    for (int i = 1; i <= MAXCELL - getCoords().first; ++i) {
+        moves.push_back(make_pair(getCoords().first + i, getCoords().second));
     }
     // horizontal
-    for (int i = 1; i <= col; ++i) {
-        moves.push_back(make_pair(row, col - i));
+    for (int i = 1; i <= getCoords().second; ++i) {
+        moves.push_back(make_pair(getCoords().first, getCoords().second - i));
     }
-    for (int i = 1; i <= MAXCELL - col; ++i) {
-        moves.push_back(make_pair(row, col + i));
+    for (int i = 1; i <= MAXCELL - getCoords().second; ++i) {
+        moves.push_back(make_pair(getCoords().first, getCoords().second + i));
     }
     return moves;
 }

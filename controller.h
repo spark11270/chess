@@ -11,8 +11,9 @@ class Controller {
     Board *board;
     std::vector<std::unique_ptr<Player>> players;
     std::vector<Observer *> o;
+    std::vector<Move> totalMoves;
     bool inGame;
-    bool inSetup;
+    bool doneSetup;
 
 public:
     Controller(Board* board);

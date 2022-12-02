@@ -1,5 +1,7 @@
 #include "king.h"
 
+using namespace std;
+
 King::King(Colour c, int row, int col) : Piece(c, row, col) {}
 
 bool King::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
@@ -19,17 +21,17 @@ bool King::isValidMove(int initialRow, int initialCol, int finalRow, int finalCo
 vector<pair<int, int>> King::getPosMoves() {
     vector<pair<int, int>> moves;
     // vertical
-    moves.push_back(make_pair(row + 1, col));
-    moves.push_back(make_pair(row - 1, col));
+    moves.push_back(make_pair(getCoords().first + 1, getCoords().second));
+    moves.push_back(make_pair(getCoords().first - 1, getCoords().second));
     // horizontal
-    moves.push_back(make_pair(row, col + 1));
-    moves.push_back(make_pair(row, col - 1));
+    moves.push_back(make_pair(getCoords().first, getCoords().second + 1));
+    moves.push_back(make_pair(getCoords().first, getCoords().second - 1));
     // forward diagonal
-    moves.push_back(make_pair(row + 1, col - 1));
-    moves.push_back(make_pair(row - 1, col + 1));
+    moves.push_back(make_pair(getCoords().first + 1, getCoords().second - 1));
+    moves.push_back(make_pair(getCoords().first - 1, getCoords().second + 1));
     // backward diagonal
-    moves.push_back(make_pair(row + 1, col + 1));
-    moves.push_back(make_pair(row - 1, col - 1));
+    moves.push_back(make_pair(getCoords().first + 1, getCoords().second + 1));
+    moves.push_back(make_pair(getCoords().first - 1, getCoords().second - 1));
     return moves;
 }
 

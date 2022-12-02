@@ -1,10 +1,12 @@
 #include "piece.h"
 using namespace std;
 
-Piece::Piece(Colour colour, int row, int col) : colour{colour}, row{row}, col{col} {}
+Piece::Piece(Colour colour, int row, int col) : colour{colour}, coords{make_pair(row, col)} {}
 
-int Piece::getRow() {return row;}
+pair<int, int> Piece::getCoords() {return coords;}
 
-int Piece::getColumn() {return col;}
+void Piece::setCoords(int r, int c) {
+    coords = make_pair(r, c);
+}
 
 Colour Piece::getColour() {return colour;}

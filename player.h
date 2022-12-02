@@ -4,6 +4,8 @@
 #include "colour.h"
 #include <string>
 
+class King;
+
 class Player {
     std::string name;
     Colour colour;

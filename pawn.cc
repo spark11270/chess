@@ -21,9 +21,9 @@ bool Pawn::isValidMove(int initialRow, int initialCol, int finalRow, int finalCo
 
 vector<pair<int, int>> Pawn::getPosMoves() {
     vector<pair<int, int>> moves;
-    moves.push_back(make_pair(row + 1, col));
+    moves.push_back(make_pair(getCoords().first + 1, getCoords().second));
     if (isFirstMove == true) { // can move 2 square forwards only if first move
-        moves.push_back(make_pair(row + 2, col));
+        moves.push_back(make_pair(getCoords().first + 2, getCoords().second));
     }
     return moves;
 }

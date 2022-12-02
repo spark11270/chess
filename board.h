@@ -20,16 +20,21 @@ class Board : public Subject {
     Player *W; 
     Player *B;
     int rounds;
+    Colour whosTurn;
 
 public:
     Board();
-    void addPiece(std::pair<int, int> to, std::shared_ptr<Piece> p);
-    void removePiece(std::pair<int, int> from);
+    bool isWhiteTurn();
+    void setPlayerFirst(Colour colour);
+    bool uniqueKing();
+    bool validPawns();
     void init();
     void render();
     std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
-    std::shared_ptr<Piece>getPiece(PieceName name);
-    void move(int begin, int end);
+    std::shared_ptr<Piece>getPiece(PieceName name, Colour colour);
+    void addPiece(std::shared_ptr<Piece> p);
+    void removePieceAt(std::pair<int, int> from);
+    void move(std::pair<int, int> begin, std::pair<int, int> end, Colour c);
     bool isCheck(std::pair<int, int> kingPos = std::make_pair(-1, -1));
     bool isCheckmate();
     void clear();

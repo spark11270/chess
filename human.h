@@ -6,7 +6,8 @@
 class Human : public Player {
 
 public:
-    Human(std::string name, Colour colour, int score);
+    Human(Colour colour);
+    virtual char getType() override;
     
     ~Human();
 };

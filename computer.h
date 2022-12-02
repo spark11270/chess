@@ -5,19 +5,18 @@
 #include <string>
 #include <vector>
 
-enum class Level {L1, L2, L3, L4};
-
 class Move;
 
 class Computer : public Player {
-    Level lvl;
+    int lvl;
 
 public:
-    Computer(std::string name, Colour c, int score, Level lvl);
+    Computer(Colour c, int lvl);
 
-    virtual vector<Move> getAIMoves();
+    virtual std::vector<Move> getAIMoves();
+    char getType();
 
-    virtual ~Computer() = 0;
+    ~Computer();
 };
 
 #endif

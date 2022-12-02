@@ -4,12 +4,12 @@ using namespace std;
 
 Bishop::Bishop(Colour c, int row, int col) : Piece(c, row, col, PieceName::Bishop) {}
 
-bool Bishop::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
-    if (finalRow >= MAXCELL) return false; // check out of bounds
-    if (finalCol >= MAXCELL) return false; // check out of bounds
-    if ((initialRow == finalRow) && (initialCol == finalCol)) return false; // you cannot stay in the same position
+bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
+    if (final.first >= MAXCELL) return false; // check out of bounds
+    if (final.second >= MAXCELL) return false; // check out of bounds
+    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
 
-    if ((finalCol - initialCol) == (finalRow - initialRow)) return true; // move diagnoally
+    if ((final.second - initial.second) == (final.first - initial.first)) return true; // move diagnoally
     return false;
 }
 

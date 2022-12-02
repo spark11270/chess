@@ -4,16 +4,16 @@ using namespace std;
 
 King::King(Colour c, int row, int col) : Piece(c, row, col, PieceName::King) {}
 
-bool King::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
-    if (finalRow >= MAXCELL) return false; // check out of bounds
-    if (finalCol >= MAXCELL) return false; // check out of bounds
-    if ((initialRow == finalRow) && (initialCol == finalCol)) return false; // you cannot stay in the same position
+bool King::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
+    if (final.first >= MAXCELL) return false; // check out of bounds
+    if (final.second >= MAXCELL) return false; // check out of bounds
+    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
 
-    if (((initialRow + 1) == finalRow || (initialRow - 1) == finalRow) && 
-        ((initialCol + 1) == finalCol || (initialCol - 1) == finalCol)) return true; // check diagnoals
+    if (((initial.first + 1) == final.first || (initial.first - 1) == final.first) && 
+        ((initial.second + 1) == final.second || (initial.second - 1) == final.second)) return true; // check diagnoals
 
-    if ((initialRow == finalRow) && ((initialCol + 1) == finalCol || (initialCol - 1) == finalCol)) return true; // moves left and right one square
-    if ((initialCol == finalCol) && ((initialRow + 1 == finalRow) || initialRow - 1 == finalRow)) return true; // moves up and down one square
+    if ((initial.first == final.first) && ((initial.second + 1) == final.second || (initial.second - 1) == final.second)) return true; // moves left and right one square
+    if ((initial.second == final.second) && ((initial.first + 1 == final.first) || initial.first - 1 == final.first)) return true; // moves up and down one square
 
     return false;
 }

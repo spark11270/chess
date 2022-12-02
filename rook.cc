@@ -4,12 +4,12 @@ using namespace std;
 
 Rook::Rook(Colour c, int row, int col) : Piece{c, row, col, PieceName::Rook} {}
 
-bool Rook::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove)  {
-    if (finalRow >= MAXCELL) return false;
-    if (finalCol >= MAXCELL) return false;
-    if (initialRow == finalRow && initialCol == finalCol) return false;
-    if (initialRow == finalRow) return true; //move horizontally
-    if (initialCol == finalCol) return true; //move vertically
+bool Rook::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)  {
+    if (final.first >= MAXCELL) return false;
+    if (final.second >= MAXCELL) return false;
+    if (initial.first == final.first && initial.second == final.second) return false;
+    if (initial.first == final.first) return true; //move horizontally
+    if (initial.second == final.second) return true; //move vertically
     
     return false;
 }

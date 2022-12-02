@@ -4,15 +4,15 @@ using namespace std;
 
 Knight::Knight(Colour c, int row, int col) : Piece(c, row, col, PieceName::Knight) {}
 
-bool Knight::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
-    if (finalRow >= MAXCELL) return false; // check out of bounds
-    if (finalCol >= MAXCELL) return false; // check out of bounds
-    if ((initialRow == finalRow) && (initialCol == finalCol)) return false; // you cannot stay in the same position
-    if (((initialRow + 2) == finalRow) && (((initialCol + 1) == finalCol) || ((initialCol - 1) == finalCol))) return true; 
-    if (((initialRow - 2) == finalRow) && (((initialCol + 1) == finalCol) || ((initialCol - 1) == finalCol))) return true;
-    if (((initialCol - 2) == finalCol) && (((initialRow + 1) == finalRow) || ((initialRow - 1) == finalRow))) return true;
-    if (((initialCol + 2) == finalCol) && (((initialRow + 1) == finalRow) || ((initialRow - 1) == finalRow))) return true;
-    if (initialCol == finalCol) return true; //move vertically
+bool Knight::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
+    if (final.first >= MAXCELL) return false; // check out of bounds
+    if (final.second >= MAXCELL) return false; // check out of bounds
+    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
+    if (((initial.first + 2) == final.first) && (((initial.second + 1) == final.second) || ((initial.second - 1) == final.second))) return true; 
+    if (((initial.first - 2) == final.first) && (((initial.second + 1) == final.second) || ((initial.second - 1) == final.second))) return true;
+    if (((initial.second - 2) == final.second) && (((initial.first + 1) == final.first) || ((initial.first - 1) == final.first))) return true;
+    if (((initial.second + 2) == final.second) && (((initial.first + 1) == final.first) || ((initial.first - 1) == final.first))) return true;
+    if (initial.second == final.second) return true; //move vertically
     return false;
 }
 

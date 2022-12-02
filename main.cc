@@ -11,4 +11,6 @@ int main () {
   theboard->init();
   TextDisplay td{theboard};
   theboard->render();
+  Controller ctr{theboard};
+  ctr.playGame();
 }

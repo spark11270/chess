@@ -2,6 +2,10 @@
 
 using namespace std;
 
-Human::Human(std::string name, Colour c, int score) : Player(name, c, score) {}
+Human::Human(Colour c) : Player(c, 0) {}
 
 Human::~Human() {}
+
+char Human::getType() {
+    return 'h';
+}

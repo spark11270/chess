@@ -7,16 +7,16 @@
 class King;
 
 class Player {
-    std::string name;
     Colour colour;
     int score;
 
 public:
-    Player(std::string name, Colour colour, int score);
+    Player(Colour colour, int score);
 
-    std::string getName();
     Colour getColour();
     int getScore();
+    void updateScore(); // increment score
+    virtual char getType() = 0;
 
     virtual ~Player() = 0;
 };

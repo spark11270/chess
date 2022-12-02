@@ -24,15 +24,50 @@ Board::Board() : W{nullptr}, B{nullptr}, rounds{0} {
     }
 }
 
-void Board::addPiece(pair<int, int> to, shared_ptr<Piece> p) {
-    if (theBoard[to.first][to.second] == nullptr) {
-        theBoard[to.first][to.second] = p;
+void Board::addPiece(shared_ptr<Piece> p) {
+    if (p->getColour() == Colour::White) {
+        whitePieces.push_back(p);
+    } else {
+        blackPieces.push_back(p);
+    }
+    int row = p->getCoords().first;
+    int col = p->getCoords().second;
+    theBoard[row][col] = p;
+}
+
+void Board::removePieceAt(pair<int, int> from) {
+    if (theBoard[from.first][from.second] != nullptr) {
+        theBoard[from.first][from.second] = nullptr;
     }
 }
 
-void Board::removePiece(pair<int, int> from) {
-    if (theBoard[from.first][from.second] != nullptr) {
-        theBoard[from.first][from.second] = nullptr;
+bool Board::uniqueKing() {
+    pair<int, int>  kingCount = make_pair(0, 0); // pair<white, black>
+    for (auto &piece : whitePieces) {
+        if (piece->getType() == PieceName::King) {
+            ++kingCount.first;
+        }
+    }
+    for (auto &piece : blackPieces) {
+        ++kingCount.second;
+    }
+
+    if (kingCount.second == 1 && kingCount.first == 1) return true;
+    return false;
+
+}
+
+bool Board::validPawns() {
+    for (auto &piece : whitePieces) {
+        if (piece->getType() == PieceName::Pawn) {
+            if (piece->getCoords().first == 7) return false;
+        }
+    }
+
+    for (auto &piece : blackPieces) {
+        if (piece->getType() == PieceName::Pawn) {
+            if (piece->getCoords().first == 0) return false;
+        }
     }
 }
 
@@ -79,8 +114,8 @@ vector<vector<shared_ptr<Piece>>> Board::getBoard() {
     return theBoard;
 }
 
-std::shared_ptr<Piece> Board::getPiece(PieceName name) {
-    if (rounds % 2 == 0)   {
+std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
+    if (colour == Colour::Black)   {
         for (auto &p : blackPieces) {
             if (p->getType() == name) {
                 return p;
@@ -95,11 +130,38 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name) {
     }
 }
 
+void Board::move(pair<int, int> begin, pair<int, int> end, Colour c) {
+    shared_ptr<Piece> p = theBoard[begin.first][begin.second];
+    if (p != nullptr && p->getColour() == c) {
+        if (p->isValidMove(begin, end)) {
+            theBoard[end.first][end.second] = p;
+        }
+    }
+}
+
+bool Board::isWhiteTurn() {
+    if (whosTurn == Colour::White) return true;
+    return false;
+}
+
+void Board::setPlayerFirst(Colour colour) {
+    if (colour == Colour::Black) {
+        whosTurn = Colour::Black;
+    }
+    else if (colour == Colour::White) {
+        whosTurn = Colour::White;
+    }
+    else {
+        throw runtime_error("Please enter a valid colour");
+    }
+}
+
+
 bool Board::isCheck(pair<int, int> kingPos) {
     if (kingPos.first == -1) {
-        kingPos = getPiece(PieceName::King)->getCoords();
+        kingPos = getPiece(PieceName::King, whosTurn)->getCoords();
     }
-    if (rounds % 2 == 0)   {
+    if (whosTurn == Colour::Black)   {
         for (auto &p : whitePieces) {
             if (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end()) {
                 return true;
@@ -117,7 +179,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
 
 bool Board::isCheckmate() {
     if (isCheck()) {
-        for (auto &cells : getPiece(PieceName::King)->getPosMoves()) {
+        for (auto &cells : getPiece(PieceName::King, whosTurn)->getPosMoves()) {
             if (isCheck(cells)) {
                 return true;
             }

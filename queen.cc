@@ -4,14 +4,14 @@ using namespace std;
 
 Queen::Queen(Colour c, int row, int col) : Piece(c, row, col, PieceName::Queen) {}
 
-bool Queen::isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) {
-    if (finalRow >= MAXCELL) return false; // check out of bounds
-    if (finalCol >= MAXCELL) return false; // check out of bounds
-    if ((initialRow == finalRow) && (initialCol == finalCol)) return false; // you cannot stay in the same position
+bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
+    if (final.first >= MAXCELL) return false; // check out of bounds
+    if (final.second >= MAXCELL) return false; // check out of bounds
+    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
 
-    if (initialRow == finalRow) return true; // move along same row
-    if (initialCol == finalCol) return true; // move along the same col
-    if ((finalCol - initialCol) == (finalRow - initialRow)) return true; // move diagnoally
+    if (initial.first == final.first) return true; // move along same row
+    if (initial.second == final.second) return true; // move along the same col
+    if ((final.second - initial.second) == (final.first - initial.first)) return true; // move diagnoally
     return false;
 }
 

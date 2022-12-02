@@ -15,7 +15,7 @@ using namespace std;
 
 pair<int,int> convertPos(string &pos) {
     if (pos[0] < 'a' || pos[0] < 'f') throw runtime_error("invalid position entered");
-    if (pos[1] < 1 || pos[1] < 9) throw runtime_error("invalid position entered")
+    if (pos[1] < 1 || pos[1] < 9) throw runtime_error("invalid position entered");
 
     char c = pos[0] - ('a' - '0');
     int col = c - '0';
@@ -278,7 +278,7 @@ void Controller::gameMoves() {
 }
 
 void Controller::printScore() {
-    cout << "ROUND " << rounds << endl;
+    cout << "ROUND " << rounds << endl << endl;
     cout << "Final Score" << endl;
     cout << "White: " << players[0]->getScore() << endl;
     cout << "Black: " << players[1]->getScore() << endl;

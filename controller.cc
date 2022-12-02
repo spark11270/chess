@@ -14,8 +14,8 @@ using namespace std;
 // ----------------------- Helper ----------------------------
 
 pair<int,int> convertPos(string &pos) {
-    if (pos[0] < 'a' || pos[0] < 'f') throw runtime_error("invalid position entered");
-    if (pos[1] < 1 || pos[1] < 9) throw runtime_error("invalid position entered");
+    if (pos[0] < 'a' || pos[0] > 'h') throw runtime_error("invalid position entered: " + pos);
+    if (pos[1] < '1' || pos[1] > '8') throw runtime_error("invalid position entered: " + pos);
 
     char c = pos[0] - ('a' - '0');
     int col = c - '0';
@@ -68,7 +68,7 @@ void Controller::initGame() {
     while(cin >> command) {
         char piece;
         string pos;
-        string player;
+        string colour;
         try {
             if (command == "+") {
                 cin >> piece;
@@ -123,21 +123,25 @@ void Controller::initGame() {
                 board->render();
             }
             else if (command == "=") {
-                cin >> player;
-                if (player == "black") board->setPlayerFirst(Colour::Black);
-                if (player == "white") board->setPlayerFirst(Colour::White);
+                cin >> colour;
+                if (colour == "black") board->setPlayerFirst(Colour::Black);
+                else if (colour == "white") board->setPlayerFirst(Colour::White);
                 else {
                     throw runtime_error("Please enter a valid colour");
                 }
             }
             else if (command == "done") {
-                if (board->uniqueKing() == false) throw runtime_error("You must have one kings for each player");
-                else if (board->validPawns() == false) throw runtime_error("You must not have Pawns on first and last row");
-                else {
-                    doneSetup = true;
-                    cout << "EXIT SETUP MODE" << endl;
-                    break;
+                cout << 2 << endl;
+                if (board->uniqueKing() == false) {
+                    throw runtime_error("You must have one kings for each player");
                 }
+                cout << 3 << endl;
+                if (board->validPawns() == false) {
+                    throw runtime_error("You must not have Pawns on first and last row");
+                }
+                doneSetup = true;
+                cout << "EXIT SETUP MODE" << endl;
+                break;
             }
             else {
                 throw runtime_error("Please enter a valid command for the setup");
@@ -223,6 +227,7 @@ void Controller::gameMoves() {
                 break;
             }
             else if (command == "move") {
+                cout << 0 << endl;
                 if (board->isWhiteTurn() == true) {
                     if(players[0]->getType() == 'c') {
                         // board->move();
@@ -245,6 +250,7 @@ void Controller::gameMoves() {
                     }
                 }
                 else {
+                    cout << 1 << endl;
                     if(players[1]->getType() == 'c') {
                         // board->move();
                         // board->render();

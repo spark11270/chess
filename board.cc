@@ -17,11 +17,6 @@ Board::Board() : W{nullptr}, B{nullptr} {
             theBoard[i][j] = nullptr;
         }
     }
-    // white/black pieces vector
-    for (int i = 0; i < 16; ++i) {
-        whitePieces[i] = nullptr;
-        blackPieces[i] = nullptr;
-    }
 }
 
 void Board::addPiece(shared_ptr<Piece> p) {
@@ -35,9 +30,29 @@ void Board::addPiece(shared_ptr<Piece> p) {
     theBoard[row][col] = p;
 }
 
-void Board::removePieceAt(pair<int, int> from) {
+void Board::removePieceAt(const pair<int, int> &from) {
+    Piece* tmp = theBoard[from.first][from.second];
     if (theBoard[from.first][from.second] != nullptr) {
         theBoard[from.first][from.second] = nullptr;
+        int pos = 0;
+        if (tmp->getColour() == Colour::Black) {
+            for (auto &piece : blackPieces) {
+                if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
+                    blackPieces.erase(blackPieces.begin() + pos);
+                    break;
+                }
+                ++pos;
+            }
+        }
+        else {
+            for (auto &piece : whitePieces) {
+                if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
+                    whitePieces.erase(whitePieces.begin() + pos);
+                    break;
+                }
+                ++pos;
+            }
+        }
     }
 }
 
@@ -60,12 +75,14 @@ bool Board::uniqueKing() {
 bool Board::validPawns() {
     for (auto &piece : whitePieces) {
         if (piece->getType() == PieceName::Pawn) {
+            cout << piece->getCoords().first << " " << piece->getCoords().second << endl;
             if (piece->getCoords().first == 7) return false;
         }
     }
 
     for (auto &piece : blackPieces) {
         if (piece->getType() == PieceName::Pawn) {
+            cout << piece->getCoords().first << " " << piece->getCoords().second << endl;
             if (piece->getCoords().first == 0) return false;
         }
     }
@@ -134,7 +151,7 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
 }
 
 
-void Board::move(pair<int, int> begin, pair<int, int> end, Colour c) {
+void Board::move(const pair<int, int> &begin, const pair<int, int> &end, const Colour &c) {
     shared_ptr<Piece> p = theBoard[begin.first][begin.second];
     if (c == Colour::White) {
         // white's turn

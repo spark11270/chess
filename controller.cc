@@ -8,7 +8,17 @@ using namespace std;
 
 Controller::Controller(Board* board) : board{board} {}
 
-initPlayer(const string& player, Colour colour) {
+// ----------------------- Helper ----------------------------
+pair<int,int> convertPos(string &pos) {
+    int row = stoi(pos[1]) - 1;
+    char colInChar = pos[0] - (pos[0] - '0');
+    int col = stoi(colInChar);
+    return make_pair(row,col);
+    
+}
+
+
+void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
         if (player == "human") player.push_back(make_unique<Human>(Colour::White));
         if (player == "computer1") player.push_back(make_unique<Computer>(Colour::White, 1));
@@ -27,6 +37,8 @@ initPlayer(const string& player, Colour colour) {
         throw runtime_error("Please enter a valid player: Human / Computer[1-4]");
     }
 }
+
+
 
 void Controller::playGame() {
     string line;
@@ -50,7 +62,15 @@ void Controller::playGame() {
 
                 while(cin >> command) {
                     try {
+                        if (command == "+") {
+                            string piece;
+                            string pos;
+                            cin >> piece;
+                            cin >> pos;
+                            pair<int, int> coords = convertPos(pos);
+                            
 
+                        }
                     }
                     
                 }

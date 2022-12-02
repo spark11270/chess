@@ -83,13 +83,13 @@ bool Board::isCheck(pair<int, int> kingPos) {
     }
     if (rounds % 2 == 0)   {
         for (auto &p : whitePieces) {
-            if (find(p->getPosMoves.begin(), p->getPosMoves.end(), kingPos) != p->getPosMoves.end()) {
+            if (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end()) {
                 return true;
             }
         }
     } else {
         for (auto &p : blackPieces) {
-           if (find(p->getPosMoves.begin(), p->getPosMoves.end(), kingPos) != p->getPosMoves.end()) {
+           if (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end()) {
                 return true;
             }
         }
@@ -99,7 +99,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
 
 bool Board::isCheckmate() {
     if (isCheck()) {
-        for (auto &cells : getPiece(PieceName::king)->getPosMoves) {
+        for (auto &cells : getPiece(PieceName::king)->getPosMoves()) {
             if (isCheck(cells)) {
                 return true;
             }

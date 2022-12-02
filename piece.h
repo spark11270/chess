@@ -28,14 +28,12 @@ class Piece {
 
         virtual bool isValidMove(int initialRow, int initialCol, int finalRow, int finalCol, bool isFirstMove) = 0;
         virtual std::vector<std::pair<int, int>> getPosMoves() = 0;
-        virtual bool isCheck() = 0;
-        virtual bool isCheckmate() = 0;
         virtual PieceName getType() = 0;
         std::pair<int, int> getCoords();
         void setCoords(int r, int c);
         Colour getColour();
 
-        ~Piece();
+        virtual ~Piece() = 0;
 
 };
 #endif

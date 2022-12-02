@@ -80,26 +80,26 @@ void Controller::initGame() {
                 cin >> piece;
                 cin >> pos;
                 pair<int, int> coords = convertPos(pos);
-                b->addPiece(piece, coords);
-                b->render();
+                board->addPiece(piece, coords);
+                board->render();
             }
             else if (command == "-") {
                 cin >> pos;
                 pair<int, int> coords = convertPos(pos);
-                b->removePieceAt(coords);
-                b->render;
+                board->removePieceAt(coords);
+                board->render;
             }
             else if (command == "=") {
                 cin >> player;
-                if (player == "black") b->setPlayerFirst(Colour::black);
-                if (player == "white") b->setPlayerFirst(Colour::white);
+                if (player == "black") board->setPlayerFirst(Colour::black);
+                if (player == "white") board->setPlayerFirst(Colour::white);
                 else {
                     throw runtime_error("Please enter a valid colour");
                 }
             }
             else if (command == "done") {
-                if (b->uniqueKing == false) throw runtime_error("You must have one kings for each player");
-                else if (b->validPawns == false) throw runtime_error("You must not have Pawns on first and last row");
+                if (board->uniqueKing == false) throw runtime_error("You must have one kings for each player");
+                else if (board->validPawns == false) throw runtime_error("You must not have Pawns on first and last row");
                 else {
                     doneSetup = true;
                     cout << "EXIT SETUP MODE" << endl;
@@ -167,7 +167,7 @@ void Controller::gameMoves() {
         line >> command;
         try {
             if (command == "resign") {
-                if (b->isWhiteTurn()) {
+                if (board->isWhiteTurn()) {
                     // black resigns
                     player[0]->updateScore();
                 }
@@ -178,7 +178,7 @@ void Controller::gameMoves() {
             }
             else if (command == "move") {
                 line = command + " " + line;
-                getMove(line)
+                if (board->)
             }
             else {
                 throw runtime_error("Please enter a valid command");

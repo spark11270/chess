@@ -10,3 +10,5 @@ void Piece::setCoords(int r, int c) {
 }
 
 Colour Piece::getColour() {return colour;}
+
+Piece::~Piece() {};

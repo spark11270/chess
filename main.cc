@@ -25,7 +25,7 @@ int main () {
         // For pawn promotion we can take cin from the promotion function 
 
         // Print board after each move
-        board->render();
+        //board->render();
       } else if (command == "resign") {
         // End game
         // Make sure board gets deleted
@@ -64,7 +64,7 @@ int main () {
       td = new TextDisplay(board);
 
       // Render board (both text and graphically)
-      board->render();
+      //board->render();
 
       inGame = true;
 

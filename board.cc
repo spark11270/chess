@@ -10,6 +10,30 @@
 
 using namespace std;
 
+// -------------------------------- Helper ------------------------------
+void printPieces(std::vector<std::shared_ptr<Piece>> pieces) {
+    for (auto &piece: pieces) {
+        if (piece->getType() == PieceName::Bishop) {
+            cout << "PieceName::Bishop" << endl;
+        }
+        if (piece->getType() == PieceName::Pawn) {
+            cout << "PieceName::Pawn" << endl;
+        }
+        if (piece->getType() == PieceName::King) {
+            cout << "PieceName::King" << endl;
+        }
+        if (piece->getType() == PieceName::Queen) {
+            cout << "PieceName::Queen" << endl;
+        }
+        if (piece->getType() == PieceName::Knight) {
+            cout << "PieceName::Knight" << endl;
+        }
+        if (piece->getType() == PieceName::Rook) {
+            cout << "PieceName::Rook" << endl;
+        }
+    }
+}
+
 Board::Board() : W{nullptr}, B{nullptr} {
     // construct theBoard
     for (int i = 0; i < MAXCELL; ++i) {
@@ -30,8 +54,8 @@ void Board::addPiece(shared_ptr<Piece> p) {
     theBoard[row][col] = p;
 }
 
-void Board::removePieceAt(const pair<int, int> &from) {
-    Piece* tmp = theBoard[from.first][from.second];
+void Board::removePieceAt(const std::pair<int, int> &from) {
+    shared_ptr<Piece> tmp = theBoard[from.first][from.second];
     if (theBoard[from.first][from.second] != nullptr) {
         theBoard[from.first][from.second] = nullptr;
         int pos = 0;
@@ -151,7 +175,7 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
 }
 
 
-void Board::move(const pair<int, int> &begin, const pair<int, int> &end, const Colour &c) {
+void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
     shared_ptr<Piece> p = theBoard[begin.first][begin.second];
     if (c == Colour::White) {
         // white's turn
@@ -194,7 +218,6 @@ void Board::setPlayerFirst(Colour colour) {
         throw runtime_error("Please enter a valid colour");
     }
 }
-
 
 bool Board::isCheck(pair<int, int> kingPos) {
     if (kingPos.first == -1) {

@@ -33,7 +33,7 @@ public:
     std::shared_ptr<Piece>getPiece(PieceName name, Colour colour);
     void addPiece(std::shared_ptr<Piece> p);
     void removePieceAt(const std::pair<int, int> &from);
-    void move(const std::pair<int, int> &begin, const std::pair<int, int> &end, const Colour &c);
+    void move(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c);
     bool isCheck(std::pair<int, int> kingPos = std::make_pair(-1, -1));
     bool isCheckmate();
     void clear();

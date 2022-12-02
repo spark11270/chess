@@ -10,7 +10,7 @@
 
 using namespace std;
 
-Board::Board() : W{nullptr}, B{nullptr}, rounds{0} {
+Board::Board() : W{nullptr}, B{nullptr} {
     // construct theBoard
     for (int i = 0; i < MAXCELL; ++i) {
         for (int j = 0; j < MAXCELL; ++j) {
@@ -73,46 +73,49 @@ bool Board::validPawns() {
 
 void Board::init() {
     // white pieces
-    theBoard[0][0] = make_shared<Rook>(Colour::White, 0, 0);
-    theBoard[0][1] = make_shared<Knight>(Colour::White, 1, 0);
-    theBoard[0][2] = make_shared<Bishop>(Colour::White, 2, 0);
-    theBoard[0][3] = make_shared<King>(Colour::White, 3, 0);
-    theBoard[0][4] = make_shared<Queen>(Colour::White, 4, 0);
-    theBoard[0][5] = make_shared<Bishop>(Colour::White, 5, 0);
-    theBoard[0][6] = make_shared<Knight>(Colour::White, 6, 0);
-    theBoard[0][7] = make_shared<Rook>(Colour::White, 7, 0);
+    theBoard[7][0] = make_shared<Rook>(Colour::White, 0, 0);
+    theBoard[7][1] = make_shared<Knight>(Colour::White, 1, 0);
+    theBoard[7][2] = make_shared<Bishop>(Colour::White, 2, 0);
+    theBoard[7][3] = make_shared<King>(Colour::White, 3, 0);
+    theBoard[7][4] = make_shared<Queen>(Colour::White, 4, 0);
+    theBoard[7][5] = make_shared<Bishop>(Colour::White, 5, 0);
+    theBoard[7][6] = make_shared<Knight>(Colour::White, 6, 0);
+    theBoard[7][7] = make_shared<Rook>(Colour::White, 7, 0);
 
     // black pieces
-    theBoard[7][0] = make_shared<Rook>(Colour::Black, 0, 0);
-    theBoard[7][1] = make_shared<Knight>(Colour::Black, 1, 0);
-    theBoard[7][2] = make_shared<Bishop>(Colour::Black, 2, 0);
-    theBoard[7][3] = make_shared<King>(Colour::Black, 3, 0);
-    theBoard[7][4] = make_shared<Queen>(Colour::Black, 4, 0);
-    theBoard[7][5] = make_shared<Bishop>(Colour::Black, 5, 0);
-    theBoard[7][6] = make_shared<Knight>(Colour::Black, 6, 0);
-    theBoard[7][7] = make_shared<Rook>(Colour::Black, 7, 0);
+    theBoard[0][0] = make_shared<Rook>(Colour::Black, 0, 0);
+    theBoard[0][1] = make_shared<Knight>(Colour::Black, 1, 0);
+    theBoard[0][2] = make_shared<Bishop>(Colour::Black, 2, 0);
+    theBoard[0][3] = make_shared<King>(Colour::Black, 3, 0);
+    theBoard[0][4] = make_shared<Queen>(Colour::Black, 4, 0);
+    theBoard[0][5] = make_shared<Bishop>(Colour::Black, 5, 0);
+    theBoard[0][6] = make_shared<Knight>(Colour::Black, 6, 0);
+    theBoard[0][7] = make_shared<Rook>(Colour::Black, 7, 0);
 
     for (int i = 0 ; i < MAXCELL; ++i) {
-        whitePieces.push_back(theBoard[i][0]);
-        blackPieces.push_back(theBoard[i][7]);
+        whitePieces.push_back(theBoard[i][7]);
+        blackPieces.push_back(theBoard[i][0]);
     }
 
     // pawns
     for (int i = 0; i < MAXCELL; ++i) {
-        theBoard[1][i] = make_shared<Pawn>(Colour::White, i, 1);
-        theBoard[6][i] = make_shared<Pawn>(Colour::Black, i, 6);
-        whitePieces.push_back(theBoard[i][1]);
-        blackPieces.push_back(theBoard[i][6]);
+        theBoard[6][i] = make_shared<Pawn>(Colour::White, i, 1);
+        theBoard[1][i] = make_shared<Pawn>(Colour::Black, i, 6);
+        whitePieces.push_back(theBoard[i][6]);
+        blackPieces.push_back(theBoard[i][1]);
     }
 }
+
 
 void Board::render() {
     notifyObservers();
 }
 
+
 vector<vector<shared_ptr<Piece>>> Board::getBoard() {
     return theBoard;
 }
+
 
 std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
     if (colour == Colour::Black)   {
@@ -130,12 +133,13 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
     }
 }
 
+
 void Board::move(pair<int, int> begin, pair<int, int> end, Colour c) {
     shared_ptr<Piece> p = theBoard[begin.first][begin.second];
     if (c == Colour::White) {
         // white's turn
-        cout << p->isValidMove(begin, end) << endl;
-        if (isWhiteTurn() && p->getColour() == c) {
+        // isValidMove() is false;
+        if (isWhiteTurn() && p->getColour() == c && p->isValidMove(begin, end)) {
             theBoard[end.first][end.second] = p;
             p->modifyCoords(end);
             theBoard[begin.first][begin.second] = nullptr;
@@ -146,7 +150,7 @@ void Board::move(pair<int, int> begin, pair<int, int> end, Colour c) {
     }
     else {
         // black's turn
-        if (!isWhiteTurn() && p->getColour() == c) {
+        if (!isWhiteTurn() && p->getColour() == c && p->isValidMove(begin, end)) {
             theBoard[end.first][end.second] = p;
             p->modifyCoords(end);
             theBoard[begin.first][begin.second] = nullptr;
@@ -207,12 +211,19 @@ bool Board::isCheckmate() {
 }
 
 void Board::clear() {
+    // turn = white by default
+    whosTurn = Colour::White;
+
+    // clear out the pieces of the previous game;
+    whitePieces.clear();
+    blackPieces.clear();
     // construct theBoard
     for (int i = 0; i < MAXCELL; i++) {
         for (int j = 0; j < MAXCELL; j++) {
             theBoard[i][j] = nullptr;
         }
     }
+
 }
 
 Board::~Board() {}

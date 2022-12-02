@@ -22,7 +22,7 @@ pair<int,int> convertPos(string &pos) {
 
 // -----------------------------------------------------------
 
-Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false} {}
+Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
 
 void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
@@ -175,6 +175,13 @@ void Controller::playGame() {
                 cin >> bPlayer;
                 initPlayer(bPlayer, Colour::Black);
                 gameMoves();
+                if (!newRound) break;
+                board->clear();
+                doneSetup = false;
+                inGame = false;
+                for (auto &player : players) {
+                    player->resetScore();
+                }
             }
             else {
                 throw runtime_error("Please enter a valid command: " + command);
@@ -201,18 +208,22 @@ void Controller::gameMoves() {
             if (command == "resign") {
                 if (board->isWhiteTurn()) {
                     // black resigns
+                    cout << "White Wins!" << endl;
                     players[0]->updateScore();
                 }
                 else {
                     // white resigns
+                    cout << "Black Wins!" << endl;
                     players[1]->updateScore();
                 }
-                board->render();
+                printScore();
+                break;
             }
             else if (command == "move") {
                 if (board->isWhiteTurn() == true) {
                     if(players[0]->getType() == 'c') {
                         // board->move();
+                        // board->render();
                         // continue;
                     }
                     else {
@@ -228,16 +239,28 @@ void Controller::gameMoves() {
                             // no promotion
                             board->move(fromCoords, toCoords, Colour::White);
                         }
-
                     }
                 }
                 else {
-                    // black's turn
-                    ss >> from;
-                    pair<int, int> fromCoords = convertPos(from);
-                    ss >> to;
-                    pair<int, int> toCoords = convertPos(to);
-                    board->move(fromCoords, toCoords, Colour::Black);
+                    if(players[1]->getType() == 'c') {
+                        // board->move();
+                        // board->render();
+                        // continue;
+                    }
+                    else {
+                        ss >> from;
+                        pair<int, int> fromCoords = convertPos(from);
+                        ss >> to;
+                        pair<int, int> toCoords = convertPos(to);
+                        if (ss >> prom) {
+                            // handle promotion
+                            cout << prom << endl;
+                        }
+                        else {
+                            // no promotion
+                            board->move(fromCoords, toCoords, Colour::Black);
+                        }
+                    }
                 }
                 board->render();
             }
@@ -249,4 +272,26 @@ void Controller::gameMoves() {
             cerr << f.what() << endl;
         }
     }
+}
+
+void Controller::printScore() {
+    cout << "ROUND " << rounds << endl;
+    cout << "Final Score" << endl;
+    cout << "White: " << players[0]->getScore() << endl;
+    cout << "Black: " << players[1]->getScore() << endl;
+    
+    char ans;
+    cout << "Do you want to play again? [Y/N]" << endl;
+    while (true) {
+        if (cin.eof()) break;
+        cin >> ans;
+        while (cin >> ans) {
+            continue;
+        }
+        if (cin.eof()) break;
+        if (ans == 'Y') newRound = true;
+        if (ans == 'N') newRound = false;
+        cout << "Please either choose Y/N" << endl;
+    }
+
 }

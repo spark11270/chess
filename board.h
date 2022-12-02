@@ -19,7 +19,6 @@ class Board : public Subject {
     std::vector<std::shared_ptr<Piece>> blackPieces{std::vector<std::shared_ptr<Piece>>{16}};
     Player *W; 
     Player *B;
-    int rounds;
     Colour whosTurn = Colour::White;
 
 public:

@@ -17,7 +17,7 @@ public:
     int getScore();
     void updateScore(); // increment score
     virtual char getType() = 0;
-
+    void resetScore();
     virtual ~Player() = 0;
 };
 

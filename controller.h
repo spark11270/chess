@@ -18,6 +18,8 @@ class Controller {
     std::vector<std::unique_ptr<Player>> players;
     bool inGame;
     bool doneSetup;
+    int rounds;
+    bool newRound;
 
 public:
     Controller(Board* board);

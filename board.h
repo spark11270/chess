@@ -39,7 +39,7 @@ public:
     std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
     // returns the position of the King of the given colour
     std::shared_ptr<Piece> getKing();
-     void addPiece(std::shared_ptr<Piece> p);
+    void addPiece(std::pair<int, int> pos, char c);
     void removePieceAt(std::pair<int, int> from);
     void move(std::pair<int, int> &begin, std::pair<int, int> &end);
     void promotion(std::pair<int, int> &begin, std::pair<int, int> &end, char prom);
@@ -65,6 +65,8 @@ public:
     bool isValidTurn(const std::pair<int, int> &from);
     // set whosturn to the next player
     void nextTurn();
+    // logic for computer
+    std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> getAllValidMoves(bool whiteTurn);
     ~Board();
 };
 

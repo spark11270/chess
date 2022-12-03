@@ -77,45 +77,7 @@ void Controller::initGame() {
                 cin >> pos;
                 shared_ptr<Piece> thePiece;
                 pair<int, int> coords = convertPos(pos);
-                switch(piece) {
-                    case 'K':
-                        thePiece = make_shared<King>(Colour::White, coords.first, coords.second, board);
-                        break;
-                    case 'Q':
-                        thePiece = make_shared<Queen>(Colour::White, coords.first, coords.second, board);
-                        break;
-                    case 'N':
-                        thePiece = make_shared<Knight>(Colour::White, coords.first, coords.second, board);
-                        break;
-                    case 'B':
-                        thePiece = make_shared<Bishop>(Colour::White, coords.first, coords.second, board);
-                        break;
-                    case 'R':
-                        thePiece = make_shared<Rook>(Colour::White, coords.first, coords.second, board);
-                        break;
-                    case 'P': 
-                        thePiece = make_shared<Pawn>(Colour::White, coords.first, coords.second, board);
-                        break;
-                    case 'k':
-                        thePiece = make_shared<King>(Colour::Black, coords.first, coords.second, board);
-                        break;
-                    case 'q':
-                        thePiece = make_shared<Queen>(Colour::Black, coords.first, coords.second, board);
-                        break;
-                    case 'n':
-                        thePiece = make_shared<Knight>(Colour::Black, coords.first, coords.second, board);
-                        break;
-                    case 'b':
-                        thePiece = make_shared<Bishop>(Colour::Black, coords.first, coords.second, board);
-                        break;
-                    case 'r':
-                        thePiece = make_shared<Rook>(Colour::Black, coords.first, coords.second, board);
-                        break;
-                    case 'p':
-                        thePiece = make_shared<Pawn>(Colour::Black, coords.first, coords.second, board);
-                        break;
-                }
-                board->addPiece(thePiece);
+                board->addPiece(coords, piece);
                 board->render();
             }
             else if (command == "-") {
@@ -236,14 +198,13 @@ void Controller::gameMoves() {
                 break;
             }
             else if (command == "move") {
-                cout << "at controller" << endl;
-                cout << "getKing()->getCoords(): " << board->getKing()->getCoords().first << ", " << board->getKing()->getCoords().second << endl;
                 if (board->isCheck(board->getKing()->getCoords())) {
                     players[1]->updateScore();
                     printScore();
                     break;
                 }
                 if (board->isWhiteTurn() == true) {
+                    cout << "next check" << endl;
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         players[0]->move(board, uselsssCord, uselsssCord);
@@ -261,6 +222,9 @@ void Controller::gameMoves() {
                                 if (toCoords.first != 0) {
                                     throw runtime_error ("White has not reached into the enemy's back row");
                                 }
+                            }
+                            if (prom == 'k' || prom == 'K') {
+                                throw runtime_error("You cannot promote to King");
                             }
                            board->promotion(fromCoords, toCoords, prom);
                         }
@@ -281,7 +245,7 @@ void Controller::gameMoves() {
                         ss >> to;
                         pair<int, int> toCoords = convertPos(to);
                         if (ss >> prom) {
-                                                       if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");
                             } 
                             if (board->getWhosTurn() == Colour::Black) {
@@ -289,7 +253,9 @@ void Controller::gameMoves() {
                                     throw runtime_error ("Black has not reached into the enemy's back row");
                                 }
                             }
-                            cout << prom << endl;
+                            if (prom == 'k' || prom == 'K') {
+                                throw runtime_error("You cannot promote to King");
+                            }
                             board->promotion(fromCoords, toCoords, prom);
                         }
                         else {

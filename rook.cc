@@ -57,7 +57,6 @@ vector<pair<int, int>> Rook::getPosMoves() {
         pos.second = getCoords().second;
         if (i != getCoords().first) {
             if (isValidMove(getCoords(), pos)) {
-                cout << pos.first << ", " << pos.second << endl;
                 moves.push_back(pos);
             }
         }

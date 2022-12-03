@@ -49,18 +49,58 @@ Board::Board() : W{nullptr}, B{nullptr} {
     }
 }
 
-void Board::addPiece(shared_ptr<Piece> p) {
-    if (p->getColour() == Colour::White) {
-        whitePieces.push_back(p);
+void Board::addPiece(pair<int, int> coords, char piece) {
+    shared_ptr<Piece> thePiece;
+    switch(piece) {
+        case 'K':
+            thePiece = make_shared<King>(Colour::White, coords.first, coords.second, this);
+            break;
+        case 'Q':
+            thePiece = make_shared<Queen>(Colour::White, coords.first, coords.second, this);
+            break;
+        case 'N':
+            thePiece = make_shared<Knight>(Colour::White, coords.first, coords.second, this);
+            break;
+        case 'B':
+            thePiece = make_shared<Bishop>(Colour::White, coords.first, coords.second, this);
+            break;
+        case 'R':
+            thePiece = make_shared<Rook>(Colour::White, coords.first, coords.second, this);
+            break;
+        case 'P': 
+            thePiece = make_shared<Pawn>(Colour::White, coords.first, coords.second, this);
+            break;
+        case 'k':
+            thePiece = make_shared<King>(Colour::Black, coords.first, coords.second, this);
+            break;
+        case 'q':
+            thePiece = make_shared<Queen>(Colour::Black, coords.first, coords.second, this);
+            break;
+        case 'n':
+            thePiece = make_shared<Knight>(Colour::Black, coords.first, coords.second, this);
+            break;
+        case 'b':
+            thePiece = make_shared<Bishop>(Colour::Black, coords.first, coords.second, this);
+            break;
+        case 'r':
+            thePiece = make_shared<Rook>(Colour::Black, coords.first, coords.second, this);
+            break;
+        case 'p':
+            thePiece = make_shared<Pawn>(Colour::Black, coords.first, coords.second, this);
+            break;
+    }
+    if (thePiece->getColour() == Colour::White) {
+        whitePieces.push_back(thePiece);
     }
     else {
-        blackPieces.push_back(p);
+        blackPieces.push_back(thePiece);
     }
 
-    int row = p->getCoords().first;
-    int col = p->getCoords().second;
-    theBoard[row][col] = p;
+    int row = thePiece->getCoords().first;
+    int col = thePiece->getCoords().second;
+    theBoard[row][col] = thePiece;
 }
+
 
 void Board::removePieceAt(std::pair<int, int> from) {
     shared_ptr<Piece> tmp = theBoard[from.first][from.second];
@@ -234,47 +274,10 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     nextTurn();
 }
 
-void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c, char prom) {
+void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, char prom) {
     move(begin, end);
     removePieceAt(end);
-    shared_ptr<Piece> p = getPieceAt(begin);
-    if ((end.first == 0 && p->getColour() == Colour::White)) {
-        switch(prom) {
-            case 'R':
-                theBoard[end.first][end.second] = make_shared<Rook>(Colour::White, end.first, end.second, this);
-                break;
-            case 'B':
-                theBoard[end.first][end.second] = make_shared<Bishop>(Colour::White, end.first, end.second, this);
-                break;
-            case 'N':
-                theBoard[end.first][end.second] = make_shared<Knight>(Colour::White, end.first, end.second, this);
-                break;
-            case 'Q':
-                theBoard[end.first][end.second] = make_shared<Queen>(Colour::White, end.first, end.second, this);
-                break;
-        }
-    } else if (end.first == 7 && p->getColour() == Colour::Black) {
-        switch(prom) {
-            case 'r':
-                theBoard[end.first][end.second] = make_shared<Rook>(Colour::Black, end.first, end.second, this);
-                break;
-            case 'b':
-                theBoard[end.first][end.second] = make_shared<Bishop>(Colour::Black, end.first, end.second, this);
-                break;
-            case 'n':
-                theBoard[end.first][end.second] = make_shared<Knight>(Colour::Black, end.first, end.second, this);
-                break;
-            case 'q':
-                theBoard[end.first][end.second] = make_shared<Queen>(Colour::Black, end.first, end.second, this);
-                break;
-        }
-    }
-    if (whosTurn == Colour::White) {
-        blackPieces.push_back(theBoard[end.first][end.second]);
-    }
-    else {
-        whitePieces.push_back(theBoard[end.first][end.second]);
-    }
+    addPiece(end, prom);
 }
 
 bool Board::isWhiteTurn() {
@@ -311,7 +314,9 @@ bool Board::isCheck(pair<int, int> kingPos) {
         }
     } else {
         for (auto &p : blackPieces) {
-            switch(p->getType()) {
+            cout <<"i ran" << endl;
+            PieceName name = p->getType();
+            switch(name) {
                 case PieceName::Bishop :
                     cout << "Bishop moves: " << endl;
                     break;
@@ -329,11 +334,11 @@ bool Board::isCheck(pair<int, int> kingPos) {
                     break;
             }
             for (auto &m : p->getPosMoves()) {
-                cout << m.first <<  ", " << m.second << endl;
+                cout << m.first << ", " << m.second << endl;
             }
-        //    if ((p->getType() != PieceName::King) && (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end())) {
-        //         return true;
-        //     }
+           if ((p->getType() != PieceName::King) && (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end())) {
+                return true;
+            }
         }
     }
     return false;
@@ -379,7 +384,6 @@ bool Board::hasOpponent(Colour c, const pair<int, int> pos) {
 }
 
 bool Board::hasObstacle(pair<int, int> pos) {
-    cout << "HI THERE STEP 5-8-1" << pos.first << " " << pos.second << endl;
     shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
     return tmp != nullptr;
 }
@@ -432,7 +436,7 @@ vector<pair<shared_ptr<Piece>, pair<int, int>>> Board::getAllValidMoves(bool whi
     return validMovePairs;
 }
 
-bool Board::willLeadToCheck(std::pair<int, int> &to) {
-    pair<int, int> kingPos = getPiece(PieceName::King, whosTurn)->getCoords();
-    return kingPos.first == to.first && kingPos.second == to.second;
-}
+
+
+
+

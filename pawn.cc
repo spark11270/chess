@@ -45,7 +45,7 @@ vector<pair<int, int>> Pawn::getPosMoves() {
         pos.first = getCoords().first + 1;
         pos.second = getCoords().second;
         if (isValidMove(getCoords(), pos)) {
-             moves.push_back(pos);
+            moves.push_back(pos);
         }
 
         // can move 2 square forwards only if first move

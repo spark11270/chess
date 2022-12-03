@@ -17,6 +17,7 @@ class Computer : public Player {
         Computer(Colour c, int lvl);
         ~Computer();
 
+        char getType() override;
         std::shared_ptr<LVL> getAI();
 
         void move(Board *board, std::pair<int, int> from, std::pair<int, int> to) override;

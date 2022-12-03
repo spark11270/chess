@@ -9,6 +9,7 @@ public:
     Human(Colour colour);
     ~Human();
 
+    char getType() override;
     void move(Board *board, std::pair<int, int> from, std::pair<int, int> to) override;
 };
 

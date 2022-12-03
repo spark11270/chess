@@ -31,10 +31,15 @@ Computer::Computer(Colour c, int lvl) : Player(c, 0) {
     }
 }
 
+
 Computer::~Computer() {}
 
 std::shared_ptr<LVL> Computer::getAI() {
     return ai;
+}
+
+char Computer::getType() {
+    return 'c';
 }
 
 void Computer::move(Board *board, pair<int, int> from, pair<int, int> to) {

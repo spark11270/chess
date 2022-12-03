@@ -1,4 +1,5 @@
 #include "board.h"
+#include "move.h"
 #include "king.h"
 #include "queen.h"
 #include "knight.h"
@@ -199,12 +200,26 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     if (!validMove) {
         throw runtime_error("Illegal move");
     }
-
+    
     // check for if the move will lead to checkmate
+    // if (isCheck()) {
+    //     if (getWhosTurn() == Colour::White) {
+    //         throw runtime_error("White King is in check");
+    //     } else {
+    //         throw runtime_error("Black King is in check");
+    //     }
+    // }
 
+    // capture
+    // if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
+    //     Move m{begin.first, begin.second, end.first, end.second, p};
+    //     m.setCaptured(getPieceAt(end));
+    //     totalMoves.push_back(m);
+    // }
+    
     // remove the piece
-    removePieceAt(begin);
-
+    theBoard[begin.first][begin.second] = nullptr;
+    
     // add the piece
     if (getPieceAt(end) != nullptr) {
         removePieceAt(end); 
@@ -216,6 +231,50 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
 
     // take the next turn
     nextTurn();
+}
+
+void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c, char prom) {
+    move(begin, end);
+    removePieceAt(end);
+    shared_ptr<Piece> p = getPieceAt(begin);
+    if ((end.first == 0 && p->getColour() == Colour::White)) {
+        switch(prom) {
+            case 'R':
+                theBoard[end.first][end.second] = make_shared<Rook>(Colour::White, end.first, end.second, this);
+                break;
+            case 'B':
+                theBoard[end.first][end.second] = make_shared<Bishop>(Colour::White, end.first, end.second, this);
+                break;
+            case 'N':
+                theBoard[end.first][end.second] = make_shared<Knight>(Colour::White, end.first, end.second, this);
+                break;
+            case 'Q':
+                theBoard[end.first][end.second] = make_shared<Queen>(Colour::White, end.first, end.second, this);
+                break;
+        }
+    } else if (end.first == 7 && p->getColour() == Colour::Black) {
+        switch(prom) {
+            case 'r':
+                theBoard[end.first][end.second] = make_shared<Rook>(Colour::Black, end.first, end.second, this);
+                break;
+            case 'b':
+                theBoard[end.first][end.second] = make_shared<Bishop>(Colour::Black, end.first, end.second, this);
+                break;
+            case 'n':
+                theBoard[end.first][end.second] = make_shared<Knight>(Colour::Black, end.first, end.second, this);
+                break;
+            case 'q':
+                theBoard[end.first][end.second] = make_shared<Queen>(Colour::Black, end.first, end.second, this);
+
+                break;
+        }
+    }
+    if (whosTurn == Colour::White) {
+        blackPieces.push_back(theBoard[end.first][end.second]);
+    }
+    else {
+        whitePieces.push_back(theBoard[end.first][end.second]);
+    }
 }
 
 bool Board::isWhiteTurn() {
@@ -253,6 +312,10 @@ bool Board::isCheck(pair<int, int> kingPos) {
         }
     }
     return false;
+}
+
+Colour Board::getWhosTurn() {
+    return whosTurn;
 }
 
 bool Board::isCheckmate() {
@@ -334,22 +397,14 @@ vector<pair<pair<int, int>, pair<int, int>>> Board::getAllValidMoves(bool whiteT
     vector<shared_ptr<Piece>> &pieces = whiteTurn ? whitePieces : blackPieces;
     int piecesSize = pieces.size();
     vector<pair<pair<int, int>, pair<int, int>>> validMovePairs;
-    cout << "HI THERE STEP 1" << endl;
     for (int row = 0; row < MAXCELL; ++row) {
         for (int col = 0; col < MAXCELL; ++col) {
             for (int idx = 0; idx < piecesSize; ++idx) {
-                cout << "HI THERE STEP 2" << endl;
                 shared_ptr<Piece> p = pieces.at(idx);
-                cout << "HI THERE STEP 3" << endl;
                 pair<int, int> from = p->getCoords();
-                cout << "HI THERE STEP 4" << endl;
                 pair<int, int> to = make_pair(row, col);
-                cout << "HI THERE STEP 5" << endl;
                 printPiece(p);
-                cout << from.first << " " << from.second << " & " << to.first << " " << to.second << endl;
                 bool validMove = p->isValidMove(from, to);
-
-                cout << "HI THERE STEP 6" << endl;
                 if (validMove) {
                     // TO-DO: check 'will lead to check'. don't add this
                     validMovePairs.push_back(make_pair(from, to));
@@ -357,7 +412,6 @@ vector<pair<pair<int, int>, pair<int, int>>> Board::getAllValidMoves(bool whiteT
             }
         }
     }
-    cout << "HI THERE STEP 7" << endl;
     validMovePairs.shrink_to_fit();
     return validMovePairs;
 }

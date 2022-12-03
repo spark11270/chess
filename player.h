@@ -17,6 +17,7 @@ public:
 
     Colour getColour();
     int getScore();
+    virtual char getType() = 0;
 
     void updateScore(); // increment score
     void resetScore();

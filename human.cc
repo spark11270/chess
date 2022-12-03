@@ -8,6 +8,10 @@ Human::Human(Colour c) : Player(c, 0) {}
 
 Human::~Human() {}
 
+char Human::getType() {
+    return 'h';
+}
+
 void Human::move(Board *board, std::pair<int, int> from, std::pair<int, int> to) {
     board->move(from, to);
 }

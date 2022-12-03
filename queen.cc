@@ -50,28 +50,38 @@ bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) 
     } else if (abs(final.second - initial.second) == abs(final.first - initial.first)) {
         int x = 1;
         int y = 1;
+        if (final.first >= MAXCELL) return false; // check out of bounds
+        if (final.second >= MAXCELL) return false; // check out of bounds
 
-        pair<int, int> xyCoords;
-        xyCoords.first = initial.first;
-        xyCoords.second = initial.second;
+        if (final.first < 0) return false; // check out of bounds
+        if (final.second < 0) return false; // check out of bounds;
         
+        if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
+        if ((final.second - initial.second) == (final.first - initial.first)) return true;
+        return false;
+    
+        // check is there is an ally in the final destination
+        if (getTheBoard()->hasAlly(getColour(), final)) return false;
+        // check if moves diagnoally     
+        if (abs(final.second - initial.second) != abs(final.first - initial.first)) return false; 
+        // check if there is an obstacle on the way
+
         if ((final.second - initial.second) < 0) {
+            // moves in negative x direction
             x = -1;
         }
         if ((final.first - initial.first) < 0) {
+            // moives in negative y direction
             y = -1;
         }
 
-        pair<int, int> dir;
-        dir.first = y;
-        dir.second = x;
-        xyCoords.first += dir.first;
-        xyCoords.second += dir.second;
+        pair<int, int> dir = make_pair(y, x); // y = row && x = column
+        pair<int, int> xyCoords = make_pair(initial.first, initial.first);
 
         for (int i = 1; i < abs(final.second - initial.second); ++i) {
-            if(getTheBoard()->hasObstacle(xyCoords)) return false;
             xyCoords.first += dir.first;
             xyCoords.second += dir.second;
+            if(getTheBoard()->hasObstacle(xyCoords)) return false;
         }
         return true;
     }

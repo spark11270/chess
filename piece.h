@@ -14,10 +14,10 @@ class Board;
 
 // Decorator for Cell
 class Piece {
-    Board *b;
-    PieceName type;   
     Colour colour;
     std::pair<int, int> coords;
+    PieceName type;
+    Board *b;  
     bool isFirstMove;
 
     public:

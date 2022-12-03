@@ -23,6 +23,9 @@ char printPiece(PieceName n, Colour c) {
         } else if (n == PieceName::Pawn) {
             return 'P';
         }
+        else {
+            return ' ';
+        }
     } else {
         if (n == PieceName::King) {
             return 'k';
@@ -36,6 +39,9 @@ char printPiece(PieceName n, Colour c) {
             return 'n';
         } else if (n == PieceName::Pawn) {
             return 'p';
+        }
+        else {
+            return ' ';
         }
     }
 }

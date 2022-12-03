@@ -23,25 +23,23 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
     // check if moves diagnoally     
     if (abs(final.second - initial.second) != abs(final.first - initial.first)) return false; 
     // check if there is an obstacle on the way
-    pair<int, int> xyCoords = make_pair(initial.first, initial.second);
 
     if ((final.second - initial.second) < 0) {
+        // moves in negative x direction
         x = -1;
     }
     if ((final.first - initial.first) < 0) {
+        // moives in negative y direction
         y = -1;
     }
 
-    pair<int, int> dir;
-    dir.first = y;
-    dir.second = x;
-    xyCoords.first += dir.first;
-    xyCoords.second += dir.second;
+    pair<int, int> dir = make_pair(y, x); // y = row && x = column
+    pair<int, int> xyCoords = make_pair(initial.first, initial.first);
 
     for (int i = 1; i < abs(final.second - initial.second); ++i) {
-        if(getTheBoard()->hasObstacle(xyCoords)) return false;
         xyCoords.first += dir.first;
         xyCoords.second += dir.second;
+        if(getTheBoard()->hasObstacle(xyCoords)) return false;
     }
     return true;
 }

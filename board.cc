@@ -119,6 +119,7 @@ bool Board::validPawns() {
             if (piece->getCoords().first == 0) return false;
         }
     }
+    return true;
 }
 
 void Board::init() {
@@ -167,16 +168,16 @@ vector<vector<shared_ptr<Piece>>> Board::getBoard() {
 }
 
 
-std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
-    if (colour == Colour::Black)   {
+std::shared_ptr<Piece> Board::getKing() {
+    if (whosTurn == Colour::Black)   {
         for (auto &p : blackPieces) {
-            if (p->getType() == name) {
+            if (p->getType() == PieceName::King) {
                 return p;
             }
         }
     } else {
         for (auto &p : whitePieces) {
-            if (p->getType() == name) {
+            if (p->getType() == PieceName::King) {
                 return p;
             }
         }
@@ -202,13 +203,13 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     }
     
     // check for if the move will lead to checkmate
-    // if (isCheck()) {
-    //     if (getWhosTurn() == Colour::White) {
-    //         throw runtime_error("White King is in check");
-    //     } else {
-    //         throw runtime_error("Black King is in check");
-    //     }
-    // }
+    if (isCheck(getKing()->getCoords())) {
+        if (getWhosTurn() == Colour::White) {
+            throw runtime_error("White King is in check");
+        } else {
+            throw runtime_error("Black King is in check");
+        }
+    }
 
     // capture
     // if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
@@ -265,7 +266,6 @@ void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, Colo
                 break;
             case 'q':
                 theBoard[end.first][end.second] = make_shared<Queen>(Colour::Black, end.first, end.second, this);
-
                 break;
         }
     }
@@ -295,20 +295,45 @@ void Board::setPlayerFirst(Colour colour) {
 }
 
 bool Board::isCheck(pair<int, int> kingPos) {
-    if (kingPos.first == -1) {
-        kingPos = getPiece(PieceName::King, whosTurn)->getCoords();
+    // debugging
+    if (whosTurn == Colour::White) {
+        cout << "white king pos: ";
+    } else {
+        cout << "black king pos: ";
     }
+    cout << kingPos.first <<", " << kingPos.second << endl;
+
     if (whosTurn == Colour::Black)   {
         for (auto &p : whitePieces) {
-            if (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end()) {
+            if ((p->getType() != PieceName::King) && (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end())) {
                 return true;
             }
         }
     } else {
         for (auto &p : blackPieces) {
-           if (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end()) {
-                return true;
+            switch(p->getType()) {
+                case PieceName::Bishop :
+                    cout << "Bishop moves: " << endl;
+                    break;
+                case PieceName::Queen :
+                    cout << "Queen moves: " << endl;
+                    break;
+                case PieceName::Pawn :
+                    cout << "Pawn moves: " << endl;
+                    break;
+                case PieceName::Rook :
+                    cout << "Rook moves: " << endl;
+                    break;
+                case PieceName::Knight :
+                    cout << "Knight moves: " << endl;
+                    break;
             }
+            for (auto &m : p->getPosMoves()) {
+                cout << m.first << ', ' << m.second << endl;
+            }
+        //    if ((p->getType() != PieceName::King) && (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end())) {
+        //         return true;
+        //     }
         }
     }
     return false;
@@ -319,8 +344,8 @@ Colour Board::getWhosTurn() {
 }
 
 bool Board::isCheckmate() {
-    if (isCheck()) {
-        for (auto &cells : getPiece(PieceName::King, whosTurn)->getPosMoves()) {
+    if (isCheck(getKing()->getCoords())) {
+        for (auto &cells : getKing()->getPosMoves()) {
             if (isCheck(cells)) {
                 return true;
             }

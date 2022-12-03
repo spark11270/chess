@@ -51,18 +51,27 @@ bool Rook::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)  
 vector<pair<int, int>> Rook::getPosMoves() {
     vector<pair<int, int>> moves;
     // vertical
-    for (int i = 1; i <= getCoords().first; ++i) {
-        moves.push_back(make_pair(getCoords().first - i, getCoords().second));
-    }
-    for (int i = 1; i <= MAXCELL - getCoords().first; ++i) {
-        moves.push_back(make_pair(getCoords().first + i, getCoords().second));
+    for (int i = 0; i < MAXCELL; ++i) {
+        pair<int, int> pos;
+        pos.first = i;
+        pos.second = getCoords().second;
+        if (i != getCoords().first) {
+            if (isValidMove(getCoords(), pos)) {
+                cout << pos.first << ", " << pos.second << endl;
+                moves.push_back(pos);
+            }
+        }
     }
     // horizontal
-    for (int i = 1; i <= getCoords().second; ++i) {
-        moves.push_back(make_pair(getCoords().first, getCoords().second - i));
-    }
-    for (int i = 1; i <= MAXCELL - getCoords().second; ++i) {
-        moves.push_back(make_pair(getCoords().first, getCoords().second + i));
+     for (int j = 0; j < MAXCELL; ++j) {
+         pair<int, int> pos;
+         pos.first = getCoords().first;
+         pos.second = j;
+        if (j != getCoords().second) {
+            if (isValidMove(getCoords(), pos)) {
+                moves.push_back(pos);
+            }
+        }
     }
     return moves;
 }

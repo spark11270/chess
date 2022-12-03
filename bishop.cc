@@ -48,20 +48,43 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
 
 vector<pair<int, int>> Bishop::getPosMoves() {
     vector<pair<int, int>> moves;
-    for (int i = 1; i <= getCoords().first; ++i) {
-        if (getCoords().second - i >= 0) {
-            // backward diagonal
-            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
-            // forward diagonal
-            moves.push_back(make_pair(getCoords().first - i, getCoords().second + i));
+
+    for (int i = 1; i < MAXCELL; ++i) {
+        pair<int, int> pos;
+        // before piece
+        if (i <= getCoords().first) {
+            if (getCoords().second - i >= 0) {
+                pos.first = getCoords().first - i;
+                pos.second = getCoords().second - i;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            }
+            if (getCoords().second + i < MAXCELL) {
+                pos.first = getCoords().first - i;
+                pos.second = getCoords().second + i;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            }
         }
-    }
-    for (int i = 1; i <= MAXCELL - getCoords().first; ++i) {
-        if (getCoords().second + i <= MAXCELL) {
-            // forward diagonal
-            moves.push_back(make_pair(getCoords().first + i, getCoords().second - i));
-            // bckward diagonal
-            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
+        // after piece
+        if (i > getCoords().first) {
+            int j = i - getCoords().first;
+            if (getCoords().second - j >= 0 ) {
+                pos.first = i;
+                pos.second = getCoords().second - j;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            } 
+            if ( getCoords().second + j < MAXCELL) {
+                pos.first = i;
+                pos.second = getCoords().second + j;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            }
         }
     }
     

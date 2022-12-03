@@ -48,46 +48,20 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
 
 vector<pair<int, int>> Bishop::getPosMoves() {
     vector<pair<int, int>> moves;
-
-    for (int i = 1; i < MAXCELL; ++i) {
-        pair<int, int> pos;
-        // before piece
-        if (i <= getCoords().first) {
-            if (getCoords().second - i >= 0) {
-                pos.first = getCoords().first - i;
-                pos.second = getCoords().second - i;
-                if (isValidMove(getCoords(), pos)) {
+    
+    for (int i = 0; i < MAXCELL; i++) {
+        for (int j = 0; j < MAXCELL; j++) {
+            if ((i - getCoords().first == j - getCoords().second) || (i - getCoords().first == -(j - getCoords().second))) {
+                if (i != getCoords().first && j!= getCoords().second) {
+                    pair<int, int> pos = make_pair(i, j);
+                    if (isValidMove(getCoords(), pos)) {
                         moves.push_back(pos);
-                }
-            }
-            if (getCoords().second + i < MAXCELL) {
-                pos.first = getCoords().first - i;
-                pos.second = getCoords().second + i;
-                if (isValidMove(getCoords(), pos)) {
-                        moves.push_back(pos);
-                }
-            }
-        }
-        // after piece
-        if (i > getCoords().first) {
-            int j = i - getCoords().first;
-            if (getCoords().second - j >= 0 ) {
-                pos.first = i;
-                pos.second = getCoords().second - j;
-                if (isValidMove(getCoords(), pos)) {
-                        moves.push_back(pos);
+                    }
                 }
             } 
-            if ( getCoords().second + j < MAXCELL) {
-                pos.first = i;
-                pos.second = getCoords().second + j;
-                if (isValidMove(getCoords(), pos)) {
-                        moves.push_back(pos);
-                }
-            }
         }
     }
-    
+        
     return moves;
 }
 

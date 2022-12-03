@@ -314,7 +314,6 @@ bool Board::isCheck(pair<int, int> kingPos) {
         }
     } else {
         for (auto &p : blackPieces) {
-            cout <<"i ran" << endl;
             PieceName name = p->getType();
             switch(name) {
                 case PieceName::Bishop :
@@ -336,9 +335,9 @@ bool Board::isCheck(pair<int, int> kingPos) {
             for (auto &m : p->getPosMoves()) {
                 cout << m.first << ", " << m.second << endl;
             }
-           if ((p->getType() != PieceName::King) && (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end())) {
-                return true;
-            }
+        //    if ((p->getType() != PieceName::King) && (find(p->getPosMoves().begin(), p->getPosMoves().end(), kingPos) != p->getPosMoves().end())) {
+        //         return true;
+        //     }
         }
     }
     return false;
@@ -436,7 +435,9 @@ vector<pair<shared_ptr<Piece>, pair<int, int>>> Board::getAllValidMoves(bool whi
     return validMovePairs;
 }
 
-
-
+bool Board::willLeadToCheck(std::pair<int, int> &to) {
+    pair<int, int> kingPos = getKing()->getCoords();
+    return kingPos.first == to.first && kingPos.second == to.second;
+}
 
 

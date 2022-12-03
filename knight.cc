@@ -30,41 +30,49 @@ vector<pair<int, int>> Knight::getPosMoves() {
     vector<pair<int, int>> moves;
 
     pair<int, int> pos;
+    // 2 right, 1 down
     pos.first = getCoords().first + 1;
     pos.second = getCoords().second + 2;
     if (isValidMove(getCoords(), pos)) {
             moves.push_back(pos);
     }
-    pos.first = getCoords().first + 1;
-    pos.second = getCoords().second - 2;
-    if (isValidMove(getCoords(), pos)) {
-            moves.push_back(pos);
-    }
+    // 2 right, 1 up
     pos.first = getCoords().first - 1;
     pos.second = getCoords().second + 2;
     if (isValidMove(getCoords(), pos)) {
             moves.push_back(pos);
     }
+    // 2 left, 1 down
+    pos.first = getCoords().first + 1;
+    pos.second = getCoords().second - 2;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+    // 2 left, 1 up
     pos.first = getCoords().first - 1;
     pos.second = getCoords().second - 2;
     if (isValidMove(getCoords(), pos)) {
             moves.push_back(pos);
     }
+    // 1 right, 2 down
     pos.first = getCoords().first + 2;
     pos.second = getCoords().second + 1;
     if (isValidMove(getCoords(), pos)) {
             moves.push_back(pos);
     }
-    pos.first = getCoords().first + 2;
-    pos.second = getCoords().second - 1;
-    if (isValidMove(getCoords(), pos)) {
-            moves.push_back(pos);
-    }
+    // 1 right, 2 up
     pos.first = getCoords().first - 2;
     pos.second = getCoords().second + 1;
     if (isValidMove(getCoords(), pos)) {
             moves.push_back(pos);
     }
+    // 1 left, 2 down
+    pos.first = getCoords().first + 2;
+    pos.second = getCoords().second - 1;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+    // 1 left, 2 up
     pos.first = getCoords().first - 2;
     pos.second = getCoords().second - 1;
     if (isValidMove(getCoords(), pos)) {

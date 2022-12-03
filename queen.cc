@@ -83,6 +83,7 @@ vector<pair<int, int>> Queen::getPosMoves() {
     vector<pair<int, int>> moves;
 
     for (int i = 0; i < MAXCELL; ++i) {
+        // vertical
         pair<int, int> pos;
         pos.first = i;
         pos.second = getCoords().second;
@@ -91,56 +92,30 @@ vector<pair<int, int>> Queen::getPosMoves() {
                 moves.push_back(pos);
             }
         }
-    }
-    // horizontal
-     for (int j = 0; j < MAXCELL; ++j) {
-         pair<int, int> pos;
-         pos.first = getCoords().first;
-         pos.second = j;
-        if (j != getCoords().second) {
-            if (isValidMove(getCoords(), pos)) {
-                moves.push_back(pos);
-            }
-        }
-    }
 
-    // diagonal
-    for (int k = 1; k < MAXCELL; ++k) {
-        pair<int, int> pos;
-        // before piece
-        if (k <= getCoords().first) {
-            if (getCoords().second - k >= 0) {
-                pos.first = getCoords().first - k;
-                pos.second = getCoords().second - k;
-                if (isValidMove(getCoords(), pos)) {
+        for (int j = 0; j < MAXCELL; ++j) {
+            // only run once
+            if (i == getCoords().first) {
+                // horizontal
+                pair<int, int> pos;
+                pos.first = getCoords().first;
+                pos.second = j;
+                if (j != getCoords().second) {
+                    if (isValidMove(getCoords(), pos)) {
                         moves.push_back(pos);
+                    }
                 }
             }
-            if (getCoords().second + k < MAXCELL) {
-                pos.first = getCoords().first - k;
-                pos.second = getCoords().second + k;
-                if (isValidMove(getCoords(), pos)) {
+
+            //diagonal
+            if ((i - getCoords().first == j - getCoords().second) || (i - getCoords().first == -(j - getCoords().second))) {
+                if (i != getCoords().first && j!= getCoords().second) {
+                    pair<int, int> pos = make_pair(i, j);
+                    if (isValidMove(getCoords(), pos)) {
                         moves.push_back(pos);
-                }
-            }
-        }
-        // after piece
-        if (k > getCoords().first) {
-            int l = k - getCoords().first;
-            if (getCoords().second - l >= 0 ) {
-                pos.first = k;
-                pos.second = getCoords().second - l;
-                if (isValidMove(getCoords(), pos)) {
-                        moves.push_back(pos);
+                    }
                 }
             } 
-            if ( getCoords().second + l < MAXCELL) {
-                pos.first = k;
-                pos.second = getCoords().second + l;
-                if (isValidMove(getCoords(), pos)) {
-                        moves.push_back(pos);
-                }
-            }
         }
     }
 

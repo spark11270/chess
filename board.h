@@ -65,8 +65,6 @@ public:
     bool isValidTurn(const std::pair<int, int> &from);
     // set whosturn to the next player
     void nextTurn();
-    // logic for computer
-    std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> getAllValidMoves(bool whiteTurn);
     ~Board();
 };
 

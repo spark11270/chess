@@ -1,4 +1,5 @@
 #include "controller.h"
+#include "xwindow.h"
 #include "board.h"
 #include "king.h"
 #include "queen.h"
@@ -181,6 +182,7 @@ void Controller::playGame() {
                 initPlayer(bPlayer, Colour::Black);
                 board->render();
                 gameMoves();
+                Xwindow w(450, 450);
                 if (!newRound) break;
                 board->clear();
                 doneSetup = false;

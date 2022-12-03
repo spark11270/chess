@@ -15,22 +15,22 @@ using namespace std;
 void printPieces(std::vector<std::shared_ptr<Piece>> pieces) {
     for (auto &piece: pieces) {
         if (piece->getType() == PieceName::Bishop) {
-            cout << "PieceName::Bishop" << endl;
+            cout << "Bishop" << endl;
         }
         if (piece->getType() == PieceName::Pawn) {
-            cout << "PieceName::Pawn" << endl;
+            cout << "Pawn" << endl;
         }
         if (piece->getType() == PieceName::King) {
-            cout << "PieceName::King" << endl;
+            cout << "King" << endl;
         }
         if (piece->getType() == PieceName::Queen) {
-            cout << "PieceName::Queen" << endl;
+            cout << "Queen" << endl;
         }
         if (piece->getType() == PieceName::Knight) {
-            cout << "PieceName::Knight" << endl;
+            cout << "Knight" << endl;
         }
         if (piece->getType() == PieceName::Rook) {
-            cout << "PieceName::Rook" << endl;
+            cout << "Rook" << endl;
         }
     }
 }
@@ -252,6 +252,35 @@ bool Board::isCheckmate() {
         }
     }
     return false;
+}
+
+bool Board::hasAlly(Colour c, const pair<int, int> pos) {
+    shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
+    if (c == Colour::Black) {
+        if (tmp != nullptr && tmp->getColour() == Colour::Black) return true;
+        return false;
+    }
+    else {
+        if (tmp != nullptr && tmp->getColour() == Colour::White) return true;
+        return false;
+    }
+}
+
+bool Board::hasOpponent(Colour c, const pair<int, int> pos) {
+    shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
+    if (c == Colour::White) {
+        if (tmp != nullptr && tmp->getColour() == Colour::Black) return true;
+        return false;
+    }
+    else {
+        if (tmp != nullptr && tmp->getColour() == Colour::White) return true;
+        return false;
+    }
+}
+
+bool Board::hasObstacle(pair<int, int> pos) {
+    shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
+    return tmp != nullptr;
 }
 
 void Board::clear() {

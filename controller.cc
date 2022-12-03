@@ -139,6 +139,13 @@ void Controller::initGame() {
                 if (board->validPawns() == false) {
                     throw runtime_error("You must not have Pawns on first and last row");
                 }
+                if (board->isCheck()) {
+                    if (board->getWhosTurn() == Colour::White) {
+                        throw runtime_error("White King is in check");
+                    } else {
+                        throw runtime_error("Black King is in check");
+                    }
+                }
                 doneSetup = true;
                 cout << "EXIT SETUP MODE" << endl;
                 break;
@@ -229,6 +236,11 @@ void Controller::gameMoves() {
                 break;
             }
             else if (command == "move") {
+                if (board->isCheck()) {
+                    players[1]->updateScore();
+                    printScore();
+                    break;
+                }
                 if (board->isWhiteTurn() == true) {
                     if(players[0]->getType() == 'c') {
                         // board->move();
@@ -241,8 +253,20 @@ void Controller::gameMoves() {
                         ss >> to;
                         pair<int, int> toCoords = convertPos(to);
                         if (ss >> prom) {
-                            // handle promotion
-                            cout << prom << endl;
+                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                                throw runtime_error ("You can only promote Pawn");
+                            }
+                            if (board->getWhosTurn() == Colour::Black) {
+                                if (toCoords.first != 7) {
+                                    throw runtime_error ("Black has not reached into the enemy's back row");
+                                }
+                            }
+                            if (board->getWhosTurn() == Colour::White) {
+                                if (toCoords.first != 0) {
+                                    throw runtime_error ("White has not reached into the enemy's back row");
+                                }
+                            }
+                           board->promotion(fromCoords, toCoords, Colour::White, prom);
                         }
                         else {
                             // no promotion
@@ -263,6 +287,7 @@ void Controller::gameMoves() {
                         pair<int, int> toCoords = convertPos(to);
                         if (ss >> prom) {
                             cout << prom << endl;
+                            board->promotion(fromCoords, toCoords, Colour::Black, prom);
                         }
                         else {
                             // no promotion
@@ -270,6 +295,7 @@ void Controller::gameMoves() {
                         }
                     }
                 }
+                cout <<"here!" <<endl;
                 board->render();
             }
             else {

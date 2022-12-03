@@ -1,4 +1,5 @@
 #include "board.h"
+#include "move.h"
 #include "king.h"
 #include "queen.h"
 #include "knight.h"
@@ -178,7 +179,6 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
     }
 }
 
-
 void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
     bool validTurn = isValidTurn(begin);
 
@@ -192,12 +192,26 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
     if (!validMove) {
         throw runtime_error("Illegal move");
     }
-
+    
     // check for if the move will lead to checkmate
+    if (isCheck()) {
+        if (getWhosTurn() == Colour::White) {
+            throw runtime_error("White King is in check");
+        } else {
+            throw runtime_error("Black King is in check");
+        }
+    }
 
+    // capture
+    if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
+        Move m{begin.first, begin.second, end.first, end.second, p};
+        m.setCaptured(getPieceAt(end));
+        totalMoves.push_back(m);
+    }
+    
     // remove the piece
-    removePieceAt(begin);
-
+    theBoard[begin.first][begin.second] = nullptr;
+    
     // add the piece
     theBoard[end.first][end.second] = p;
 
@@ -206,6 +220,50 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
 
     // take the next turn
     nextTurn();
+}
+
+void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c, char prom) {
+    move(begin, end, c);
+    removePieceAt(end);
+    shared_ptr<Piece> p = getPieceAt(begin);
+    if ((end.first == 0 && p->getColour() == Colour::White)) {
+        switch(prom) {
+            case 'R':
+                theBoard[end.first][end.second] = make_shared<Rook>(Colour::White, end.first, end.second, this);
+                break;
+            case 'B':
+                theBoard[end.first][end.second] = make_shared<Bishop>(Colour::White, end.first, end.second, this);
+                break;
+            case 'N':
+                theBoard[end.first][end.second] = make_shared<Knight>(Colour::White, end.first, end.second, this);
+                break;
+            case 'Q':
+                theBoard[end.first][end.second] = make_shared<Queen>(Colour::White, end.first, end.second, this);
+                break;
+        }
+    } else if (end.first == 7 && p->getColour() == Colour::Black) {
+        switch(prom) {
+            case 'r':
+                theBoard[end.first][end.second] = make_shared<Rook>(Colour::Black, end.first, end.second, this);
+                break;
+            case 'b':
+                theBoard[end.first][end.second] = make_shared<Bishop>(Colour::Black, end.first, end.second, this);
+                break;
+            case 'n':
+                theBoard[end.first][end.second] = make_shared<Knight>(Colour::Black, end.first, end.second, this);
+                break;
+            case 'q':
+                theBoard[end.first][end.second] = make_shared<Queen>(Colour::Black, end.first, end.second, this);
+
+                break;
+        }
+    }
+    if (whosTurn == Colour::White) {
+        blackPieces.push_back(theBoard[end.first][end.second]);
+    }
+    else {
+        whitePieces.push_back(theBoard[end.first][end.second]);
+    }
 }
 
 bool Board::isWhiteTurn() {
@@ -243,6 +301,10 @@ bool Board::isCheck(pair<int, int> kingPos) {
         }
     }
     return false;
+}
+
+Colour Board::getWhosTurn() {
+    return whosTurn;
 }
 
 bool Board::isCheckmate() {

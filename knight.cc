@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Knight::Knight(Colour c, int row, int col) : Piece(c, row, col, PieceName::Knight) {}
+Knight::Knight(Colour c, int row, int col, Board *theBoard) : Piece(c, row, col, PieceName::Knight, theBoard) {}
 
 bool Knight::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     if (final.first >= MAXCELL) return false; // check out of bounds

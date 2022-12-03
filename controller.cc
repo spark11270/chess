@@ -21,6 +21,7 @@ pair<int,int> convertPos(string &pos) {
     char c = pos[0] - ('a' - '0');
     int col = c - '0';
     int row = 7 - (pos[1] - '0' - 1);
+
     return make_pair(row,col);
 }
 

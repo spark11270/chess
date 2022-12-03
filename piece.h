@@ -10,15 +10,18 @@
 
 const int MAXCELL = 8; // rows and columns are 0-7
 
+class Board;
+
 // Decorator for Cell
 class Piece {
+    Board *theBoard;
     PieceName type;   
     Colour colour;
     std::pair<int, int> coords;
     bool isFirstMove;
 
     public:
-        Piece(Colour color, int row, int col, PieceName type);
+        Piece(Colour color, int row, int col, PieceName type, Board *theBoard);
 
         virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) = 0;
         virtual std::vector<std::pair<int, int>> getPosMoves() = 0;
@@ -27,6 +30,7 @@ class Piece {
         void setCoords(int r, int c);
         void modifyCoords(std::pair<int,int> &newCoords);
         Colour getColour();
+        bool isMine(Piece *p);
 
         virtual ~Piece() = 0;
 

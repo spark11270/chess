@@ -57,15 +57,18 @@ void Board::addPiece(shared_ptr<Piece> p) {
     theBoard[row][col] = p;
 }
 
-void Board::removePieceAt(const std::pair<int, int> &from) {
-    if (getPieceAt(from) == nullptr) return;
-
-    int pos = 0;
-    if (getPieceAt(from)->getColour() == Colour::Black) {
-        for (auto &piece : blackPieces) {
-            if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
-                blackPieces.erase(blackPieces.begin() + pos);
-                break;
+void Board::removePieceAt(std::pair<int, int> from) {
+    shared_ptr<Piece> tmp = theBoard[from.first][from.second];
+    if (theBoard[from.first][from.second] != nullptr) {
+        theBoard[from.first][from.second] = nullptr;
+        int pos = 0;
+        if (tmp->getColour() == Colour::Black) {
+            for (auto &piece : blackPieces) {
+                if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
+                    blackPieces.erase(blackPieces.begin() + pos);
+                    break;
+                }
+                ++pos;
             }
             ++pos;
         }
@@ -92,7 +95,9 @@ bool Board::uniqueKing() {
         }
     }
     for (auto &piece : blackPieces) {
-        ++kingCount.second;
+        if (piece->getType() == PieceName::King) {
+            ++kingCount.second;
+        }
     }
 
     if (kingCount.second == 1 && kingCount.first == 1) return true;

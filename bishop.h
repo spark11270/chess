@@ -6,7 +6,7 @@
 class Bishop : public Piece {
 
 public:
-    Bishop(Colour c, int row, int col);
+    Bishop(Colour c, int row, int col, Board *theBoard);
 
     virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) override;
     virtual std::vector<std::pair<int, int>> getPosMoves() override;

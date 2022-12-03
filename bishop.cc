@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Bishop::Bishop(Colour c, int row, int col) : Piece(c, row, col, PieceName::Bishop) {}
+Bishop::Bishop(Colour c, int row, int col, Board *theBoard) : Piece(c, row, col, PieceName::Bishop, theBoard) {}
 
 bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     if (final.first >= MAXCELL) return false; // check out of bounds

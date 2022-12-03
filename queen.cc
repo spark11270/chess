@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Queen::Queen(Colour c, int row, int col) : Piece(c, row, col, PieceName::Queen) {}
+Queen::Queen(Colour c, int row, int col, Board *theBoard) : Piece(c, row, col, PieceName::Queen, theBoard) {}
 
 bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     if (final.first >= MAXCELL) return false; // check out of bounds

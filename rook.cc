@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Rook::Rook(Colour c, int row, int col) : Piece{c, row, col, PieceName::Rook} {}
+Rook::Rook(Colour c, int row, int col, Board *theBoard) : Piece{c, row, col, PieceName::Rook, theBoard} {}
 
 bool Rook::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)  {
     if (final.first >= MAXCELL) return false;

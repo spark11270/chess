@@ -32,7 +32,7 @@ public:
     std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
     std::shared_ptr<Piece> getPiece(PieceName name, Colour colour);
     void addPiece(std::shared_ptr<Piece> p);
-    void removePieceAt(const std::pair<int, int> &from);
+    void removePieceAt(std::pair<int, int> from);
     void move(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c);
     bool isCheck(std::pair<int, int> kingPos = std::make_pair(-1, -1));
     bool isCheckmate();

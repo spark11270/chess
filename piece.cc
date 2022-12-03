@@ -1,7 +1,8 @@
 #include "piece.h"
+
 using namespace std;
 
-Piece::Piece(Colour colour, int row, int col, PieceName type) : colour{colour}, coords{make_pair(row, col)}, type{type} {}
+Piece::Piece(Colour colour, int row, int col, PieceName type, Board *theBoard) : colour{colour}, coords{make_pair(row, col)}, type{type}, theBoard{theBoard} {}
 
 pair<int, int> Piece::getCoords() {return coords;}
 
@@ -15,5 +16,12 @@ void Piece::modifyCoords(pair<int,int> &newCoords) {
 }
 
 Colour Piece::getColour() {return colour;}
+
+bool Piece::isMine(Piece *p) {
+    if (p != null && p->getColour() == getColour()) {
+        return true;
+    }
+    return false;
+}
 
 Piece::~Piece() {};

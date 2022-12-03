@@ -139,7 +139,7 @@ void Controller::initGame() {
                 if (board->validPawns() == false) {
                     throw runtime_error("You must not have Pawns on first and last row");
                 }
-                if (board->isCheck()) {
+                if (board->isCheck(board->getKing()->getCoords())) {
                     if (board->getWhosTurn() == Colour::White) {
                         throw runtime_error("White King is in check");
                     } else {
@@ -235,15 +235,16 @@ void Controller::gameMoves() {
                 printScore();
                 break;
             }
-            else if (command == "move") {          
-                // if (board->isCheck()) {
-                //     players[1]->updateScore();
-                //     printScore();
-                //     break;
-                // }
-
-                if (board->isWhiteTurn()) {
-                    if (players[0]->getType() == 'c') {
+            else if (command == "move") {
+                cout << "at controller" << endl;
+                cout << "getKing()->getCoords(): " << board->getKing()->getCoords().first << ", " << board->getKing()->getCoords().second << endl;
+                if (board->isCheck(board->getKing()->getCoords())) {
+                    players[1]->updateScore();
+                    printScore();
+                    break;
+                }
+                if (board->isWhiteTurn() == true) {
+                    if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         players[0]->move(board, uselsssCord, uselsssCord);
                     }
@@ -261,11 +262,11 @@ void Controller::gameMoves() {
                                     throw runtime_error ("White has not reached into the enemy's back row");
                                 }
                             }
-                            board->promotion(fromCoords, toCoords, Colour::White, prom);
+                           board->promotion(fromCoords, toCoords, prom);
                         }
                         else {
                             // no promotion
-                            players[0]->move(board, fromCoords, toCoords);
+                            board->move(fromCoords, toCoords);
                         }
                     }
                 }
@@ -279,20 +280,21 @@ void Controller::gameMoves() {
                         pair<int, int> fromCoords = convertPos(from);
                         ss >> to;
                         pair<int, int> toCoords = convertPos(to);
-                       if (ss >> prom) {
-                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                        if (ss >> prom) {
+                                                       if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");
-                            }
+                            } 
                             if (board->getWhosTurn() == Colour::Black) {
-                                if (toCoords.first != 0) {
-                                    throw runtime_error ("White has not reached into the enemy's back row");
+                                if (toCoords.first != 7) {
+                                    throw runtime_error ("Black has not reached into the enemy's back row");
                                 }
                             }
-                            board->promotion(fromCoords, toCoords, Colour::White, prom);
-                       }
+                            cout << prom << endl;
+                            board->promotion(fromCoords, toCoords, prom);
+                        }
                         else {
                             // no promotion
-                            players[1]->move(board, fromCoords, toCoords);
+                            board->move(fromCoords, toCoords);
                         }
                     }
                 }

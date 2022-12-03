@@ -81,36 +81,69 @@ bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) 
 
 vector<pair<int, int>> Queen::getPosMoves() {
     vector<pair<int, int>> moves;
-    // vertical
-    for (int i = 1; i <= getCoords().first; ++i) {
-        moves.push_back(make_pair(getCoords().first - i, getCoords().second));
-        // backward diagonal
-        if (getCoords().second - i >= 0) {
-            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
-        }
-    }
-    for (int i = 1; i <= MAXCELL - getCoords().first; ++i) {
-        moves.push_back(make_pair(getCoords().first + i, getCoords().second));
-        // backward diagonal
-        if (getCoords().second + i <= MAXCELL) {
-            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
+
+    for (int i = 0; i < MAXCELL; ++i) {
+        pair<int, int> pos;
+        pos.first = i;
+        pos.second = getCoords().second;
+        if (i != getCoords().first) {
+            if (isValidMove(getCoords(), pos)) {
+                moves.push_back(pos);
+            }
         }
     }
     // horizontal
-    for (int i = 1; i <= getCoords().second; ++i) {
-        moves.push_back(make_pair(getCoords().first, getCoords().second - i));
-        // forward diagonal
-        if (getCoords().first - i >= 0) {
-            moves.push_back(make_pair(getCoords().first - i, getCoords().second - i));
+     for (int j = 0; j < MAXCELL; ++j) {
+         pair<int, int> pos;
+         pos.first = getCoords().first;
+         pos.second = j;
+        if (j != getCoords().second) {
+            if (isValidMove(getCoords(), pos)) {
+                moves.push_back(pos);
+            }
         }
     }
-    for (int i = 1; i <= MAXCELL - getCoords().second; ++i) {
-        moves.push_back(make_pair(getCoords().first, getCoords().second + i));
-        // forward diagonal
-        if (getCoords().first + i <= MAXCELL) {
-            moves.push_back(make_pair(getCoords().first + i, getCoords().second + i));
+
+    // diagonal
+    for (int k = 1; k < MAXCELL; ++k) {
+        pair<int, int> pos;
+        // before piece
+        if (k <= getCoords().first) {
+            if (getCoords().second - k >= 0) {
+                pos.first = getCoords().first - k;
+                pos.second = getCoords().second - k;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            }
+            if (getCoords().second + k < MAXCELL) {
+                pos.first = getCoords().first - k;
+                pos.second = getCoords().second + k;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            }
+        }
+        // after piece
+        if (k > getCoords().first) {
+            int l = k - getCoords().first;
+            if (getCoords().second - l >= 0 ) {
+                pos.first = k;
+                pos.second = getCoords().second - l;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            } 
+            if ( getCoords().second + l < MAXCELL) {
+                pos.first = k;
+                pos.second = getCoords().second + l;
+                if (isValidMove(getCoords(), pos)) {
+                        moves.push_back(pos);
+                }
+            }
         }
     }
+
     return moves;
 }
 

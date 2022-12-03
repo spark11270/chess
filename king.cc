@@ -28,18 +28,61 @@ bool King::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 
 vector<pair<int, int>> King::getPosMoves() {
     vector<pair<int, int>> moves;
+
     // vertical
-    moves.push_back(make_pair(getCoords().first + 1, getCoords().second));
-    moves.push_back(make_pair(getCoords().first - 1, getCoords().second));
+    pair<int, int> pos;
+    pos.first = getCoords().first + 1;
+    pos.second = getCoords().second;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+    pos.first = getCoords().first + 1;
+    pos.second = getCoords().second;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+    pos.first = getCoords().first - 1;
+    pos.second = getCoords().second;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+
     // horizontal
-    moves.push_back(make_pair(getCoords().first, getCoords().second + 1));
-    moves.push_back(make_pair(getCoords().first, getCoords().second - 1));
+    pos.first = getCoords().first;
+    pos.second = getCoords().second + 1;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+    pos.first = getCoords().first;
+    pos.second = getCoords().second - 1;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+
     // forward diagonal
-    moves.push_back(make_pair(getCoords().first + 1, getCoords().second - 1));
-    moves.push_back(make_pair(getCoords().first - 1, getCoords().second + 1));
+    pos.first = getCoords().first + 1;
+    pos.second = getCoords().second - 1;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+    pos.first = getCoords().first - 1;
+    pos.second = getCoords().second + 1;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+
     // backward diagonal
-    moves.push_back(make_pair(getCoords().first + 1, getCoords().second + 1));
-    moves.push_back(make_pair(getCoords().first - 1, getCoords().second - 1));
+    pos.first = getCoords().first + 1;
+    pos.second = getCoords().second + 1;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+    pos.first = getCoords().first - 1;
+    pos.second = getCoords().second - 1;
+    if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+    }
+
     return moves;
 }
 

@@ -14,14 +14,14 @@ class Board;
 
 // Decorator for Cell
 class Piece {
-    Board *theBoard;
+    Board *b;
     PieceName type;   
     Colour colour;
     std::pair<int, int> coords;
     bool isFirstMove;
 
     public:
-        Piece(Colour color, int row, int col, PieceName type, Board *theBoard);
+        Piece(Colour color, int row, int col, PieceName type, Board *b);
 
         virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) = 0;
         virtual std::vector<std::pair<int, int>> getPosMoves() = 0;
@@ -30,7 +30,7 @@ class Piece {
         void setCoords(int r, int c);
         void modifyCoords(std::pair<int,int> &newCoords);
         Colour getColour();
-        bool isMine(Piece *p);
+        Board *getTheBoard();
 
         virtual ~Piece() = 0;
 

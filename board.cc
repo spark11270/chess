@@ -60,7 +60,6 @@ void Board::addPiece(shared_ptr<Piece> p) {
 void Board::removePieceAt(std::pair<int, int> from) {
     shared_ptr<Piece> tmp = theBoard[from.first][from.second];
     if (theBoard[from.first][from.second] != nullptr) {
-        theBoard[from.first][from.second] = nullptr;
         int pos = 0;
         if (tmp->getColour() == Colour::Black) {
             for (auto &piece : blackPieces) {
@@ -70,19 +69,17 @@ void Board::removePieceAt(std::pair<int, int> from) {
                 }
                 ++pos;
             }
-            ++pos;
-        }
-    }
-    else {
-        for (auto &piece : whitePieces) {
-            if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
-                whitePieces.erase(whitePieces.begin() + pos);
-                break;
+        } else {
+            for (auto &piece : whitePieces) {
+                if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
+                    whitePieces.erase(whitePieces.begin() + pos);
+                    break;
+                }
+                ++pos;
             }
-            ++pos;
         }
     }
-
+    
     theBoard[from.first][from.second] = nullptr;
 }
 
@@ -121,24 +118,24 @@ bool Board::validPawns() {
 
 void Board::init() {
     // white pieces
-    theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0);
-    theBoard[7][1] = make_shared<Knight>(Colour::White, 7, 1);
-    theBoard[7][2] = make_shared<Bishop>(Colour::White, 7, 2);
-    theBoard[7][3] = make_shared<King>(Colour::White, 7, 3);
-    theBoard[7][4] = make_shared<Queen>(Colour::White, 7, 4);
-    theBoard[7][5] = make_shared<Bishop>(Colour::White, 7, 5);
-    theBoard[7][6] = make_shared<Knight>(Colour::White, 7, 6);
-    theBoard[7][7] = make_shared<Rook>(Colour::White, 7, 7);
+    theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0, this);
+    theBoard[7][1] = make_shared<Knight>(Colour::White, 7, 1, this);
+    theBoard[7][2] = make_shared<Bishop>(Colour::White, 7, 2, this);
+    theBoard[7][3] = make_shared<King>(Colour::White, 7, 3, this);
+    theBoard[7][4] = make_shared<Queen>(Colour::White, 7, 4, this);
+    theBoard[7][5] = make_shared<Bishop>(Colour::White, 7, 5, this);
+    theBoard[7][6] = make_shared<Knight>(Colour::White, 7, 6, this);
+    theBoard[7][7] = make_shared<Rook>(Colour::White, 7, 7, this);
 
     // black pieces
-    theBoard[0][0] = make_shared<Rook>(Colour::Black, 0, 0);
-    theBoard[0][1] = make_shared<Knight>(Colour::Black, 0, 1);
-    theBoard[0][2] = make_shared<Bishop>(Colour::Black, 0, 2);
-    theBoard[0][3] = make_shared<King>(Colour::Black, 0, 3);
-    theBoard[0][4] = make_shared<Queen>(Colour::Black, 0, 4);
-    theBoard[0][5] = make_shared<Bishop>(Colour::Black, 0, 5);
-    theBoard[0][6] = make_shared<Knight>(Colour::Black, 0, 6);
-    theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 7);
+    theBoard[0][0] = make_shared<Rook>(Colour::Black, 0, 0, this);
+    theBoard[0][1] = make_shared<Knight>(Colour::Black, 0, 1, this);
+    theBoard[0][2] = make_shared<Bishop>(Colour::Black, 0, 2, this);
+    theBoard[0][3] = make_shared<King>(Colour::Black, 0, 3, this);
+    theBoard[0][4] = make_shared<Queen>(Colour::Black, 0, 4, this);
+    theBoard[0][5] = make_shared<Bishop>(Colour::Black, 0, 5, this);
+    theBoard[0][6] = make_shared<Knight>(Colour::Black, 0, 6, this);
+    theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 7, this);
 
     for (int i = 0 ; i < MAXCELL; ++i) {
         whitePieces.push_back(theBoard[7][i]);
@@ -147,8 +144,8 @@ void Board::init() {
 
     // pawns
     for (int i = 0; i < MAXCELL; ++i) {
-        theBoard[6][i] = make_shared<Pawn>(Colour::White, 6, i);
-        theBoard[1][i] = make_shared<Pawn>(Colour::Black, 1, i);
+        theBoard[6][i] = make_shared<Pawn>(Colour::White, 6, i, this);
+        theBoard[1][i] = make_shared<Pawn>(Colour::Black, 1, i, this);
         whitePieces.push_back(theBoard[6][i]);
         blackPieces.push_back(theBoard[1][i]);
     }

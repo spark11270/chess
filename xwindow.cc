@@ -1,3 +1,5 @@
+#if 0
+
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
@@ -128,3 +130,4 @@ void Xwindow::drawBoard() {
 	}
 }
 	
+#endif

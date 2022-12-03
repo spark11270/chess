@@ -10,17 +10,36 @@
 
 using namespace std;
 
+// -------------------------------- Helper ------------------------------
+void printPieces(std::vector<std::shared_ptr<Piece>> pieces) {
+    for (auto &piece: pieces) {
+        if (piece->getType() == PieceName::Bishop) {
+            cout << "Bishop" << endl;
+        }
+        if (piece->getType() == PieceName::Pawn) {
+            cout << "Pawn" << endl;
+        }
+        if (piece->getType() == PieceName::King) {
+            cout << "King" << endl;
+        }
+        if (piece->getType() == PieceName::Queen) {
+            cout << "Queen" << endl;
+        }
+        if (piece->getType() == PieceName::Knight) {
+            cout << "Knight" << endl;
+        }
+        if (piece->getType() == PieceName::Rook) {
+            cout << "Rook" << endl;
+        }
+    }
+}
+
 Board::Board() : W{nullptr}, B{nullptr} {
     // construct theBoard
     for (int i = 0; i < MAXCELL; ++i) {
         for (int j = 0; j < MAXCELL; ++j) {
             theBoard[i][j] = nullptr;
         }
-    }
-    // white/black pieces vector
-    for (int i = 0; i < 16; ++i) {
-        whitePieces[i] = nullptr;
-        blackPieces[i] = nullptr;
     }
 }
 
@@ -35,9 +54,29 @@ void Board::addPiece(shared_ptr<Piece> p) {
     theBoard[row][col] = p;
 }
 
-void Board::removePieceAt(pair<int, int> from) {
+void Board::removePieceAt(const std::pair<int, int> &from) {
+    shared_ptr<Piece> tmp = theBoard[from.first][from.second];
     if (theBoard[from.first][from.second] != nullptr) {
         theBoard[from.first][from.second] = nullptr;
+        int pos = 0;
+        if (tmp->getColour() == Colour::Black) {
+            for (auto &piece : blackPieces) {
+                if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
+                    blackPieces.erase(blackPieces.begin() + pos);
+                    break;
+                }
+                ++pos;
+            }
+        }
+        else {
+            for (auto &piece : whitePieces) {
+                if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
+                    whitePieces.erase(whitePieces.begin() + pos);
+                    break;
+                }
+                ++pos;
+            }
+        }
     }
 }
 
@@ -60,12 +99,14 @@ bool Board::uniqueKing() {
 bool Board::validPawns() {
     for (auto &piece : whitePieces) {
         if (piece->getType() == PieceName::Pawn) {
+            cout << piece->getCoords().first << " " << piece->getCoords().second << endl;
             if (piece->getCoords().first == 7) return false;
         }
     }
 
     for (auto &piece : blackPieces) {
         if (piece->getType() == PieceName::Pawn) {
+            cout << piece->getCoords().first << " " << piece->getCoords().second << endl;
             if (piece->getCoords().first == 0) return false;
         }
     }
@@ -134,7 +175,7 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
 }
 
 
-void Board::move(pair<int, int> begin, pair<int, int> end, Colour c) {
+void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
     shared_ptr<Piece> p = theBoard[begin.first][begin.second];
     if (c == Colour::White) {
         // white's turn
@@ -178,7 +219,6 @@ void Board::setPlayerFirst(Colour colour) {
     }
 }
 
-
 bool Board::isCheck(pair<int, int> kingPos) {
     if (kingPos.first == -1) {
         kingPos = getPiece(PieceName::King, whosTurn)->getCoords();
@@ -208,6 +248,35 @@ bool Board::isCheckmate() {
         }
     }
     return false;
+}
+
+bool Board::hasAlly(Colour c, const pair<int, int> pos) {
+    shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
+    if (c == Colour::Black) {
+        if (tmp != nullptr && tmp->getColour() == Colour::Black) return true;
+        return false;
+    }
+    else {
+        if (tmp != nullptr && tmp->getColour() == Colour::White) return true;
+        return false;
+    }
+}
+
+bool Board::hasOpponent(Colour c, const pair<int, int> pos) {
+    shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
+    if (c == Colour::White) {
+        if (tmp != nullptr && tmp->getColour() == Colour::Black) return true;
+        return false;
+    }
+    else {
+        if (tmp != nullptr && tmp->getColour() == Colour::White) return true;
+        return false;
+    }
+}
+
+bool Board::hasObstacle(pair<int, int> pos) {
+    shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
+    return tmp != nullptr;
 }
 
 void Board::clear() {

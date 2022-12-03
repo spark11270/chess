@@ -62,7 +62,7 @@ void TextDisplay::notify() {
         }
         out << std::endl;
     }
-    out << "  abcdefgh" << std::endl;
+    out << "  abcdefgh" << std::endl << std::endl;
 }
 
 // Detach for deleting

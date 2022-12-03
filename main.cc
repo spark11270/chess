@@ -10,7 +10,6 @@ using namespace std;
 
 int main () { 
   Board *theboard = new Board();
-  theboard->init();
   TextDisplay td{theboard};
   GraphicsDisplay gd{theboard};
   theboard->render();

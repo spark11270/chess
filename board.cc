@@ -179,7 +179,7 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
     }
 }
 
-void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
+void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     bool validTurn = isValidTurn(begin);
 
     if (!validTurn) {
@@ -223,7 +223,7 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
 }
 
 void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c, char prom) {
-    move(begin, end, c);
+    move(begin, end);
     removePieceAt(end);
     shared_ptr<Piece> p = getPieceAt(begin);
     if ((end.first == 0 && p->getColour() == Colour::White)) {

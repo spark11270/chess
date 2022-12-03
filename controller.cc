@@ -236,6 +236,7 @@ void Controller::gameMoves() {
                 break;
             }
             else if (command == "move") {
+
                 if (board->isCheck()) {
                     players[1]->updateScore();
                     printScore();
@@ -256,11 +257,6 @@ void Controller::gameMoves() {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");
                             }
-                            if (board->getWhosTurn() == Colour::Black) {
-                                if (toCoords.first != 7) {
-                                    throw runtime_error ("Black has not reached into the enemy's back row");
-                                }
-                            }
                             if (board->getWhosTurn() == Colour::White) {
                                 if (toCoords.first != 0) {
                                     throw runtime_error ("White has not reached into the enemy's back row");
@@ -270,7 +266,7 @@ void Controller::gameMoves() {
                         }
                         else {
                             // no promotion
-                            board->move(fromCoords, toCoords, Colour::White);
+                            board->move(fromCoords, toCoords);
                         }
                     }
                 }
@@ -285,13 +281,20 @@ void Controller::gameMoves() {
                         pair<int, int> fromCoords = convertPos(from);
                         ss >> to;
                         pair<int, int> toCoords = convertPos(to);
-                        if (ss >> prom) {
-                            cout << prom << endl;
-                            board->promotion(fromCoords, toCoords, Colour::Black, prom);
-                        }
+                       if (ss >> prom) {
+                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                                throw runtime_error ("You can only promote Pawn");
+                            }
+                            if (board->getWhosTurn() == Colour::Black) {
+                                if (toCoords.first != 0) {
+                                    throw runtime_error ("White has not reached into the enemy's back row");
+                                }
+                            }
+                           board->promotion(fromCoords, toCoords, Colour::White, prom);
+                       }
                         else {
                             // no promotion
-                            board->move(fromCoords, toCoords, Colour::Black);
+                            board->move(fromCoords, toCoords);
                         }
                     }
                 }

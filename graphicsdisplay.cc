@@ -1,3 +1,5 @@
+#if 0
+
 #include "graphicsdisplay.h"
 #include "board.h"
 
@@ -15,3 +17,5 @@ void GraphicsDisplay::notify() {
 GraphicsDisplay::~GraphicsDisplay() {
 	board->detach(this);
 }          
+
+#endif

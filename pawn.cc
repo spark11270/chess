@@ -1,4 +1,5 @@
 #include "pawn.h"
+#include "board.h"
 #include <iostream>
 using namespace std;
 
@@ -29,7 +30,7 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     }
 
     // my own item?
-    if (isMine(theBoard->getBoard()[final.first][final.second] != nullptr)) return false;
+    if (getTheBoard()->hasAlly(getColour(), final)) return false;
 
     return false;
 }

@@ -11,7 +11,7 @@ using namespace std;
 int main () { 
   Board *theboard = new Board();
   TextDisplay td{theboard};
-  GraphicsDisplay gd{theboard};
+  //GraphicsDisplay gd{theboard};
   theboard->render();
   Controller ctr{theboard};
   ctr.playGame();

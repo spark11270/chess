@@ -36,6 +36,9 @@ public:
     void move(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c);
     bool isCheck(std::pair<int, int> kingPos = std::make_pair(-1, -1));
     bool isCheckmate();
+    bool hasAlly(Colour c, const std::pair<int, int> pos);
+    bool hasOpponent(Colour c, const std::pair<int, int> pos);
+    bool hasObstacle(const std::pair<int, int> pos);
     void clear();
     ~Board();
 };

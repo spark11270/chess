@@ -2,6 +2,7 @@
 #define _LEVEL_H_
 
 #include <utility>
+#include <memory>
 
 class Move;
 class Board;
@@ -12,9 +13,18 @@ class LVL {
     LVL();
     virtual ~LVL();
 
-    std::pair<std::pair<int, int>, std::pair<int, int>> generateRandomMove( \
-      const std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> possibleMovePairs \
+    std::pair<std::pair<int, int>, std::pair<int, int>> converter( \
+      std::pair<std::shared_ptr<Piece>, std::pair<int, int>> movePair
     );
+
+    std::pair<std::shared_ptr<Piece>, std::pair<int, int>> generateRandomMove( \
+      std::vector<std::pair<std::shared_ptr<Piece>, std::pair<int, int>>> possibleMovePairs);
+
+    bool preferCaptureCheck( \
+      Board *board, \
+      std::pair<std::shared_ptr<Piece>, std::pair<int, int>> &result, \
+      std::vector<std::pair<std::shared_ptr<Piece>, std::pair<int, int>>> possibleMovePairs);
+
     virtual std::pair<std::pair<int, int>, std::pair<int, int>> getAIMove(Board *board) = 0;
 };
 

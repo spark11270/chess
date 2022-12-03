@@ -392,26 +392,22 @@ void Board::nextTurn() {
 
 Board::~Board() {}
 
-// ------------------- logic for computer -------------------
-vector<pair<pair<int, int>, pair<int, int>>> Board::getAllValidMoves(bool whiteTurn) {
+vector<pair<shared_ptr<Piece>, pair<int, int>>> Board::getAllValidMoves(bool whiteTurn) {
+    vector<pair<shared_ptr<Piece>, pair<int, int>>> validMovePairs;
     vector<shared_ptr<Piece>> &pieces = whiteTurn ? whitePieces : blackPieces;
-    int piecesSize = pieces.size();
-    vector<pair<pair<int, int>, pair<int, int>>> validMovePairs;
-    for (int row = 0; row < MAXCELL; ++row) {
-        for (int col = 0; col < MAXCELL; ++col) {
-            for (int idx = 0; idx < piecesSize; ++idx) {
-                shared_ptr<Piece> p = pieces.at(idx);
-                pair<int, int> from = p->getCoords();
-                pair<int, int> to = make_pair(row, col);
-                printPiece(p);
-                bool validMove = p->isValidMove(from, to);
-                if (validMove) {
-                    // TO-DO: check 'will lead to check'. don't add this
-                    validMovePairs.push_back(make_pair(from, to));
-                }                
-            }
-        }
+
+    for (auto &piece : pieces) {
+       vector<pair<int, int>> posMoves = piece->getPosMoves();
+       
+       for (auto &posMove : posMoves) {
+        validMovePairs.emplace_back(piece, posMove);
+       }
     }
-    validMovePairs.shrink_to_fit();
+
     return validMovePairs;
+}
+
+bool Board::willLeadToCheck(std::pair<int, int> &to) {
+    pair<int, int> kingPos = getPiece(PieceName::King, whosTurn)->getCoords();
+    return kingPos.first == to.first && kingPos.second == to.second;
 }

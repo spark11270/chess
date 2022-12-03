@@ -1,14 +1,14 @@
 #include <string>
 #include <vector>
+#include <utility>
 
 #include "board.h"
 #include "computer.h"
 #include "lvl.h"
 #include "lvl1.h"
+#include "lvl2.h"
 
 using namespace std;
-
-class Board;
 
 Computer::Computer(Colour c, int lvl) : Player(c, 0) {
     switch(lvl) {
@@ -18,7 +18,7 @@ Computer::Computer(Colour c, int lvl) : Player(c, 0) {
             break;
         case 2:
             // . prefers captures and checks
-            ai = make_shared<LVL1>();
+            ai = make_shared<LVL2>();
             break;
         case 3:
             // prefers avodiing capture and checks

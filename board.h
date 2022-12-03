@@ -45,8 +45,8 @@ public:
     void clear();
     Colour getWhosTurn();
 
-    std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> getAllValidMoves(bool whiteTurn);
-
+    std::vector<std::pair<std::shared_ptr<Piece>, std::pair<int, int>>> getAllValidMoves(bool whiteTurn);
+    bool willLeadToCheck(std::pair<int, int> &to);
     bool isValidTurn(const std::pair<int, int> &from);
     void nextTurn();
     ~Board();

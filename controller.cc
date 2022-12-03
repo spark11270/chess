@@ -243,9 +243,9 @@ void Controller::gameMoves() {
                 // }
 
                 if (board->isWhiteTurn()) {
-                    if(players[0]->getType() == 'c') {
-                        // pair<int, int> uselsssCord = make_pair(-1, -1);
-                        // players[0]->move(board, uselsssCord, uselsssCord);
+                    if (players[0]->getType() == 'c') {
+                        pair<int, int> uselsssCord = make_pair(-1, -1);
+                        players[0]->move(board, uselsssCord, uselsssCord);
                     }
                     else {
                         ss >> from;
@@ -271,8 +271,8 @@ void Controller::gameMoves() {
                 }
                 else {
                     if(players[1]->getType() == 'c') {
-                        // pair<int, int> uselsssCord = make_pair(-1, -1);
-                        // players[0]->move(board, uselsssCord, uselsssCord);
+                        pair<int, int> uselsssCord = make_pair(-1, -1);
+                        players[0]->move(board, uselsssCord, uselsssCord);
                     }
                     else {
                         ss >> from;

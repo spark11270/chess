@@ -6,7 +6,6 @@
 #include <memory>
 
 class Board;
-class Move;
 class LVL;
 
 class Computer : public Player {

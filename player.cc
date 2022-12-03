@@ -20,4 +20,5 @@ void Player::updateScore() {
 void Player::resetScore() {
     score = 0;
 }
+
 Player::~Player() {}

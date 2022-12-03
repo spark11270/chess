@@ -131,11 +131,9 @@ void Controller::initGame() {
                 }
             }
             else if (command == "done") {
-                cout << 2 << endl;
                 if (board->uniqueKing() == false) {
                     throw runtime_error("You must have one kings for each player");
                 }
-                cout << 3 << endl;
                 if (board->validPawns() == false) {
                     throw runtime_error("You must not have Pawns on first and last row");
                 }
@@ -181,6 +179,7 @@ void Controller::playGame() {
                 initPlayer(wPlayer, Colour::White);
                 cin >> bPlayer;
                 initPlayer(bPlayer, Colour::Black);
+                board->render();
                 gameMoves();
                 if (!newRound) break;
                 board->clear();
@@ -227,7 +226,6 @@ void Controller::gameMoves() {
                 break;
             }
             else if (command == "move") {
-                cout << 0 << endl;
                 if (board->isWhiteTurn() == true) {
                     if(players[0]->getType() == 'c') {
                         // board->move();
@@ -250,7 +248,6 @@ void Controller::gameMoves() {
                     }
                 }
                 else {
-                    cout << 1 << endl;
                     if(players[1]->getType() == 'c') {
                         // board->move();
                         // board->render();

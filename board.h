@@ -31,9 +31,10 @@ public:
     void render();
     std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
     std::shared_ptr<Piece> getPiece(PieceName name, Colour colour);
+    std::shared_ptr<Piece> getPieceAt(const std::pair<int, int> &at);
     void addPiece(std::shared_ptr<Piece> p);
     void removePieceAt(std::pair<int, int> from);
-    void move(std::pair<int, int> &begin, std::pair<int, int> &end, Colour c);
+    void move(std::pair<int, int> &begin, std::pair<int, int> &end);
     bool isCheck(std::pair<int, int> kingPos = std::make_pair(-1, -1));
     bool isCheckmate();
     bool hasAlly(Colour c, const std::pair<int, int> pos);
@@ -41,7 +42,8 @@ public:
     bool hasObstacle(const std::pair<int, int> pos);
     void clear();
 
-    std::shared_ptr<Piece> getPieceAt(const std::pair<int, int> &at);
+    std::vector<std::pair<std::pair<int, int>, std::pair<int, int>>> getAllValidMoves(bool whiteTurn);
+
     bool isValidTurn(const std::pair<int, int> &from);
     void nextTurn();
     ~Board();

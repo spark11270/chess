@@ -12,26 +12,30 @@
 using namespace std;
 
 // -------------------------------- Helper ------------------------------
-void printPieces(std::vector<std::shared_ptr<Piece>> pieces) {
+void printPiece(shared_ptr<Piece> &piece) {
+    if (piece->getType() == PieceName::Bishop) {
+        cout << "Bishop" << endl;
+    }
+    if (piece->getType() == PieceName::Pawn) {
+        cout << "Pawn" << endl;
+    }
+    if (piece->getType() == PieceName::King) {
+        cout << "King" << endl;
+    }
+    if (piece->getType() == PieceName::Queen) {
+        cout << "Queen" << endl;
+    }
+    if (piece->getType() == PieceName::Knight) {
+        cout << "Knight" << endl;
+    }
+    if (piece->getType() == PieceName::Rook) {
+        cout << "Rook" << endl;
+    }
+}
+
+void printPieces(vector<shared_ptr<Piece>> pieces) {
     for (auto &piece: pieces) {
-        if (piece->getType() == PieceName::Bishop) {
-            cout << "Bishop" << endl;
-        }
-        if (piece->getType() == PieceName::Pawn) {
-            cout << "Pawn" << endl;
-        }
-        if (piece->getType() == PieceName::King) {
-            cout << "King" << endl;
-        }
-        if (piece->getType() == PieceName::Queen) {
-            cout << "Queen" << endl;
-        }
-        if (piece->getType() == PieceName::Knight) {
-            cout << "Knight" << endl;
-        }
-        if (piece->getType() == PieceName::Rook) {
-            cout << "Rook" << endl;
-        }
+        printPiece(piece);
     }
 }
 
@@ -60,7 +64,6 @@ void Board::addPiece(shared_ptr<Piece> p) {
 void Board::removePieceAt(std::pair<int, int> from) {
     shared_ptr<Piece> tmp = theBoard[from.first][from.second];
     if (theBoard[from.first][from.second] != nullptr) {
-        theBoard[from.first][from.second] = nullptr;
         int pos = 0;
         if (tmp->getColour() == Colour::Black) {
             for (auto &piece : blackPieces) {
@@ -70,19 +73,17 @@ void Board::removePieceAt(std::pair<int, int> from) {
                 }
                 ++pos;
             }
-            ++pos;
-        }
-    }
-    else {
-        for (auto &piece : whitePieces) {
-            if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
-                whitePieces.erase(whitePieces.begin() + pos);
-                break;
+        } else {
+            for (auto &piece : whitePieces) {
+                if (piece->getCoords().first == from.first && piece->getCoords().second == from.second) {
+                    whitePieces.erase(whitePieces.begin() + pos);
+                    break;
+                }
+                ++pos;
             }
-            ++pos;
         }
     }
-
+    
     theBoard[from.first][from.second] = nullptr;
 }
 
@@ -121,24 +122,24 @@ bool Board::validPawns() {
 
 void Board::init() {
     // white pieces
-    theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0);
-    theBoard[7][1] = make_shared<Knight>(Colour::White, 7, 1);
-    theBoard[7][2] = make_shared<Bishop>(Colour::White, 7, 2);
-    theBoard[7][3] = make_shared<King>(Colour::White, 7, 3);
-    theBoard[7][4] = make_shared<Queen>(Colour::White, 7, 4);
-    theBoard[7][5] = make_shared<Bishop>(Colour::White, 7, 5);
-    theBoard[7][6] = make_shared<Knight>(Colour::White, 7, 6);
-    theBoard[7][7] = make_shared<Rook>(Colour::White, 7, 7);
+    theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0, this);
+    theBoard[7][1] = make_shared<Knight>(Colour::White, 7, 1, this);
+    theBoard[7][2] = make_shared<Bishop>(Colour::White, 7, 2, this);
+    theBoard[7][3] = make_shared<King>(Colour::White, 7, 3, this);
+    theBoard[7][4] = make_shared<Queen>(Colour::White, 7, 4, this);
+    theBoard[7][5] = make_shared<Bishop>(Colour::White, 7, 5, this);
+    theBoard[7][6] = make_shared<Knight>(Colour::White, 7, 6, this);
+    theBoard[7][7] = make_shared<Rook>(Colour::White, 7, 7, this);
 
     // black pieces
-    theBoard[0][0] = make_shared<Rook>(Colour::Black, 0, 0);
-    theBoard[0][1] = make_shared<Knight>(Colour::Black, 0, 1);
-    theBoard[0][2] = make_shared<Bishop>(Colour::Black, 0, 2);
-    theBoard[0][3] = make_shared<King>(Colour::Black, 0, 3);
-    theBoard[0][4] = make_shared<Queen>(Colour::Black, 0, 4);
-    theBoard[0][5] = make_shared<Bishop>(Colour::Black, 0, 5);
-    theBoard[0][6] = make_shared<Knight>(Colour::Black, 0, 6);
-    theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 7);
+    theBoard[0][0] = make_shared<Rook>(Colour::Black, 0, 0, this);
+    theBoard[0][1] = make_shared<Knight>(Colour::Black, 0, 1, this);
+    theBoard[0][2] = make_shared<Bishop>(Colour::Black, 0, 2, this);
+    theBoard[0][3] = make_shared<King>(Colour::Black, 0, 3, this);
+    theBoard[0][4] = make_shared<Queen>(Colour::Black, 0, 4, this);
+    theBoard[0][5] = make_shared<Bishop>(Colour::Black, 0, 5, this);
+    theBoard[0][6] = make_shared<Knight>(Colour::Black, 0, 6, this);
+    theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 7, this);
 
     for (int i = 0 ; i < MAXCELL; ++i) {
         whitePieces.push_back(theBoard[7][i]);
@@ -147,8 +148,8 @@ void Board::init() {
 
     // pawns
     for (int i = 0; i < MAXCELL; ++i) {
-        theBoard[6][i] = make_shared<Pawn>(Colour::White, 6, i);
-        theBoard[1][i] = make_shared<Pawn>(Colour::Black, 1, i);
+        theBoard[6][i] = make_shared<Pawn>(Colour::White, 6, i, this);
+        theBoard[1][i] = make_shared<Pawn>(Colour::Black, 1, i, this);
         whitePieces.push_back(theBoard[6][i]);
         blackPieces.push_back(theBoard[1][i]);
     }
@@ -181,8 +182,11 @@ std::shared_ptr<Piece> Board::getPiece(PieceName name, Colour colour) {
     }
 }
 
+shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
+    return theBoard[at.first][at.second];
+}
 
-void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
+void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     bool validTurn = isValidTurn(begin);
 
     if (!validTurn) {
@@ -202,6 +206,9 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, Colour c) {
     removePieceAt(begin);
 
     // add the piece
+    if (getPieceAt(end) != nullptr) {
+        removePieceAt(end); 
+    }
     theBoard[end.first][end.second] = p;
 
     // modify the piece coordinate
@@ -284,6 +291,7 @@ bool Board::hasOpponent(Colour c, const pair<int, int> pos) {
 }
 
 bool Board::hasObstacle(pair<int, int> pos) {
+    cout << "HI THERE STEP 5-8-1" << pos.first << " " << pos.second << endl;
     shared_ptr<Piece> tmp = theBoard[pos.first][pos.second];
     return tmp != nullptr;
 }
@@ -303,10 +311,6 @@ void Board::clear() {
     }
 }
 
-shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
-    return theBoard[at.first][at.second];
-}
-
 bool Board::isValidTurn(const pair<int, int> &from) {
     shared_ptr<Piece> piece = getPieceAt(from);
     if (piece == nullptr) return false;
@@ -324,3 +328,36 @@ void Board::nextTurn() {
 }
 
 Board::~Board() {}
+
+// ------------------- logic for computer -------------------
+vector<pair<pair<int, int>, pair<int, int>>> Board::getAllValidMoves(bool whiteTurn) {
+    vector<shared_ptr<Piece>> &pieces = whiteTurn ? whitePieces : blackPieces;
+    int piecesSize = pieces.size();
+    vector<pair<pair<int, int>, pair<int, int>>> validMovePairs;
+    cout << "HI THERE STEP 1" << endl;
+    for (int row = 0; row < MAXCELL; ++row) {
+        for (int col = 0; col < MAXCELL; ++col) {
+            for (int idx = 0; idx < piecesSize; ++idx) {
+                cout << "HI THERE STEP 2" << endl;
+                shared_ptr<Piece> p = pieces.at(idx);
+                cout << "HI THERE STEP 3" << endl;
+                pair<int, int> from = p->getCoords();
+                cout << "HI THERE STEP 4" << endl;
+                pair<int, int> to = make_pair(row, col);
+                cout << "HI THERE STEP 5" << endl;
+                printPiece(p);
+                cout << from.first << " " << from.second << " & " << to.first << " " << to.second << endl;
+                bool validMove = p->isValidMove(from, to);
+
+                cout << "HI THERE STEP 6" << endl;
+                if (validMove) {
+                    // TO-DO: check 'will lead to check'. don't add this
+                    validMovePairs.push_back(make_pair(from, to));
+                }                
+            }
+        }
+    }
+    cout << "HI THERE STEP 7" << endl;
+    validMovePairs.shrink_to_fit();
+    return validMovePairs;
+}

@@ -7,9 +7,9 @@ class Human : public Player {
 
 public:
     Human(Colour colour);
-    virtual char getType() override;
-    
     ~Human();
+
+    void move(Board *board, std::pair<int, int> from, std::pair<int, int> to) override;
 };
 
 #endif

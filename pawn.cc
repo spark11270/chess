@@ -1,13 +1,14 @@
 #include "pawn.h"
+#include "board.h"
 #include <iostream>
 using namespace std;
 
 Pawn::Pawn(Colour c, int row, int col, Board *theBoard) : Piece{c, row, col, PieceName::Pawn, theBoard}, isFirstMove{true} {}
 
 bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
-    
     if (final.first >= MAXCELL) return false; // check out of bounds
     if (final.second >= MAXCELL) return false; // check out of bounds
+    
     if (final.first < 0) return false; // check out of bounds
     if (final.second < 0) return false; // check out of bounds
     
@@ -29,7 +30,7 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     }
 
     // my own item?
-    if (isMine(theBoard->getBoard()[final.first][final.second] != nullptr)) return false;
+    if (getTheBoard()->hasAlly(getColour(), final)) return false;
 
     return false;
 }

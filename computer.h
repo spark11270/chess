@@ -3,20 +3,23 @@
 
 #include "player.h"
 #include <string>
-#include <vector>
+#include <memory>
 
+class Board;
 class Move;
+class LVL;
 
 class Computer : public Player {
-    int lvl;
+    private:
+        std::shared_ptr<LVL> ai;
 
-public:
-    Computer(Colour c, int lvl);
+    public:
+        Computer(Colour c, int lvl);
+        ~Computer();
 
-    virtual std::vector<Move> getAIMoves();
-    char getType();
+        std::shared_ptr<LVL> getAI();
 
-    ~Computer();
+        void move(Board *board, std::pair<int, int> from, std::pair<int, int> to) override;
 };
 
 #endif

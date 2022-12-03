@@ -1,5 +1,5 @@
 #include "controller.h"
-#include "xwindow.h"
+// #include "xwindow.h"
 #include "board.h"
 #include "king.h"
 #include "queen.h"
@@ -79,40 +79,40 @@ void Controller::initGame() {
                 pair<int, int> coords = convertPos(pos);
                 switch(piece) {
                     case 'K':
-                        thePiece = make_shared<King>(Colour::White, coords.first, coords.second);
+                        thePiece = make_shared<King>(Colour::White, coords.first, coords.second, board);
                         break;
                     case 'Q':
-                        thePiece = make_shared<Queen>(Colour::White, coords.first, coords.second);
+                        thePiece = make_shared<Queen>(Colour::White, coords.first, coords.second, board);
                         break;
                     case 'N':
-                        thePiece = make_shared<Knight>(Colour::White, coords.first, coords.second);
+                        thePiece = make_shared<Knight>(Colour::White, coords.first, coords.second, board);
                         break;
                     case 'B':
-                        thePiece = make_shared<Bishop>(Colour::White, coords.first, coords.second);
+                        thePiece = make_shared<Bishop>(Colour::White, coords.first, coords.second, board);
                         break;
                     case 'R':
-                        thePiece = make_shared<Rook>(Colour::White, coords.first, coords.second);
+                        thePiece = make_shared<Rook>(Colour::White, coords.first, coords.second, board);
                         break;
                     case 'P': 
-                        thePiece = make_shared<Pawn>(Colour::White, coords.first, coords.second);
+                        thePiece = make_shared<Pawn>(Colour::White, coords.first, coords.second, board);
                         break;
                     case 'k':
-                        thePiece = make_shared<King>(Colour::Black, coords.first, coords.second);
+                        thePiece = make_shared<King>(Colour::Black, coords.first, coords.second, board);
                         break;
                     case 'q':
-                        thePiece = make_shared<Queen>(Colour::Black, coords.first, coords.second);
+                        thePiece = make_shared<Queen>(Colour::Black, coords.first, coords.second, board);
                         break;
                     case 'n':
-                        thePiece = make_shared<Knight>(Colour::Black, coords.first, coords.second);
+                        thePiece = make_shared<Knight>(Colour::Black, coords.first, coords.second, board);
                         break;
                     case 'b':
-                        thePiece = make_shared<Bishop>(Colour::Black, coords.first, coords.second);
+                        thePiece = make_shared<Bishop>(Colour::Black, coords.first, coords.second, board);
                         break;
                     case 'r':
-                        thePiece = make_shared<Rook>(Colour::Black, coords.first, coords.second);
+                        thePiece = make_shared<Rook>(Colour::Black, coords.first, coords.second, board);
                         break;
                     case 'p':
-                        thePiece = make_shared<Pawn>(Colour::Black, coords.first, coords.second);
+                        thePiece = make_shared<Pawn>(Colour::Black, coords.first, coords.second, board);
                         break;
                 }
                 board->addPiece(thePiece);
@@ -183,7 +183,7 @@ void Controller::playGame() {
                 initPlayer(bPlayer, Colour::Black);
                 board->render();
                 gameMoves();
-                Xwindow w(450, 450);
+                //Xwindow w(450, 450);
                 if (!newRound) break;
                 board->clear();
                 doneSetup = false;
@@ -229,46 +229,21 @@ void Controller::gameMoves() {
                 break;
             }
             else if (command == "move") {
-                if (board->isWhiteTurn() == true) {
-                    if(players[0]->getType() == 'c') {
-                        // board->move();
-                        // board->render();
-                        // continue;
-                    }
-                    else {
-                        ss >> from;
-                        pair<int, int> fromCoords = convertPos(from);
-                        ss >> to;
-                        pair<int, int> toCoords = convertPos(to);
-                        if (ss >> prom) {
-                            // handle promotion
-                            cout << prom << endl;
-                        }
-                        else {
-                            // no promotion
-                            board->move(fromCoords, toCoords, Colour::White);
-                        }
-                    }
+                if (board->isWhiteTurn()) {
+                    pair<int, int> uselsssCord = make_pair(-1, -1);
+                    players[0]->move(board, uselsssCord, uselsssCord);
                 }
                 else {
-                    if(players[1]->getType() == 'c') {
-                        // board->move();
-                        // board->render();
-                        // continue;
+                    ss >> from >> to;
+                    pair<int, int> fromCoords = convertPos(from);
+                    pair<int, int> toCoords = convertPos(to);
+                    if (ss >> prom) {
+                        // handle promotion
+                        cout << prom << endl;
                     }
                     else {
-                        ss >> from;
-                        pair<int, int> fromCoords = convertPos(from);
-                        ss >> to;
-                        pair<int, int> toCoords = convertPos(to);
-                        if (ss >> prom) {
-                            // handle promotion
-                            cout << prom << endl;
-                        }
-                        else {
-                            // no promotion
-                            board->move(fromCoords, toCoords, Colour::Black);
-                        }
+                        // no promotion
+                        players[1]->move(board, fromCoords, toCoords);
                     }
                 }
                 board->render();

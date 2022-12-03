@@ -1,5 +1,5 @@
-#ifndef __WINDOW_H__
-#define __WINDOW_H__
+#if 0
+
 #include <X11/Xlib.h>
 #include <iostream>
 #include <string>
@@ -31,5 +31,6 @@ class Xwindow {
 
   void drawBoard();
 };
+
 
 #endif

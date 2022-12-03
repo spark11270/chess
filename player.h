@@ -5,6 +5,7 @@
 #include <string>
 
 class King;
+class Board;
 
 class Player {
     Colour colour;
@@ -12,13 +13,14 @@ class Player {
 
 public:
     Player(Colour colour, int score);
+    virtual ~Player() = 0;
 
     Colour getColour();
     int getScore();
+
     void updateScore(); // increment score
-    virtual char getType() = 0;
     void resetScore();
-    virtual ~Player() = 0;
+    virtual void move(Board *board, std::pair<int, int> from, std::pair<int, int> to) = 0;
 };
 
 #endif

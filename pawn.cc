@@ -22,15 +22,12 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
         if (getTheBoard()->hasObstacle(final)) return true;
 
         // if trying to enpassant
-<<<<<<< Updated upstream
         if ((getTheBoard()->hasObstacle(final) == false) && (getTheBoard()->hasOpponent(getColour(), make_pair(initial.first, final.second))) && 
             (getTheBoard()->canEP(initial, final))) {
-=======
-    /*    if ((getTheBoard()->hasObstacle(final) == false) && (getTheBoard()->hasOpponent(getColour(), make_pair(initial.first, final.second))) && 
+        if ((getTheBoard()->hasObstacle(final) == false) && (getTheBoard()->hasOpponent(getColour(), make_pair(initial.first, final.second))) && 
             (getTheBoard()->canEP((getTheBoard()->getPieceAt(make_pair(initial.first, final.second))), initial, final))) {
->>>>>>> Stashed changes
                 return true;
-            }*/
+            }
     }
 
     if (getIsFirstMove() == true) { 

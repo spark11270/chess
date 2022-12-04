@@ -244,8 +244,12 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
     // modify the piece coordinate
     p->modifyCoords(end);
 
+    if (type == MoveType::EnPassant) {
+        removePieceAt(make_pair(end.first, end.second + 1));
+        Move m{getPieceAt(make_pair(end.first, end.second + 1)), p, begin, end, MoveType::EnPassant};
+        totalMoves.push_back(m);
     // promotion
-    if (type == MoveType::Promotion) {
+    } else if (type == MoveType::Promotion) {
         removePieceAt(end);
         addPiece(end, prom);
         Move m{getPieceAt(end), p, begin, end, MoveType::Promotion};
@@ -271,6 +275,14 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
     }
 }
 
+bool Board::canEP(shared_ptr<Piece> pawn, pair<int, int> &begin, pair<int, int> &end) {
+    if (pawn->getIsFirstMove()) {
+        if (end.second - begin.second == 2) {
+            return true;
+        }
+    }
+    return false;
+}
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {
 
@@ -289,9 +301,12 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char
 
     // modify the piece coordinate
     p->modifyCoords(end);
-
+    if (type == MoveType::EnPassant) {
+        removePieceAt(make_pair(end.first, end.second + 1));
+        Move m{getPieceAt(make_pair(end.first, end.second + 1)), p, begin, end, MoveType::EnPassant};
+        totalMoves.push_back(m);
     // promotion
-    if (type == MoveType::Promotion) {
+    } else if (type == MoveType::Promotion) {
         removePieceAt(end);
         addPiece(end, prom);
         Move m{getPieceAt(end), p, begin, end, MoveType::Promotion};

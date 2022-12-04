@@ -20,4 +20,10 @@ Colour Piece::getColour() {return colour;}
 
 Board *Piece::getTheBoard() {return b;}
 
+bool Piece::getIsFirstMove() {return isFirstMove;}
+
+void Piece::setIsFirstMove() {
+    isFirstMove = false;
+}
+
 Piece::~Piece() {};

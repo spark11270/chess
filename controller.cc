@@ -224,7 +224,7 @@ void Controller::gameMoves() {
                             throw runtime_error("Invalid move");
                         }
                         if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, MoveType::EnPassant);
+                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
                         } 
                         else if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
@@ -238,22 +238,22 @@ void Controller::gameMoves() {
                             if (prom == 'k' || prom == 'K') {
                                 throw runtime_error("You cannot promote to King");
                             }
-                           board->move(fromCoords, toCoords, MoveType::Promotion, prom);
+                           board->move(fromCoords, toCoords, prom, MoveType::Promotion);
                         } 
                         else {
                             // no promotion
                             if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, MoveType::EnPassant);
+                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
                             }
                             char dir = board->canCastle(fromCoords, toCoords);
                             if (dir != ' ') {
-                                board->move(fromCoords, toCoords, MoveType::Castling, dir);
+                                board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
                             }
                             if (board->hasObstacle(toCoords)) {
-                                board->move(fromCoords, toCoords, MoveType::Capture);
+                                board->move(fromCoords, toCoords, ' ', MoveType::Capture);
                             }
                             else {
-                                board->move(fromCoords, toCoords, MoveType::Normal);
+                                board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
                             }
                         }
                     }
@@ -280,16 +280,16 @@ void Controller::gameMoves() {
                             if (prom == 'k' || prom == 'K') {
                                 throw runtime_error("You cannot promote to King");
                             }
-                            board->move(fromCoords, toCoords, MoveType::Promotion, prom);
+                            board->move(fromCoords, toCoords, ' ', MoveType::Promotion, prom);
                         }
                         else {
                             // no promotion
                             if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, MoveType::EnPassant);
+                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
                             }
                             char dir = board->canCastle(fromCoords, toCoords);
                             if (dir != ' ') {
-                                board->move(fromCoords, toCoords, MoveType::Castling, dir);
+                                board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
                             }
                             board->move(fromCoords, toCoords);
                         }

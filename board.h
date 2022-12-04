@@ -40,7 +40,7 @@ public:
     void addPiece(std::pair<int, int> pos, char c);
     void removePieceAt(std::pair<int, int> from);
     void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom = ' ', char dir = ' ');
-    void move(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type = MoveType::Normal, char prom = ' ',  char dir = ' ');
+    void move(std::pair<int, int> &begin, std::pair<int, int> &end, char prom = ' ', MoveType type = MoveType::Normal,  char dir = ' ');
     void undoMove(const Move &m);
     Move getLastMove(std::shared_ptr<Piece> p);
     bool isCheck(std::pair<int, int> kingPos);

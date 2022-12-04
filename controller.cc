@@ -242,14 +242,14 @@ void Controller::gameMoves() {
                         } 
                         else {
                             // no promotion
-                            if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
-                            }
                             char dir = board->canCastle(fromCoords, toCoords);
                             if (dir != ' ') {
                                 board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
                             }
-                            if (board->hasObstacle(toCoords)) {
+                            else if (board->canEP(fromCoords, toCoords)) {
+                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
+                            }
+                            else if (board->hasObstacle(toCoords)) {
                                 board->move(fromCoords, toCoords, ' ', MoveType::Capture);
                             }
                             else {
@@ -314,8 +314,6 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
     if (p == nullptr) { return false; }
     if (p->getColour() != board->getWhosTurn()) {
         string name = "blah";
-        if (p->getType() == PieceName::King) name = "king";
-        cout << name << " at " << p->getCoords().first << ", " << p->getCoords().second << endl; 
         throw runtime_error("Wrong player's turn to move");
     }
 

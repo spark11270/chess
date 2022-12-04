@@ -305,8 +305,6 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
 
     if (type == MoveType::Castling) {
         shared_ptr<Piece> rook = getRook(getKing()->getCoords(), dir, whosTurn);
-        cout << rook->getCoords().first << endl;
-        cout << rook->getCoords().second << endl;
 
         pair<int, int> rookPos;
         theBoard[rook->getCoords().first][rook->getCoords().second] = nullptr;
@@ -321,18 +319,12 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
                 break;
             // move rook one down of king
             case UP:
-                rookPos = make_pair(end.first - 1, end.second);
+                rookPos = make_pair(end.first + 1, end.second);
                 break;
             // move rook one right of king
             case DOWN:
-                rookPos = make_pair(end.first + 1, end.second);
+                rookPos = make_pair(end.first - 1, end.second);
                 break;
-        }
-        char c;
-        if (whosTurn == Colour::White) {
-            c = 'R';
-        } else {
-            c = 'r';
         }
         theBoard[rookPos.first][rookPos.second] = rook;
         rook->modifyCoords(rookPos);
@@ -477,8 +469,6 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
     // for (auto &m : totalMoves) {
     //     cout << m.getMoves() << endl;
     // }
-    cout << "check white's turn: ";
-    cout << isWhiteTurn() << endl;
     nextTurn();
 }
 

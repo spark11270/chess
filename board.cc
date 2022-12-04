@@ -231,6 +231,7 @@ shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
 
 void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {
     shared_ptr<Piece> p = getPieceAt(begin);
+    shared_ptr<Piece> captured = getPieceAt(end);
 
     // remove the piece
     theBoard[begin.first][begin.second] = nullptr;
@@ -245,18 +246,23 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
     p->modifyCoords(end);
 
     if (type == MoveType::EnPassant) {
-        removePieceAt(make_pair(end.first, end.second + 1));
-        Move m{getPieceAt(make_pair(end.first, end.second + 1)), p, begin, end, MoveType::EnPassant};
+        shared_ptr<Piece> removed = getPieceAt(make_pair(begin.first, end.second)); //opponent's pawn
+        Move m{removed, p, begin, end, MoveType::EnPassant};
+        removePieceAt(make_pair(begin.first, end.second));
         totalMoves.push_back(m);
     // promotion
     } else if (type == MoveType::Promotion) {
         removePieceAt(end);
         addPiece(end, prom);
-        Move m{getPieceAt(end), p, begin, end, MoveType::Promotion};
-        totalMoves.push_back(m);
+        if (captured != nullptr) {
+            Move m{captured, p, begin, end, MoveType::Promotion};
+        }
+        else {
+            Move m{p, begin, end, MoveType::Promotion};
+        }
     // capture
     } else if (type == MoveType::Capture) {
-        Move m{getPieceAt(end), p, begin, end, MoveType::Capture};
+        Move m{captured, p, begin, end, MoveType::Capture};
         totalMoves.push_back(m);
     // normal
     } else {
@@ -317,42 +323,7 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char
             break;
     }
 
-
-    shared_ptr<Piece> p = getPieceAt(begin);
-
     simulate(begin, end, type, prom);
-    
-    // remove the piece
-    theBoard[begin.first][begin.second] = nullptr;
-    
-    // add the piece
-    if (getPieceAt(end) != nullptr) {
-        removePieceAt(end); 
-    }
-    theBoard[end.first][end.second] = p;
-
-    // modify the piece coordinate
-    p->modifyCoords(end);
-    if (type == MoveType::EnPassant) {
-        shared_ptr<Piece> removed = getPieceAt(make_pair(begin.first, end.second)); //opponent's pawn
-        Move m{removed, p, begin, end, MoveType::EnPassant};
-        removePieceAt(make_pair(begin.first, end.second));
-        totalMoves.push_back(m);
-    // promotion
-    } else if (type == MoveType::Promotion) {
-        removePieceAt(end);
-        addPiece(end, prom);
-        Move m{getPieceAt(end), p, begin, end, MoveType::Promotion};
-        totalMoves.push_back(m);
-    // capture
-    } else if (type == MoveType::Capture) {
-        Move m{getPieceAt(end), p, begin, end, MoveType::Capture};
-        totalMoves.push_back(m);
-    // normal
-    } else {
-        Move m{p, begin, end};
-        totalMoves.push_back(m);
-    }
 
     // for (auto &m : totalMoves) {
     //     cout << m.getMoves() << endl;

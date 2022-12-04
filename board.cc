@@ -362,6 +362,7 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
             throw runtime_error("Black King is in check");
         }
     }
+    p->setIsFirstMove();
 }
 
 Move Board::getLastMove(shared_ptr<Piece> p) {

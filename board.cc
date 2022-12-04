@@ -79,24 +79,24 @@ shared_ptr<Piece> Board::getRook(pair<int,int> kingPos, char kingDir, Colour c) 
         for (auto &piece : whitePieces) {
             if (piece->getType() == PieceName::Rook) {
                 if (kingDir == UP) {
-                    if (piece->getCoords().second < kingPos.second) {
+                    if (piece->getCoords().first < kingPos.first) {
                         return piece;
                     }
 
                 }
                 if (kingDir == DOWN) {
-                    if (piece->getCoords().second > kingPos.second) {
+                    if (piece->getCoords().first > kingPos.first) {
                         return piece;
                     }
 
                 }
                 if (kingDir == RIGHT) {
-                    if (piece->getCoords().first > kingPos.first) {
+                    if (piece->getCoords().second > kingPos.second) {
                         return piece;
                     }
                 }
                 if (kingDir == LEFT) {
-                    if (piece->getCoords().first < kingPos.first) {
+                    if (piece->getCoords().second < kingPos.second) {
                         return piece;
                     }
 
@@ -313,6 +313,8 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
 
     if (type == MoveType::Castling) {
         shared_ptr<Piece> rook = getRook(getKing()->getCoords(), dir, whosTurn);
+        cout << rook->getCoords().first << endl;
+        cout << rook->getCoords().second << endl;
         removePieceAt(rook->getCoords());
         pair<int, int> rookPos;
         switch(dir) {
@@ -404,20 +406,17 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
 
     // piece is not king
     if (king->getType() != PieceName::King) return ' ';
-
-    // if king is not at first move;
+    // if not king's first move
     if (!king->getIsFirstMove()) return ' ';
-
     // neither horizontal nor vertical
     if ((begin.first != end.first) && (begin.second != end.second)) return ' ';
-
     // moves horizontally
     if (begin.first == end.first) {
         if (abs(end.second - begin.second) != 2) return ' ';
         // moves right
         if (end.second > begin.second) {
             dir = RIGHT;
-            rook = getRook(king->getCoords(), RIGHT , whosTurn);    // get rook on right hand side
+            rook = getRook(king->getCoords(), RIGHT, whosTurn);    // get rook on right hand side
             if (rook == nullptr) return ' ';
             if (!rook->getIsFirstMove()) return ' ';
             if (rook->getCoords().first != begin.first) return ' '; // must be on same row

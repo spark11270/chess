@@ -334,8 +334,9 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char
     // modify the piece coordinate
     p->modifyCoords(end);
     if (type == MoveType::EnPassant) {
-        removePieceAt(make_pair(end.first, end.second + 1));
-        Move m{getPieceAt(make_pair(end.first, end.second + 1)), p, begin, end, MoveType::EnPassant};
+        shared_ptr<Piece> removed = getPieceAt(begine.first, end.second); //opponent's pawn
+        Move m{removed, p, begin, end, MoveType::EnPassant};
+        removePieceAt(make_pair(begin.first, end.second));
         totalMoves.push_back(m);
     // promotion
     } else if (type == MoveType::Promotion) {

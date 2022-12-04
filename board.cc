@@ -243,11 +243,11 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     }
 
     // capture
-    if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
-        Move m{begin.first, begin.second, end.first, end.second, p};
-        m.setCaptured(getPieceAt(end));
-        totalMoves.push_back(m);
-    }
+    // if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
+    //     Move m{begin.first, begin.second, end.first, end.second, p};
+    //     m.setCaptured(getPieceAt(end));
+    //     totalMoves.push_back(m);
+    // }
     
     // remove the piece
     theBoard[begin.first][begin.second] = nullptr;

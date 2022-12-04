@@ -7,6 +7,7 @@
 #include "lvl.h"
 #include "lvl1.h"
 #include "lvl2.h"
+#include "lvl3.h"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ Computer::Computer(Colour c, int lvl) : Player(c, 0) {
             break;
         case 3:
             // prefers avodiing capture and checks
-            ai = make_shared<LVL1>();
+            ai = make_shared<LVL3>();
             break;
         case 4:
             // plays sophistircated moves

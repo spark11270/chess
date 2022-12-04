@@ -284,14 +284,19 @@ void Controller::gameMoves() {
                         }
                         else {
                             // no promotion
-                            if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
-                            }
                             char dir = board->canCastle(fromCoords, toCoords);
                             if (dir != ' ') {
                                 board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
                             }
-                            board->move(fromCoords, toCoords);
+                            else if (board->canEP(fromCoords, toCoords)) {
+                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
+                            }
+                            else if (board->hasObstacle(toCoords)) {
+                                board->move(fromCoords, toCoords, ' ', MoveType::Capture);
+                            }
+                            else {
+                                board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
+                            }
                         }
                     }
                 }

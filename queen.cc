@@ -17,36 +17,34 @@ bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) 
     // my own item in the final
     if (getTheBoard()->hasAlly(getColour(), final)) return false;
 
+    int start, end;
+
     // move horizontally
     if (initial.first == final.first) {
-        int r1 = initial.first;
-        if (final.second > initial.second) {
-            for (int i = initial.second + 1; i < final.second; ++i) {
-            // obstacle blocking path
-            if (getTheBoard()->hasObstacle(make_pair(r1, i))) return false;
-            }
-        } else {
-            for (int i = final.second - 1; i < initial.second; --i) {
-            // obstacle blocking path
-            if (getTheBoard()->hasObstacle(make_pair(r1, i))) return false;
-            }
+        start = final.second < initial.second ? final.second : initial.second;
+        end = final.second < initial.second ? initial.second : final.second;
+
+        pair<int, int> tmp = make_pair(final.first, start);
+        for (int i = start + 1; i < end; ++i) {
+            tmp.second = i;
+            if (i != initial.second && getTheBoard()->hasObstacle(tmp)) return false;
         }
-        return true;
+
+        return !getTheBoard()->hasAlly(getColour(), final);
+    }
     // move vertically
-    } else if (initial.second == final.second) {
-        int c1 = initial.second;
-        if (final.first > initial.first) {
-            for (int i = initial.first + 1; i < final.first; ++i) {
-            // obstacle blocking path
-            if (getTheBoard()->hasObstacle(make_pair(i, c1))) return false;
-            }
-        } else {
-            for (int i = final.first - 1; i < initial.first; --i) {
-            // obstacle blocking path
-            if (getTheBoard()->hasObstacle(make_pair(i, c1))) return false;
-            }
+    else if (initial.second == final.second) {
+        start = final.first < initial.first ? final.first : initial.first;
+        end = final.first < initial.first ? initial.first : final.first;
+
+        pair<int, int> tmp = make_pair(start, final.second);
+        for (int i = start + 1; i < end; ++i) {
+            tmp.first = i;
+            if (i != initial.first && getTheBoard()->hasObstacle(tmp)) return false;
         }
-        return true;
+
+        return !getTheBoard()->hasAlly(getColour(), final);
+
     } else if (abs(final.second - initial.second) == abs(final.first - initial.first)) {
         int x = 1;
     int y = 1;

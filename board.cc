@@ -392,12 +392,12 @@ void Board::setPlayerFirst(Colour colour) {
 
 bool Board::isCheck(pair<int, int> kingPos) {
     // debugging
-    if (whosTurn == Colour::White) {
-        cout << "white king pos: ";
-    } else {
-        cout << "black king pos: ";
-    }
-    cout << kingPos.first <<", " << kingPos.second << endl;
+    // if (whosTurn == Colour::White) {
+    //     cout << "white king pos: ";
+    // } else {
+    //     cout << "black king pos: ";
+    // }
+    // cout << kingPos.first <<", " << kingPos.second << endl;
 
     if (whosTurn == Colour::Black)   {
         for (auto &p : whitePieces) {
@@ -484,7 +484,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
                 // for (auto &m : p->getPosMoves()) {
                 //     cout << m.first << ", " << m.second << endl;
                 // }
-                cout << "ischeck here" << endl;
+                // cout << "ischeck here" << endl;
                 return true;
             }
         }

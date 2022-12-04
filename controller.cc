@@ -199,7 +199,6 @@ void Controller::gameMoves() {
             }
             else if (command == "move") {
                 if (board->isCheck(board->getKing()->getCoords())) {
-                    cout << "is check :(" << endl;
                     players[1]->updateScore();
                     printScore();
                     break;

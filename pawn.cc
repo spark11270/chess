@@ -23,7 +23,7 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 
         // if trying to enpassant
         if ((getTheBoard()->hasObstacle(final) == false) && (getTheBoard()->hasOpponent(getColour(), make_pair(initial.first, final.second))) && 
-            (getTheBoard()->canEP((getTheBoard()->getPieceAt(make_pair(initial.first, final.second))), initial, final))) {
+            (getTheBoard()->canEP(initial, final))) {
                 return true;
             }
     }

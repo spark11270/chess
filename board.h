@@ -18,8 +18,6 @@ class Board : public Subject {
     std::vector<std::shared_ptr<Piece>> whitePieces;
     std::vector<std::shared_ptr<Piece>> blackPieces;
     std::vector<Move> totalMoves;
-    Player *W; 
-    Player *B;
     Colour whosTurn = Colour::White;
 
 public:
@@ -57,7 +55,7 @@ public:
     void clear();
     // returns White if white's turn and Black otherwise
     Colour getWhosTurn();
-    bool canEP(std::shared_ptr<Piece> pawn, std::pair<int, int> &begin, std::pair<int, int> &end);
+    bool canEP(std::pair<int, int> &begin, std::pair<int, int> &end);
     std::vector<std::pair<std::shared_ptr<Piece>, std::pair<int, int>>> getAllValidMoves(bool whiteTurn);
     bool willLeadToCheck(std::pair<int, int> &to);
     // returns the piece of the given position

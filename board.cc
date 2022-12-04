@@ -41,7 +41,7 @@ void printPieces(vector<shared_ptr<Piece>> pieces) {
     }
 }
 
-Board::Board() : W{nullptr}, B{nullptr} {
+Board::Board() {
     // construct theBoard
     for (int i = 0; i < MAXCELL; ++i) {
         for (int j = 0; j < MAXCELL; ++j) {
@@ -284,13 +284,17 @@ Move Board::getLastMove(shared_ptr<Piece> p) {
 }
 
 bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
-    if (hasObstacle(end)) return false; // the end position should be empty
-
-    shared_ptr<Piece> toCapture = board->getPieceAt(make_pair(from.first, to.second));
+    shared_ptr<Piece> toCapture = getPieceAt(make_pair(begin.first, end.second));
     if (toCapture == nullptr) return false; // pawn must exists
     if (toCapture->getColour() == getPieceAt(begin)->getColour()) return false; // pawn must be opponent
     if (toCapture->getType() != PieceName::Pawn) return false;
     // check if the last move is pawn moving two squares
+    Move m = totalMoves.back();
+    cout << m.to.first << ", " << m.to.second << endl;
+    if ((abs(m.to.first - m.from.first) == 2) && (m.to.first == begin.first) && (m.to.second == end.second)) {
+        return true;
+    }
+    return false;
 }
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {

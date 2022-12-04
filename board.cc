@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <algorithm>
+#include <utility>
 
 using namespace std;
 
@@ -280,22 +281,69 @@ void Board::undoMove(const Move& m) {
         theBoard[m.to.first][m.to.second] = nullptr;
     }
     if (m.tactic == MoveType::EnPassant) {
-
+        theBoard[m.from.first][m.from.second] = m.moving;
+        theBoard[m.to.first][m.to.second] = nullptr;
+        shared_ptr<Piece> tmp = m.captured;
+        if (tmp->getColour() == Colour::White) {
+            whitePieces.push_back(tmp);
+        }
+        else {
+            blackPieces.push_back(tmp);
+        }
     }
     if (m.tactic == MoveType::Castling) {
+        if (m.to.first == m.from.first) {
+            // horizontal castling
+            if ((m.to.second - m.to.second) < 0) {
+                // rook moved to the left
 
+                // move king to the right
+                shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first, m.to.second + 1));
+                theBoard[m.to.first][m.to.second + 1] = nullptr;
+                theBoard[m.to.first][m.to.second - 1] = king;
+            }
+            else {
+                // rook moved to the right
+
+                // move king to the left
+                shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first, m.to.second - 1));
+                theBoard[m.to.first][m.to.second - 1] = nullptr;
+                theBoard[m.to.first][m.to.second + 1] = king;
+            }
+        }
+        else {
+            if ((m.to.first - m.from.first) < 0) {
+                // rook moved down
+                shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first - 1, m.to.second));
+                theBoard[m.to.first + 1][m.to.second] = nullptr;
+                theBoard[m.to.first - 1][m.to.second] = king;
+            }
+            else {
+                // rook moved up
+
+                // move king up two squares
+                shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first + 1, m.to.second));
+                theBoard[m.to.first - 1][m.to.second] = nullptr;
+                theBoard[m.to.first + 1][m.to.second] = king;
+            }
+        }
+
+    // move rook to the right position
+    theBoard[m.from.first][m.from.second] = m.moving;
+    theBoard[m.to.first][m.to.second] = nullptr;
+        
     }
     if (m.tactic == MoveType::Promotion) {
-        if (m.caputred == nullptr) {
+        if (m.captured == nullptr) {
             // no capturing
             removePieceAt(m.to);
             theBoard[m.to.first][m.to.first] = nullptr;
-            addPiece(from, undoProm);
+            addPiece(m.from, m.undoProm);
         }
         else {
             removePieceAt(m.to);
             theBoard[m.to.first][m.to.first] = nullptr;
-            addPiece(from, undoProm);
+            addPiece(m.from, m.undoProm);
             shared_ptr<Piece> tmp = m.captured;
             if (tmp->getColour() == Colour::White) {
                 whitePieces.push_back(tmp);
@@ -354,7 +402,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
     if (whosTurn == Colour::Black)   {
         for (auto &p : whitePieces) {
             cout << "i ran" << endl;
-            // PieceName name = p->getType();
+            PieceName name = p->getType();
             // switch(name) {
             //     case PieceName::Bishop :
             //         cout << "Bishop moves: " << endl;

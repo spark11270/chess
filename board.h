@@ -39,8 +39,8 @@ public:
     std::shared_ptr<Piece> getKing();
     void addPiece(std::pair<int, int> pos, char c);
     void removePieceAt(std::pair<int, int> from);
-    void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom);
-    void move(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type = MoveType::Normal, char prom = ' ');
+    void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom = ' ', char dir = ' ');
+    void move(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type = MoveType::Normal, char prom = ' ',  char dir = ' ');
     void undoMove(const Move &m);
     Move getLastMove(std::shared_ptr<Piece> p);
     bool isCheck(std::pair<int, int> kingPos);
@@ -63,7 +63,7 @@ public:
     // set whosturn to the next player
     void nextTurn();
     std::shared_ptr<Piece> getRook(std::pair<int,int> kingPos, char kingDir, Colour c);
-    bool canCastle(std::pair<int, int> begin, std::pair<int, int> end);
+    char canCastle(std::pair<int, int> begin, std::pair<int, int> end);
 
     // getting total moves
     std::vector<Move> getTotalMoves();

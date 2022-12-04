@@ -245,8 +245,9 @@ void Controller::gameMoves() {
                             if (board->canEP(fromCoords, toCoords)) {
                             board->move(fromCoords, toCoords, MoveType::EnPassant);
                             }
-                            if (board->canCastle(fromCoords, toCoords)) {
-                                board->move(fromCoords, toCoords, MoveType::Castling);
+                            char dir = board->canCastle(fromCoords, toCoords);
+                            if (dir != ' ') {
+                                board->move(fromCoords, toCoords, MoveType::Castling, dir);
                             }
                             if (board->hasObstacle(toCoords)) {
                                 board->move(fromCoords, toCoords, MoveType::Capture);
@@ -286,8 +287,9 @@ void Controller::gameMoves() {
                             if (board->canEP(fromCoords, toCoords)) {
                             board->move(fromCoords, toCoords, MoveType::EnPassant);
                             }
-                            if (board->canCastle(fromCoords, toCoords)) {
-                                board->move(fromCoords, toCoords, MoveType::Castling);
+                            char dir = board->canCastle(fromCoords, toCoords);
+                            if (dir != ' ') {
+                                board->move(fromCoords, toCoords, MoveType::Castling, dir);
                             }
                             board->move(fromCoords, toCoords);
                         }

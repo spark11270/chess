@@ -176,19 +176,16 @@ void Controller::playGame() {
     }
 }
 
-bool Controller::isEnPassant(pair<int, int> &from, pair<int, int> &to) {
-    // space behind piece
-    shared_ptr<Piece> empty = board->getPieceAt(to);
-    // piece to be captured, right in front
-    shared_ptr<Piece> toCapture = board->getPieceAt(make_pair(to.first, to.second + 1));
-    if (empty != nullptr) return false;
-    cout << "empty" << endl;
-    if (toCapture == nullptr) return false;
-    cout << "capture piece exists" << endl;
-    if (!board->canEP(toCapture, from, to)) return false;
-    cout << "canEP" << endl;
-    return true;
-}
+// bool Controller::isEnPassant(pair<int, int> &from, pair<int, int> &to) {
+//     // space behind piece
+//     shared_ptr<Piece> empty = board->getPieceAt(to);
+//     // piece to be captured, right in front
+//     shared_ptr<Piece> toCapture = board->getPieceAt(make_pair(to.first, to.second + 1));
+//     if (empty != nullptr) return false;
+//     if (toCapture == nullptr) return false;
+//     if (!board->canEP(toCapture, from, to)) return false;
+//     return true;
+// }
 
 void Controller::gameMoves() {
     string line;

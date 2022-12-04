@@ -153,7 +153,7 @@ void Controller::playGame() {
                 initPlayer(bPlayer, Colour::Black);
                 
 		TextDisplay td{board};
-		GraphicsDisplay gd{board};
+		// GraphicsDisplay gd{board};
 		board->render();
                 
 		gameMoves();
@@ -311,6 +311,9 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
 
     if (p == nullptr) { return false; }
     if (p->getColour() != board->getWhosTurn()) {
+        string name = "blah";
+        if (p->getType() == PieceName::King) name = "king";
+        cout << name << " at " << p->getCoords().first << ", " << p->getCoords().second << endl; 
         throw runtime_error("Wrong player's turn to move");
     }
 

@@ -234,8 +234,8 @@ void Board::init() {
     theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0, this);
     theBoard[7][1] = make_shared<Knight>(Colour::White, 7, 1, this);
     theBoard[7][2] = make_shared<Bishop>(Colour::White, 7, 2, this);
-    theBoard[7][3] = make_shared<King>(Colour::White, 7, 3, this);
-    theBoard[7][4] = make_shared<Queen>(Colour::White, 7, 4, this);
+    theBoard[7][3] = make_shared<Queen>(Colour::White, 7, 3, this);
+    theBoard[7][4] = make_shared<King>(Colour::White, 7, 4, this);
     theBoard[7][5] = make_shared<Bishop>(Colour::White, 7, 5, this);
     theBoard[7][6] = make_shared<Knight>(Colour::White, 7, 6, this);
     theBoard[7][7] = make_shared<Rook>(Colour::White, 7, 7, this);
@@ -244,8 +244,8 @@ void Board::init() {
     theBoard[0][0] = make_shared<Rook>(Colour::Black, 0, 0, this);
     theBoard[0][1] = make_shared<Knight>(Colour::Black, 0, 1, this);
     theBoard[0][2] = make_shared<Bishop>(Colour::Black, 0, 2, this);
-    theBoard[0][3] = make_shared<King>(Colour::Black, 0, 3, this);
-    theBoard[0][4] = make_shared<Queen>(Colour::Black, 0, 4, this);
+    theBoard[0][3] = make_shared<Queen>(Colour::Black, 0, 3, this);
+    theBoard[0][4] = make_shared<King>(Colour::Black, 0, 4, this);
     theBoard[0][5] = make_shared<Bishop>(Colour::Black, 0, 5, this);
     theBoard[0][6] = make_shared<Knight>(Colour::Black, 0, 6, this);
     theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 7, this);
@@ -335,7 +335,6 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
         Move m{p, begin, end};
         totalMoves.push_back(m);
     }
-
     // check for if the move will lead to checkmate
     if (isCheck(getKing()->getCoords())) {
         undoMove(totalMoves.back());
@@ -451,7 +450,8 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char
     // for (auto &m : totalMoves) {
     //     cout << m.getMoves() << endl;
     // }
-
+    cout << "check white's turn: ";
+    cout << isWhiteTurn() << endl;
     nextTurn();
 }
 

@@ -72,7 +72,7 @@ bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) 
     }
 
     pair<int, int> dir = make_pair(y, x); // y = row && x = column
-    pair<int, int> xyCoords = make_pair(initial.first, initial.first);
+    pair<int, int> xyCoords = make_pair(initial.first, initial.second);
 
     for (int i = 1; i < abs(final.second - initial.second); ++i) {
         xyCoords.first += dir.first;

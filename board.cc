@@ -230,19 +230,9 @@ shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
 }
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end) {
-    bool validTurn = isValidTurn(begin);
-
-    if (!validTurn) {
-        throw runtime_error("Wrong player's turn to move");
-    }
 
     shared_ptr<Piece> p = getPieceAt(begin);
-    bool validMove = p->isValidMove(begin, end);
 
-    if (!validMove) {
-        throw runtime_error("Illegal move");
-    }
-    
     // check for if the move will lead to checkmate
     if (isCheck(getKing()->getCoords())) {
         if (getWhosTurn() == Colour::White) {
@@ -253,11 +243,11 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     }
 
     // capture
-    // if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
-    //     Move m{begin.first, begin.second, end.first, end.second, p};
-    //     m.setCaptured(getPieceAt(end));
-    //     totalMoves.push_back(m);
-    // }
+    if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
+        Move m{begin.first, begin.second, end.first, end.second, p};
+        m.setCaptured(getPieceAt(end));
+        totalMoves.push_back(m);
+    }
     
     // remove the piece
     theBoard[begin.first][begin.second] = nullptr;
@@ -271,7 +261,6 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     // modify the piece coordinate
     p->modifyCoords(end);
 
-    // take the next turn
     nextTurn();
 }
 
@@ -549,13 +538,6 @@ void Board::clear() {
             theBoard[i][j] = nullptr;
         }
     }
-}
-
-bool Board::isValidTurn(const pair<int, int> &from) {
-    shared_ptr<Piece> piece = getPieceAt(from);
-    if (piece == nullptr) return false;
-    if (piece->getColour() != whosTurn) return false;
-    return true;
 }
 
 void Board::nextTurn() {

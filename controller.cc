@@ -203,6 +203,7 @@ void Controller::gameMoves() {
                     printScore();
                     break;
                 }
+
                 if (board->isWhiteTurn() == true) {
                     cout << "next check" << endl;
                     if(players[0]->getType() == 'c') {
@@ -214,6 +215,11 @@ void Controller::gameMoves() {
                         pair<int, int> fromCoords = convertPos(from);
                         ss >> to;
                         pair<int, int> toCoords = convertPos(to);
+
+                        if (!isValid(fromCoords, toCoords)) {
+                            throw runtime_error("Invalid move");
+                        }
+                        
                         if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");
@@ -246,7 +252,6 @@ void Controller::gameMoves() {
                         pair<int, int> toCoords = convertPos(to);
                         if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
-                                throw runtime_error ("You can only promote Pawn");
                             } 
                             if (board->getWhosTurn() == Colour::Black) {
                                 if (toCoords.first != 7) {
@@ -264,7 +269,6 @@ void Controller::gameMoves() {
                         }
                     }
                 }
-
                 board->render();
             }
             else {
@@ -275,6 +279,18 @@ void Controller::gameMoves() {
             cerr << f.what() << endl;
         }
     }
+}
+
+bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
+
+    shared_ptr<Piece> p = board->getPieceAt(from);
+
+    if (p == nullptr) { return false; }
+    if (p->getColour() != board->getWhosTurn()) {
+        throw runtime_error("Wrong player's turn to move");
+    }
+
+    return p->isValidMove(from, to);
 }
 
 void Controller::printScore() {

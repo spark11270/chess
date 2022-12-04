@@ -61,8 +61,6 @@ public:
     bool willLeadToCheck(std::pair<int, int> &to);
     // returns the piece of the given position
     std::shared_ptr<Piece> getPieceAt(const std::pair<int, int> &at);
-    // returns true if moving from current location is valid
-    bool isValidTurn(const std::pair<int, int> &from);
     // set whosturn to the next player
     void nextTurn();
     ~Board();

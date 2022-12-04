@@ -15,12 +15,14 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
     if (final.second < 0) return false; // check out of bounds;
     
     if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
- 
     // check is there is an ally in the final destination
-    if (getTheBoard()->hasAlly(getColour(), final)) return false;
+    if (getTheBoard()->hasAlly(getColour(), final)) {
+        return false;
+    }
     // check if moves diagnoally     
-    if (abs(final.second - initial.second) != abs(final.first - initial.first)) return false; 
-    // check if there is an obstacle on the way
+    if (abs(final.second - initial.second) != abs(final.first - initial.first)) {
+        return false; 
+    }
 
     if ((final.second - initial.second) < 0) {
         // moves in negative x direction
@@ -32,12 +34,18 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
     }
 
     pair<int, int> dir = make_pair(y, x); // y = row && x = column
-    pair<int, int> xyCoords = make_pair(initial.first, initial.first);
+    pair<int, int> xyCoords = make_pair(initial.first, initial.second);
 
     for (int i = 1; i < abs(final.second - initial.second); ++i) {
         xyCoords.first += dir.first;
         xyCoords.second += dir.second;
-        if(getTheBoard()->hasObstacle(xyCoords)) return false;
+        if(getTheBoard()->hasObstacle(xyCoords)) {
+            if (final.first == 5 && final.second == 4) {
+                
+            cout << "has obstacle" << endl;
+        }
+            return false;
+        }
     }
     return true;
 }

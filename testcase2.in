@@ -9,14 +9,10 @@ move f3 d4
 move g8 f6
 move b1 c3
 move a7 a6
-move c1 e6
+move c1 e3
 move e7 e6
 move f2 f3
 move b7 b5
 move d1 d2
 move b8 d7
-move a2 b3
-move a1 a4
-move b5 a4
-move a4 a1
 resign

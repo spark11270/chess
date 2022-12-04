@@ -24,6 +24,7 @@ class Controller {
 public:
     Controller(Board* board);
     void initPlayer(const std::string& player, Colour colour);
+    bool isValid(const std::pair<int, int> from, const std::pair<int, int> to);
     void initGame();
     void gameMoves();
     void playGame();

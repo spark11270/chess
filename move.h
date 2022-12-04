@@ -1,17 +1,20 @@
 #ifndef _MOVE_H_
 #define _MOVE_H_
 #include <vector>
+#include "movetype.h"
 
 class Piece;
-
 class Move {
     std::shared_ptr<Piece> captured;
     std::shared_ptr<Piece> moving;
     std::pair<int, int> from;
     std::pair<int, int> to;
+    MoveType tactic;
+    char undoProm; // character before promotion
 
     public:
-        Move(int c_f, int r_f, int c_t, int r_t, std::shared_ptr<Piece> moving);
+        Move(std::shared_ptr<Piece> moving, std::pair<int, int>& from, std::pair<int, int>& to, MoveType tactic);
+        Move(std::shared_ptr<Piece> captured, std::shared_ptr<Piece> moving, std::pair<int, int>& from, std::pair<int, int>& to, MoveType tactic);
         void setCaptured(std::shared_ptr<Piece> captured);
 };
 

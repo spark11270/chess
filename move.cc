@@ -2,7 +2,12 @@
 
 using namespace std;
 
-Move::Move(int c_f, int r_f, int c_t, int r_t, shared_ptr<Piece> moving) : from{make_pair(c_f, r_f)}, to{make_pair(c_t, r_t)}, moving{moving} {}
+Move::Move(shared_ptr<Piece> moving, std::pair<int, int>& from, std::pair<int, int>& to, MoveType tactic) : 
+    captured{nullptr}, moving{moving}, from{from}, to{to}, tactic{tactic} {}
+
+Move::Move(std::shared_ptr<Piece> captured, std::shared_ptr<Piece> moving, std::pair<int, int>& from, std::pair<int, int>& to, MoveType tactic) :
+    captured{captured}, moving{moving}, from{from}, to{to}, tactic{tactic} {}
+
 
 void Move::setCaptured(shared_ptr<Piece> p) {
     captured = p;

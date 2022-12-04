@@ -43,7 +43,7 @@ public:
     void removePieceAt(std::pair<int, int> from);
     void move(std::pair<int, int> &begin, std::pair<int, int> &end);
     void promotion(std::pair<int, int> &begin, std::pair<int, int> &end, char prom);
-
+    void undoMove(const Move &m);
     bool isCheck(std::pair<int, int> kingPos);
     bool isCheckmate();
     // returns true if has ally at the given position

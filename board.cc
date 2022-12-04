@@ -274,6 +274,51 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
     nextTurn();
 }
 
+void Board::undoMove(const Move& m) {
+    if (m.tactic == MoveType::Normal) {
+        theBoard[m.from.first][m.from.second] = m.moving;
+        theBoard[m.to.first][m.to.second] = nullptr;
+    }
+    if (m.tactic == MoveType::EnPassant) {
+
+    }
+    if (m.tactic == MoveType::Castling) {
+
+    }
+    if (m.tactic == MoveType::Promotion) {
+        if (m.caputred == nullptr) {
+            // no capturing
+            removePieceAt(m.to);
+            theBoard[m.to.first][m.to.first] = nullptr;
+            addPiece(from, undoProm);
+        }
+        else {
+            removePieceAt(m.to);
+            theBoard[m.to.first][m.to.first] = nullptr;
+            addPiece(from, undoProm);
+            shared_ptr<Piece> tmp = m.captured;
+            if (tmp->getColour() == Colour::White) {
+                whitePieces.push_back(tmp);
+            }
+            else {
+                blackPieces.push_back(tmp);
+            }
+        }
+    }
+    if (m.tactic == MoveType::Capture) {
+        theBoard[m.from.first][m.from.second] = m.moving;
+        theBoard[m.to.first][m.to.second] = nullptr;
+        shared_ptr<Piece> tmp = m.captured;
+        if (tmp->getColour() == Colour::White) {
+            whitePieces.push_back(tmp);
+        }
+        else {
+            blackPieces.push_back(tmp);
+        }
+    }
+    totalMoves.pop_back();
+}
+
 void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, char prom) {
     move(begin, end);
     removePieceAt(end);

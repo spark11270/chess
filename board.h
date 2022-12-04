@@ -44,6 +44,7 @@ public:
     void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom);
     void move(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type = MoveType::Normal, char prom = ' ');
     void undoMove(const Move &m);
+    Move getLastMove(std::shared_ptr<Piece> p);
     bool isCheck(std::pair<int, int> kingPos);
     bool isCheckmate();
     // returns true if has ally at the given position

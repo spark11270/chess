@@ -182,8 +182,11 @@ bool Controller::isEnPassant(pair<int, int> &from, pair<int, int> &to) {
     // piece to be captured, right in front
     shared_ptr<Piece> toCapture = board->getPieceAt(make_pair(to.first, to.second + 1));
     if (empty != nullptr) return false;
+    cout << "empty" << endl;
     if (toCapture == nullptr) return false;
+    cout << "capture piece exists" << endl;
     if (!board->canEP(toCapture, from, to)) return false;
+    cout << "canEP" << endl;
     return true;
 }
 
@@ -233,7 +236,7 @@ void Controller::gameMoves() {
                         if (!isValid(fromCoords, toCoords)) {
                             throw runtime_error("Invalid move");
                         }
-
+                        cout << isEnPassant(fromCoords, toCoords) << endl;
                         if (isEnPassant(fromCoords, toCoords)) {
                             board->move(fromCoords, toCoords, MoveType::EnPassant);
                         } 

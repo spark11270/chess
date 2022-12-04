@@ -275,6 +275,14 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
     }
 }
 
+Move Board::getLastMove(shared_ptr<Piece> p) {
+    for (auto &m : totalMoves) {
+        if (m.moving == p) {
+            return m;
+        }
+    }
+}
+
 bool Board::canEP(shared_ptr<Piece> pawn, pair<int, int> &begin, pair<int, int> &end) {
     if (pawn->getIsFirstMove()) {
         if (end.second - begin.second == 2) {
@@ -285,6 +293,25 @@ bool Board::canEP(shared_ptr<Piece> pawn, pair<int, int> &begin, pair<int, int> 
 }
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {
+
+     switch(type) {
+        case MoveType::Normal :
+            cout << "Normal" << endl;
+            break;
+        case MoveType::EnPassant :
+            cout << "EnPassant" << endl;
+            break;
+        case MoveType::Capture :
+            cout << "Capture" << endl;
+            break;
+        case MoveType::Castling :
+            cout << "Castling" << endl;
+            break;
+        case MoveType::Promotion :
+            cout << "Promotion" << endl;
+            break;
+    }
+
 
     shared_ptr<Piece> p = getPieceAt(begin);
 

@@ -316,21 +316,21 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
         removePieceAt(rook->getCoords());
         pair<int, int> rookPos;
         switch(dir) {
-            // move rook left
+            // move rook one left of king
             case RIGHT:
-                rookPos = make_pair(end.first, end.second - 2);
+                rookPos = make_pair(end.first, end.second - 1);
                 break;
-            // move rook right
+            // move rook one right of king
             case LEFT:
-                rookPos = make_pair(end.first, end.second + 2);
+                rookPos = make_pair(end.first, end.second + 1);
                 break;
-            // move rook down
+            // move rook one down of king
             case UP:
-                rookPos = make_pair(end.first - 2, end.second);
+                rookPos = make_pair(end.first - 1, end.second);
                 break;
-            // move rook right
+            // move rook one right of king
             case DOWN:
-                rookPos = make_pair(end.first + 2, end.second);
+                rookPos = make_pair(end.first + 1, end.second);
                 break;
         }
         char c;
@@ -385,7 +385,7 @@ Move Board::getLastMove(shared_ptr<Piece> p) {
 }
 bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
     shared_ptr<Piece> toCapture = getPieceAt(make_pair(begin.first, end.second));
-    if (toCapture == nullptr) return false; // pawn must exists
+    if (toCapture == nullptr) return false; // pawn must exist
     if (toCapture->getColour() == getPieceAt(begin)->getColour()) return false; // pawn must be opponent
     if (toCapture->getType() != PieceName::Pawn) return false;
     // check if the last move is pawn moving two squares
@@ -401,6 +401,9 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
     shared_ptr<Piece> king = getPieceAt(begin);
     shared_ptr<Piece> rook;
     char dir;
+
+    // piece is not king
+    if (king->getType() != PieceName::King) return ' ';
 
     // if king is not at first move;
     if (!king->getIsFirstMove()) return ' ';

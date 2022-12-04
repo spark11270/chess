@@ -36,86 +36,73 @@ bool King::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 
 vector<pair<int, int>> King::getPosMoves() {
     vector<pair<int, int>> moves;
+    pair<int, int> init = getCoords();
 
     // vertical
-    pair<int, int> pos;
-    pos.first = getCoords().first + 1;
-    pos.second = getCoords().second;
-    if (isValidMove(getCoords(), pos)) {
+    pair<int, int> pos = make_pair(init.first + 1, init.second);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
-    pos.first = getCoords().first + 1;
-    pos.second = getCoords().second;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first + 1, init.second);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
-    pos.first = getCoords().first - 1;
-    pos.second = getCoords().second;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first - 1, init.second);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
 
     // horizontal
-    pos.first = getCoords().first;
-    pos.second = getCoords().second + 1;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first, init.second + 1);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
-    pos.first = getCoords().first;
-    pos.second = getCoords().second - 1;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first, init.second - 1);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
 
     // forward diagonal
-    pos.first = getCoords().first + 1;
-    pos.second = getCoords().second - 1;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first + 1, init.second - 1);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
-    pos.first = getCoords().first - 1;
-    pos.second = getCoords().second + 1;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first - 1, init.second + 1);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
 
     // backward diagonal
-    pos.first = getCoords().first + 1;
-    pos.second = getCoords().second + 1;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first + 1, init.second + 1);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
-    pos.first = getCoords().first - 1;
-    pos.second = getCoords().second - 1;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first - 1, init.second - 1);
+    if (isValidMove(init, pos)) {
             moves.push_back(pos);
     }
-
+  
     // move up 2 squares
-    pos.first = getCoords().first + 2;
-    pos.second = getCoords().second;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first + 2, init.second);
+    if (isValidMove(init, pos)) {
         moves.push_back(pos);
     }
 
     // move down 2 squares
-    pos.first = getCoords().first - 2;
-    pos.second = getCoords().second;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first - 2, init.second);
+    if (isValidMove(init, pos)) {
         moves.push_back(pos);
     }
 
     // move right 2 squares
-    pos.first = getCoords().first;
-    pos.second = getCoords().second + 2;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first, init.second + 2);
+    if (isValidMove(init, pos)) {
         moves.push_back(pos);
     }
 
     // move left 2 squares
-    pos.first = getCoords().first;
-    pos.second = getCoords().second - 2;
-    if (isValidMove(getCoords(), pos)) {
+    pos = make_pair(init.first, init.second - 2);
+    if (isValidMove(init, pos)) {
         moves.push_back(pos);
     }
 

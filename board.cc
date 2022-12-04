@@ -299,40 +299,16 @@ void Board::setPlayerFirst(Colour colour) {
 
 bool Board::isCheck(pair<int, int> kingPos) {
     // debugging
-    if (whosTurn == Colour::White) {
-        cout << "white king pos: ";
-    } else {
-        cout << "black king pos: ";
-    }
-    cout << kingPos.first <<", " << kingPos.second << endl;
+    // if (whosTurn == Colour::White) {
+    //     cout << "white king pos: ";
+    // } else {
+    //     cout << "black king pos: ";
+    // }
+    // cout << kingPos.first <<", " << kingPos.second << endl;
 
     if (whosTurn == Colour::Black)   {
         for (auto &p : whitePieces) {
-            cout << "i ran" << endl;
-            // PieceName name = p->getType();
-            // switch(name) {
-            //     case PieceName::Bishop :
-            //         cout << "Bishop moves: " << endl;
-            //         break;
-            //     case PieceName::Queen :
-            //         cout << "Queen moves: " << endl;
-            //         break;
-            //     case PieceName::Pawn :
-            //         cout << "Pawn moves: " << endl;
-            //         break;
-            //     case PieceName::Rook :
-            //         cout << "Rook moves: " << endl;
-            //         break;
-            //     case PieceName::Knight :
-            //         cout << "Knight moves: " << endl;
-            //         break;
-            //     case PieceName::King :
-            //         cout << "King moves: " << endl;
-            //         break;
-            // }
-            // for (auto &m : p->getPosMoves()) {
-            //     cout << m.first << ", " << m.second << endl;
-            // }
+            PieceName name = p->getType();
             vector<pair<int, int>> moves = p->getPosMoves();
             if ((!moves.empty()) && (name != PieceName::King) && 
                 (count(moves.begin(), moves.end(), kingPos) > 0)) {
@@ -391,7 +367,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
                 // for (auto &m : p->getPosMoves()) {
                 //     cout << m.first << ", " << m.second << endl;
                 // }
-                cout << "ischeck here" << endl;
+                // cout << "ischeck here" << endl;
                 return true;
             }
         }

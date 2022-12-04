@@ -62,7 +62,7 @@ public:
     std::shared_ptr<Piece> getPieceAt(const std::pair<int, int> &at);
     // set whosturn to the next player
     void nextTurn();
-
+    std::shared_ptr<Piece> getRook(std::pair<int,int> &kingPos, char kingDir, Colour c);
     // getting total moves
     std::vector<Move> getTotalMoves();
     ~Board();

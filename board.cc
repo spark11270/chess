@@ -13,6 +13,11 @@
 
 using namespace std;
 
+const char UP = 'u';
+const char DOWN = 'd';
+const char RIGHT = 'r';
+const char LEFT = 'l';
+
 // -------------------------------- Helper ------------------------------
 void printPiece(shared_ptr<Piece> &piece) {
     if (piece->getType() == PieceName::Bishop) {
@@ -39,6 +44,67 @@ void printPieces(vector<shared_ptr<Piece>> pieces) {
     for (auto &piece: pieces) {
         printPiece(piece);
     }
+}
+
+shared_ptr<Piece> Board::getRook(pair<int,int> &kingPos, char kingDir, Colour c) {
+    if (c == Colour::Black) {
+        for (auto &piece : blackPieces) {
+            if (piece->getType() == PieceName::Rook) {
+                if (kingDir == UP) {
+                    if (piece->getCoords().second < kingPos.first) {
+                        return piece;
+                    }
+
+                }
+                if (kingDir == DOWN) {
+                    if (piece->getCoords().second > kingPos.second) {
+                        return piece;
+                    }
+
+                }
+                if (kingDir == RIGHT) {
+                    if (piece->getCoords().first > kingPos.first) {
+                        return piece;
+                    }
+                }
+                if (kingDir == LEFT) {
+                    if (piece->getCoords().first < kingPos.first) {
+                        return piece;
+                    }
+
+                }
+            }
+        }
+    } else {
+        for (auto &piece : whitePieces) {
+            if (piece->getType() == PieceName::Rook) {
+                if (kingDir == UP) {
+                    if (piece->getCoords().second < kingPos.second) {
+                        return piece;
+                    }
+
+                }
+                if (kingDir == DOWN) {
+                    if (piece->getCoords().second > kingPos.second) {
+                        return piece;
+                    }
+
+                }
+                if (kingDir == RIGHT) {
+                    if (piece->getCoords().first > kingPos.first) {
+                        return piece;
+                    }
+                }
+                if (kingDir == LEFT) {
+                    if (piece->getCoords().first < kingPos.first) {
+                        return piece;
+                    }
+
+                }
+            }
+        }
+    }
+    return nullptr;
 }
 
 Board::Board() {

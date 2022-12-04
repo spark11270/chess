@@ -306,9 +306,9 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char
         totalMoves.push_back(m);
     }
 
-    for (auto &m : totalMoves) {
-        cout << m.getMoves() << endl;
-    }
+    // for (auto &m : totalMoves) {
+    //     cout << m.getMoves() << endl;
+    // }
 
     nextTurn();
 }

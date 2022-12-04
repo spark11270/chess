@@ -128,8 +128,13 @@ void Xwindow::drawBoard() {
 		i++;
 	}
 	*/
-	for (int i = 0; i < 8; i++) {
-		this->drawBigString(65+i*50, 435, "A", Xwindow::Black);
-	}
+	this->drawBigString(65+0*50, 435, "A", Xwindow::Black);
+	this->drawBigString(65+1*50, 435, "B", Xwindow::Black);
+	this->drawBigString(65+2*50, 435, "C", Xwindow::Black);
+	this->drawBigString(65+3*50, 435, "D", Xwindow::Black);
+	this->drawBigString(65+4*50, 435, "E", Xwindow::Black);
+	this->drawBigString(65+5*50, 435, "F", Xwindow::Black);
+	this->drawBigString(65+6*50, 435, "G", Xwindow::Black);
+	this->drawBigString(65+7*50, 435, "H", Xwindow::Black);
 }
 	

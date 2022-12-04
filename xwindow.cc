@@ -1,5 +1,3 @@
-#if 0
-
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <iostream>
@@ -92,7 +90,7 @@ void Xwindow::drawString(int x, int y, std::string msg) {
   XDrawString(d, w, DefaultGC(d, s), x, y, msg.c_str(), msg.length());
 }
 
-void Xwindow::drawBigString(int x, int y, std::string msg) {
+void Xwindow::drawBigString(int x, int y, std::string msg, int colour) {
 	int width = 450;
 	int height = 450;
 	std::ostringstream name;
@@ -104,17 +102,22 @@ void Xwindow::drawBigString(int x, int y, std::string msg) {
         }
 
 
-	printMessage(x, y, msg, 1, *f);
+	printMessage(x, y, msg, colour, *f);
 	delete f;
 }
 
 void Xwindow::drawBoard() {
 	for (int i = 0; i < 8; i++) {
+		for (int j = 0; j < 8; j++) {
+			this->fillRectangle((1+(i+1)%2)*50+j*100, 50*i, 50, 50, Xwindow::Black);
+		}
+	}
+	for (int i = 0; i < 8; i++) {
 		std::stringstream stream;
 		stream << 8-i;
 		std::string s;
 		stream >> s;
-		this->drawBigString(15, 35+i*50, s);
+		this->drawBigString(15, 35+i*50, s, Xwindow::Black);
 	}
 	/*
 	std::string alphabet = "ABCDEFGH";
@@ -126,8 +129,7 @@ void Xwindow::drawBoard() {
 	}
 	*/
 	for (int i = 0; i < 8; i++) {
-		this->drawBigString(65+i*50, 435, "A");
+		this->drawBigString(65+i*50, 435, "A", Xwindow::Black);
 	}
 }
 	
-#endif

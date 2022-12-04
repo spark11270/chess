@@ -2,6 +2,7 @@
 #define _MOVE_H_
 #include <vector>
 #include <string>
+#include <memory>
 #include "movetype.h"
 #include "piecename.h"
 

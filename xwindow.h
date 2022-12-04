@@ -1,5 +1,5 @@
-#if 0
-
+#ifndef XWINDOWS_H
+#define XWINDOWS_H
 #include <X11/Xlib.h>
 #include <iostream>
 #include <string>
@@ -21,13 +21,13 @@ class Xwindow {
   enum {White=0, Black, Red, Green, Blue, Cyan, Yellow, Magenta, Orange, Brown};
 
   // Draws a rectangle
-  void fillRectangle(int x, int y, int width, int height, int colour=Black);
+  void fillRectangle(int x, int y, int width, int height, int colour);
 
   // Draws a string
   void printMessage(int x, int y, const std::string& msg, int colour, XFontStruct& f);
   void drawString(int x, int y, std::string msg);
 
-  void drawBigString(int x, int y, std::string msg);
+  void drawBigString(int x, int y, std::string msg, int colour);
 
   void drawBoard();
 };

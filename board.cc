@@ -46,7 +46,7 @@ void printPieces(vector<shared_ptr<Piece>> pieces) {
     }
 }
 
-shared_ptr<Piece> Board::getRook(pair<int,int> &kingPos, char kingDir, Colour c) {
+shared_ptr<Piece> Board::getRook(pair<int,int> kingPos, char kingDir, Colour c) {
     if (c == Colour::Black) {
         for (auto &piece : blackPieces) {
             if (piece->getType() == PieceName::Rook) {
@@ -368,56 +368,62 @@ bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
 }
 
 // already a valid king move
-bool Board::canCastle(pair<int, int> &begin, pair<int, int> &end) {
+bool Board::canCastle(pair<int, int> begin, pair<int, int> end) {
     shared_ptr<Piece> king = getPieceAt(begin);
-
-    if (!king->getIsFirstMove()) return false;
-
     shared_ptr<Piece> rook;
+
+    // if king is not at first move;
+    if (!king->getIsFirstMove()) return false;
 
     // neither horizontal nor vertical
     if ((begin.first != end.first) && (begin.second != end.second)) return false;
+
     // moves horizontally
     if (begin.first == end.first) {
         if (abs(end.second - begin.second) != 2) return false;
         // moves right
         if (end.second > begin.second) {
-            getRook(king->getCoords(), 'r', whosTurn);    // get rook on right hand side
+            rook = getRook(king->getCoords(), RIGHT , whosTurn);    // get rook on right hand side
             if (rook == nullptr) return false;
             if (!rook->getIsFirstMove()) return false;
             if (rook->getCoords().first != begin.first) return false; // must be on same row
-            if (rook->getCoords().second > end.second) return true; // must come after king, should i remove this?
-            return false;
+            if (rook->getCoords().second < end.second) return false; // must come after king, should i remove this?
+            if ((hasObstacle(make_pair(begin.first, begin.second + 1))) || (hasObstacle(end))) return false;
+            if ((isCheck(begin) || (isCheck(make_pair(begin.first, begin.second + 1))) || (isCheck(end)))) return false;
         // moves left
         } else {
-            getRook(king->getCoords(), 'l', whosTurn);    // get rook on left hand side
+            rook = getRook(king->getCoords(), LEFT, whosTurn);    // get rook on left hand side
             if (rook == nullptr) return false;
             if (!rook->getIsFirstMove()) return false;
             if (rook->getCoords().first != begin.first) return false; // must be on same row
-            if (rook->getCoords().second < end.second) return true;
-            return false;
+            if (rook->getCoords().second > end.second) return false;
+            if ((hasObstacle(make_pair(begin.first, begin.second -1)) || (hasObstacle(end)))) return false;
+            if ((isCheck(begin)) || (isCheck(make_pair(begin.first, begin.second + 1))) || (isCheck(end))) return false;   
         }
     // moves vertically
     } else {
         if (abs(end.first - begin.first) != 2) return false;
         // moves down
         if (end.first > begin.first) {
-            getRook(king->getCoords(), 'd', whosTurn);    // get rook on up side
+            rook = getRook(king->getCoords(), DOWN, whosTurn);    // get rook on up side
             if (rook == nullptr) return false;
             if (!rook->getIsFirstMove()) return false;
             if (rook->getCoords().second != begin.second) return false; // must be on same column
-            if (rook->getCoords().first > end.first) return true;
-            return false;
+            if (rook->getCoords().first < end.first) return false;
+            if ((hasObstacle(make_pair(begin.first + 1, begin.second))) || hasObstacle(end)) return false;
+            if ((isCheck(begin)) || (isCheck(make_pair(begin.first + 1, begin.second))) || (isCheck(end)) ) return false;
         // moves up
         } else {
-            getRook(king->getCoords(), 'u', whosTurn);    // get rook on down side
+            rook = getRook(king->getCoords(), UP, whosTurn);    // get rook on down side
             if (rook == nullptr) return false;
             if (!rook->getIsFirstMove()) return false;
             if (rook->getCoords().second != begin.second) return false; // must be on same column
-            if (rook->getCoords().first < end.first) return true;
-            return false;
+            if (rook->getCoords().first > end.first) return false;
+            if ((hasObstacle(make_pair(begin.first - 1, begin.second)) || hasObstacle(end))) return false;
+            if ((isCheck(begin) || (isCheck(make_pair(begin.first - 1, begin.second))) || (isCheck(end)))) return false;
         }
     }
+    return true;
 }
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {

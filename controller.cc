@@ -246,7 +246,7 @@ void Controller::gameMoves() {
                             board->move(fromCoords, toCoords, MoveType::EnPassant);
                             }
                             if (board->canCastle(fromCoords, toCoords)) {
-                                board->move(fromCoords, toCoords, MoveType::Castle);
+                                board->move(fromCoords, toCoords, MoveType::Castling);
                             }
                             if (board->hasObstacle(toCoords)) {
                                 board->move(fromCoords, toCoords, MoveType::Capture);
@@ -287,7 +287,7 @@ void Controller::gameMoves() {
                             board->move(fromCoords, toCoords, MoveType::EnPassant);
                             }
                             if (board->canCastle(fromCoords, toCoords)) {
-                                board->move(fromCoords, toCoords, MoveType::Castle);
+                                board->move(fromCoords, toCoords, MoveType::Castling);
                             }
                             board->move(fromCoords, toCoords);
                         }

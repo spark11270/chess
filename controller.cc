@@ -224,8 +224,6 @@ void Controller::gameMoves() {
                             throw runtime_error("Invalid move");
                         }
                         if (board->canEP(fromCoords, toCoords)) {
-                        cout << isEnPassant(fromCoords, toCoords) << endl;
-                        if (isEnPassant(fromCoords, toCoords)) {
                             board->move(fromCoords, toCoords, MoveType::EnPassant);
                         } 
                         else if (ss >> prom) {
@@ -244,6 +242,12 @@ void Controller::gameMoves() {
                         } 
                         else {
                             // no promotion
+                            if (board->canEP(fromCoords, toCoords)) {
+                            board->move(fromCoords, toCoords, MoveType::EnPassant);
+                            }
+                            if (board->canCastle(fromCoords, toCoords)) {
+                                board->move(fromCoords, toCoords, MoveType::Castle);
+                            }
                             if (board->hasObstacle(toCoords)) {
                                 board->move(fromCoords, toCoords, MoveType::Capture);
                             }
@@ -265,6 +269,7 @@ void Controller::gameMoves() {
                         pair<int, int> toCoords = convertPos(to);
                         if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                                    throw runtime_error ("You can only promote Pawn");
                             } 
                             if (board->getWhosTurn() == Colour::Black) {
                                 if (toCoords.first != 7) {
@@ -278,6 +283,12 @@ void Controller::gameMoves() {
                         }
                         else {
                             // no promotion
+                            if (board->canEP(fromCoords, toCoords)) {
+                            board->move(fromCoords, toCoords, MoveType::EnPassant);
+                            }
+                            if (board->canCastle(fromCoords, toCoords)) {
+                                board->move(fromCoords, toCoords, MoveType::Castle);
+                            }
                             board->move(fromCoords, toCoords);
                         }
                     }

@@ -17,6 +17,14 @@ bool King::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     // my own item?
     if (getTheBoard()->hasAlly(getColour(), final)) return false;
 
+    if (getTheBoard()->canCast(begin, end)) {
+        // checks if king moves 2 square vertically
+        if ((abs(initial.first - final.first) == 2) && (initial.second == final.second)) return true;
+        // checks if king moves 2 square horizontally
+        if ((abs(initial.second - final.second) == 2) && (initial.first = final.first)) return true;
+        return false;
+    }
+
     if (((initial.first + 1) == final.first || (initial.first - 1) == final.first) && 
         ((initial.second + 1) == final.second || (initial.second - 1) == final.second)) return true; // check diagnoals
 
@@ -81,6 +89,34 @@ vector<pair<int, int>> King::getPosMoves() {
     pos.second = getCoords().second - 1;
     if (isValidMove(getCoords(), pos)) {
             moves.push_back(pos);
+    }
+
+    // move up 2 squares
+    pos.first = getCoords().first + 2;
+    pos.second = getCoords().second;
+    if (isValidMove(getCoords(), pos)) {
+        moves.push_back(pos);
+    }
+
+    // move down 2 squares
+    pos.first = getCoords().first - 2;
+    pos.second = getCoords().second;
+    if (isValidMove(getCoords(), pos)) {
+        moves.push_back(pos);
+    }
+
+    // move right 2 squares
+    pos.first = getCoords().first;
+    pos.second = getCoords().second + 2;
+    if (isValidMove(getCoords(), pos)) {
+        moves.push_back(pos);
+    }
+
+    // move left 2 squares
+    pos.first = getCoords().first;
+    pos.second = getCoords().second - 2;
+    if (isValidMove(getCoords(), pos)) {
+        moves.push_back(pos);
     }
 
     return moves;

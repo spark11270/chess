@@ -361,12 +361,65 @@ bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
     if (toCapture->getType() != PieceName::Pawn) return false;
     // check if the last move is pawn moving two squares
     Move m = totalMoves.back();
-    cout << m.to.first << ", " << m.to.second << endl;
     if ((abs(m.to.first - m.from.first) == 2) && (m.to.first == begin.first) && (m.to.second == end.second)) {
         return true;
     }
     return false;
 }
+
+// already a valid king move
+bool Board::canCastle(pair<int, int> &begin, pair<int, int> &end) {
+    shared_ptr<Piece> king = getPieceAt(begin);
+
+    if (!king->getIsFirstMove()) return false;
+
+    shared_ptr<Piece> rook;
+
+    // neither horizontal nor vertical
+    if ((begin.first != end.first) && (begin.second != end.second)) return false;
+    // moves horizontally
+    if (begin.first == end.first) {
+        if (abs(end.second - begin.second) != 2) return false;
+        // moves right
+        if (end.second > begin.second) {
+            getRook(king->getCoords(), 'r', whosTurn);    // get rook on right hand side
+            if (rook == nullptr) return false;
+            if (!rook->getIsFirstMove()) return false;
+            if (rook->getCoords().first != begin.first) return false; // must be on same row
+            if (rook->getCoords().second > end.second) return true; // must come after king, should i remove this?
+            return false;
+        // moves left
+        } else {
+            getRook(king->getCoords(), 'l', whosTurn);    // get rook on left hand side
+            if (rook == nullptr) return false;
+            if (!rook->getIsFirstMove()) return false;
+            if (rook->getCoords().first != begin.first) return false; // must be on same row
+            if (rook->getCoords().second < end.second) return true;
+            return false;
+        }
+    // moves vertically
+    } else {
+        if (abs(end.first - begin.first) != 2) return false;
+        // moves down
+        if (end.first > begin.first) {
+            getRook(king->getCoords(), 'd', whosTurn);    // get rook on up side
+            if (rook == nullptr) return false;
+            if (!rook->getIsFirstMove()) return false;
+            if (rook->getCoords().second != begin.second) return false; // must be on same column
+            if (rook->getCoords().first > end.first) return true;
+            return false;
+        // moves up
+        } else {
+            getRook(king->getCoords(), 'u', whosTurn);    // get rook on down side
+            if (rook == nullptr) return false;
+            if (!rook->getIsFirstMove()) return false;
+            if (rook->getCoords().second != begin.second) return false; // must be on same column
+            if (rook->getCoords().first < end.first) return true;
+            return false;
+        }
+    }
+}
+
 void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {
 
      switch(type) {

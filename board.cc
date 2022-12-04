@@ -556,11 +556,11 @@ vector<pair<shared_ptr<Piece>, pair<int, int>>> Board::getAllValidMoves(bool whi
     vector<shared_ptr<Piece>> &pieces = whiteTurn ? whitePieces : blackPieces;
 
     for (auto &piece : pieces) {
-       vector<pair<int, int>> posMoves = piece->getPosMoves();
+        vector<pair<int, int>> posMoves = piece->getPosMoves();
        
-       for (auto &posMove : posMoves) {
-        validMovePairs.emplace_back(piece, posMove);
-       }
+        for (auto &posMove : posMoves) {
+            validMovePairs.emplace_back(piece, posMove);
+        }
     }
 
     return validMovePairs;

@@ -35,7 +35,7 @@ bool LVL::preferCaptureCheck( \
   vector<pair<shared_ptr<Piece>, pair<int, int>>> possibleMovePairs
 ) {
   for (auto &movePair : possibleMovePairs) {
-    if (board->willLeadToCheck(movePair.second)) {
+    if (board->hasOpponent(movePair.first->getColour(), movePair.second)) {
       result = movePair;
       return true;
     }

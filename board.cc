@@ -283,13 +283,14 @@ Move Board::getLastMove(shared_ptr<Piece> p) {
     }
 }
 
-bool Board::canEP(shared_ptr<Piece> pawn, pair<int, int> &begin, pair<int, int> &end) {
-    if (pawn->getIsFirstMove()) {
-        if (end.second - begin.second == 2) {
-            return true;
-        }
-    }
-    return false;
+bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
+    if (hasObstacle(end)) return false; // the end position should be empty
+
+    shared_ptr<Piece> toCapture = board->getPieceAt(make_pair(from.first, to.second));
+    if (toCapture == nullptr) return false; // pawn must exists
+    if (toCapture->getColour() == getPieceAt(begin)->getColour()) return false; // pawn must be opponent
+    if (toCapture->getType() != PieceName::Pawn) return false;
+    // check if the last move is pawn moving two squares
 }
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {

@@ -15,8 +15,6 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
     if (final.second < 0) return false; // check out of bounds;
     
     if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
-    if ((final.second - initial.second) == (final.first - initial.first)) return true;
-    return false;
  
     // check is there is an ally in the final destination
     if (getTheBoard()->hasAlly(getColour(), final)) return false;
@@ -46,20 +44,60 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
 
 vector<pair<int, int>> Bishop::getPosMoves() {
     vector<pair<int, int>> moves;
+
+    // for (int i = 0; i < MAXCELL; i++) {
+    //     for (int j = 0; j < MAXCELL; j++) {
+    //         if ((i - getCoords().first == j - getCoords().second) || (i - getCoords().first == -(j - getCoords().second))) {
+    //             if (i != getCoords().first && j!= getCoords().second) {
+    //                 pair<int, int> pos = make_pair(i, j);
+    //                 if (isValidMove(getCoords(), pos)) {
+    //                     moves.push_back(pos);
+    //                 }
+    //             }
+    //         } 
+    //     }
+    // }
+
+    pair<int, int> coord1 = make_pair(1, 1);
+    pair<int, int> coord2 = make_pair(1, -1);
+    pair<int, int> coord3 = make_pair(-1, -1);
+    pair<int, int> coord4 = make_pair(-1, 1);
     
-    for (int i = 0; i < MAXCELL; i++) {
-        for (int j = 0; j < MAXCELL; j++) {
-            if ((i - getCoords().first == j - getCoords().second) || (i - getCoords().first == -(j - getCoords().second))) {
-                if (i != getCoords().first && j!= getCoords().second) {
-                    pair<int, int> pos = make_pair(i, j);
-                    if (isValidMove(getCoords(), pos)) {
-                        moves.push_back(pos);
-                    }
-                }
-            } 
+    pair<int, int> pos1 = make_pair(getCoords().first, getCoords().second);
+    pair<int, int> pos2 = make_pair(getCoords().first, getCoords().second);
+    pair<int, int> pos3 = make_pair(getCoords().first, getCoords().second);
+    pair<int, int> pos4 = make_pair(getCoords().first, getCoords().second);
+
+    for (int i = myPos.first; i < MAXCELL; ++i) {
+        // check when both x and y are positive
+        pos1.first += coord1.first;
+        pos1.second += coord1.second;
+        if (isValidMove(getCoords(), pos1)) {
+            moves.push_back(pos1);
+        }
+
+        // check when x is negative and y is positive
+        pos2.first += coord2.first;
+        pos2.second += coord2.second;
+        if (isValidMove(getCoords(), pos2)) {
+            moves.push_back(pos2);
+        }
+
+        // check when x and y are negative
+        pos3.first += coord3.first;
+        pos3.second += coord3.second;
+        if (isValidMove(getCoords(), pos3)) {
+            moves.push_back(pos3);
+        }
+
+        // check when x is positive and y is negative
+        pos4.first += coord4.first;
+        pos4.second += coord4.second;
+        if (isValidMove(getCoords(), pos4)) {
+            moves.push_back(pos4);
         }
     }
-        
+
     return moves;
 }
 

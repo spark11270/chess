@@ -15,22 +15,22 @@ using namespace std;
 // -------------------------------- Helper ------------------------------
 void printPiece(shared_ptr<Piece> &piece) {
     if (piece->getType() == PieceName::Bishop) {
-        cout << "Bishop" << endl;
+        cout << "Bishop at " << piece->getCoords().first << ", " << piece->getCoords().second << endl;
     }
     if (piece->getType() == PieceName::Pawn) {
-        cout << "Pawn" << endl;
+        cout << "Pawn at " << piece->getCoords().first << ", " << piece->getCoords().second << endl;
     }
     if (piece->getType() == PieceName::King) {
-        cout << "King" << endl;
+        cout << "King at " << piece->getCoords().first << ", " << piece->getCoords().second << endl;
     }
     if (piece->getType() == PieceName::Queen) {
-        cout << "Queen" << endl;
+        cout << "Queen at " << piece->getCoords().first << ", " << piece->getCoords().second << endl;
     }
     if (piece->getType() == PieceName::Knight) {
-        cout << "Knight" << endl;
+        cout << "Knight at " << piece->getCoords().first << ", " << piece->getCoords().second << endl;
     }
     if (piece->getType() == PieceName::Rook) {
-        cout << "Rook" << endl;
+        cout << "Rook at " << piece->getCoords().first << ", " << piece->getCoords().second << endl;
     }
 }
 
@@ -313,6 +313,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
             }
         }
     } else {
+        printPieces(blackPieces);
         for (auto &p : blackPieces) {
             PieceName name = p->getType();
             switch(name) {

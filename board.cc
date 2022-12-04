@@ -229,25 +229,54 @@ shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
     return theBoard[at.first][at.second];
 }
 
-void Board::move(pair<int, int> &begin, pair<int, int> &end) {
-
+void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {
     shared_ptr<Piece> p = getPieceAt(begin);
+
+    // remove the piece
+    theBoard[begin.first][begin.second] = nullptr;
+    
+    // add the piece
+    if (getPieceAt(end) != nullptr) {
+        removePieceAt(end); 
+    }
+    theBoard[end.first][end.second] = p;
+
+    // modify the piece coordinate
+    p->modifyCoords(end);
+
+    // promotion
+    if (type == MoveType::Promotion) {
+        removePieceAt(end);
+        addPiece(end, prom);
+        Move m{getPieceAt(end), p, begin, end, MoveType::Promotion};
+        totalMoves.push_back(m);
+    // capture
+    } else if (type == MoveType::Capture) {
+        Move m{getPieceAt(end), p, begin, end, MoveType::Capture};
+        totalMoves.push_back(m);
+    // normal
+    } else {
+        Move m{p, begin, end};
+        totalMoves.push_back(m);
+    }
 
     // check for if the move will lead to checkmate
     if (isCheck(getKing()->getCoords())) {
+        undoMove(totalMoves.back());
         if (getWhosTurn() == Colour::White) {
             throw runtime_error("White King is in check");
         } else {
             throw runtime_error("Black King is in check");
         }
     }
+}
 
-    // capture
-    // if (hasOpponent(p->getColour(), getPieceAt(end)->getCoords())) {
-    //     Move m{begin.first, begin.second, end.first, end.second, p};
-    //     m.setCaptured(getPieceAt(end));
-    //     totalMoves.push_back(m);
-    // }
+
+void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {
+
+    shared_ptr<Piece> p = getPieceAt(begin);
+
+    simulate(begin, end, type, prom);
     
     // remove the piece
     theBoard[begin.first][begin.second] = nullptr;
@@ -260,6 +289,26 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end) {
 
     // modify the piece coordinate
     p->modifyCoords(end);
+
+    // promotion
+    if (type == MoveType::Promotion) {
+        removePieceAt(end);
+        addPiece(end, prom);
+        Move m{getPieceAt(end), p, begin, end, MoveType::Promotion};
+        totalMoves.push_back(m);
+    // capture
+    } else if (type == MoveType::Capture) {
+        Move m{getPieceAt(end), p, begin, end, MoveType::Capture};
+        totalMoves.push_back(m);
+    // normal
+    } else {
+        Move m{p, begin, end};
+        totalMoves.push_back(m);
+    }
+
+    for (auto &m : totalMoves) {
+        cout << m.getMoves() << endl;
+    }
 
     nextTurn();
 }
@@ -327,12 +376,22 @@ void Board::undoMove(const Move& m) {
             // no capturing
             removePieceAt(m.to);
             theBoard[m.to.first][m.to.first] = nullptr;
-            addPiece(m.from, m.undoProm);
+            if (m.moving->getColour() == Colour::White) {
+                addPiece(m.from, 'P');
+            }
+            else {
+                addPiece(m.from, 'p');
+            }
         }
         else {
             removePieceAt(m.to);
             theBoard[m.to.first][m.to.first] = nullptr;
-            addPiece(m.from, m.undoProm);
+            if (m.moving->getColour() == Colour::White) {
+                addPiece(m.from, 'P');
+            }
+            else {
+                addPiece(m.from, 'p');
+            }
             shared_ptr<Piece> tmp = m.captured;
             if (tmp->getColour() == Colour::White) {
                 whitePieces.push_back(tmp);
@@ -356,12 +415,6 @@ void Board::undoMove(const Move& m) {
     totalMoves.pop_back();
 }
 
-void Board::promotion(std::pair<int, int> &begin, std::pair<int, int> &end, char prom) {
-    move(begin, end);
-    removePieceAt(end);
-    addPiece(end, prom);
-}
-
 bool Board::isWhiteTurn() {
     if (whosTurn == Colour::White) return true;
     return false;
@@ -380,41 +433,9 @@ void Board::setPlayerFirst(Colour colour) {
 }
 
 bool Board::isCheck(pair<int, int> kingPos) {
-    // debugging
-    // if (whosTurn == Colour::White) {
-    //     cout << "white king pos: ";
-    // } else {
-    //     cout << "black king pos: ";
-    // }
-    // cout << kingPos.first <<", " << kingPos.second << endl;
-
     if (whosTurn == Colour::Black)   {
         for (auto &p : whitePieces) {
-            cout << "i ran" << endl;
             PieceName name = p->getType();
-            // switch(name) {
-            //     case PieceName::Bishop :
-            //         cout << "Bishop moves: " << endl;
-            //         break;
-            //     case PieceName::Queen :
-            //         cout << "Queen moves: " << endl;
-            //         break;
-            //     case PieceName::Pawn :
-            //         cout << "Pawn moves: " << endl;
-            //         break;
-            //     case PieceName::Rook :
-            //         cout << "Rook moves: " << endl;
-            //         break;
-            //     case PieceName::Knight :
-            //         cout << "Knight moves: " << endl;
-            //         break;
-            //     case PieceName::King :
-            //         cout << "King moves: " << endl;
-            //         break;
-            // }
-            // for (auto &m : p->getPosMoves()) {
-            //     cout << m.first << ", " << m.second << endl;
-            // }
             vector<pair<int, int>> moves = p->getPosMoves();
             if ((!moves.empty()) && (name != PieceName::King) && 
                 (count(moves.begin(), moves.end(), kingPos) > 0)) {
@@ -424,56 +445,9 @@ bool Board::isCheck(pair<int, int> kingPos) {
     } else {
         for (auto &p : blackPieces) {
             PieceName name = p->getType();
-            // switch(name) {
-            //     case PieceName::Bishop :
-            //         cout << "Bishop moves: " << endl;
-            //         break;
-            //     case PieceName::Queen :
-            //         cout << "Queen moves: " << endl;
-            //         break;
-            //     case PieceName::Pawn :
-            //         cout << "Pawn moves: " << endl;
-            //         break;
-            //     case PieceName::Rook :
-            //         cout << "Rook moves: " << endl;
-            //         break;
-            //     case PieceName::Knight :
-            //         cout << "Knight moves: " << endl;
-            //         break;
-            //     case PieceName::King :
-            //         cout << "King moves: " << endl;
-            //         break;
-            // }
-            // for (auto &m : p->getPosMoves()) {
-            //     cout << m.first << ", " << m.second << endl;
-            // }
             vector<pair<int, int>> moves = p->getPosMoves();
             if ((!moves.empty()) && (name != PieceName::King) && 
                 (count(moves.begin(), moves.end(), kingPos) > 0)) {
-                // switch(name) {
-                //     case PieceName::Bishop :
-                //         cout << "Bishop moves: " << endl;
-                //         break;
-                //     case PieceName::Queen :
-                //         cout << "Queen moves: " << endl;
-                //         break;
-                //     case PieceName::Pawn :
-                //         cout << "Pawn moves: " << endl;
-                //         break;
-                //     case PieceName::Rook :
-                //         cout << "Rook moves: " << endl;
-                //         break;
-                //     case PieceName::Knight :
-                //         cout << "Knight moves: " << endl;
-                //         break;
-                //     case PieceName::King :
-                //         cout << "King moves: " << endl;
-                //         break;
-                // }
-                // for (auto &m : p->getPosMoves()) {
-                //     cout << m.first << ", " << m.second << endl;
-                // }
-                // cout << "ischeck here" << endl;
                 return true;
             }
         }

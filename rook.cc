@@ -44,7 +44,6 @@ bool Rook::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)  
 
         return !getTheBoard()->hasAlly(getColour(), final);
     }
-    
     return false;
 }
 

@@ -4,9 +4,9 @@
 #include "piece.h"
 #include "subject.h"
 #include "colour.h"
+#include "movetype.h"
 
 #include <iostream>
-
 
 class Move;
 class Player;
@@ -41,8 +41,8 @@ public:
     std::shared_ptr<Piece> getKing();
     void addPiece(std::pair<int, int> pos, char c);
     void removePieceAt(std::pair<int, int> from);
-    void move(std::pair<int, int> &begin, std::pair<int, int> &end);
-    void promotion(std::pair<int, int> &begin, std::pair<int, int> &end, char prom);
+    void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom);
+    void move(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type = MoveType::Normal, char prom = ' ');
     void undoMove(const Move &m);
     bool isCheck(std::pair<int, int> kingPos);
     bool isCheckmate();

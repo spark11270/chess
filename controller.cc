@@ -205,7 +205,6 @@ void Controller::gameMoves() {
                 }
 
                 if (board->isWhiteTurn() == true) {
-                    cout << "next check" << endl;
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         players[0]->move(board, uselsssCord, uselsssCord);
@@ -232,11 +231,16 @@ void Controller::gameMoves() {
                             if (prom == 'k' || prom == 'K') {
                                 throw runtime_error("You cannot promote to King");
                             }
-                           board->promotion(fromCoords, toCoords, prom);
+                           board->move(fromCoords, toCoords, MoveType::Promotion, prom);
                         }
                         else {
                             // no promotion
-                            board->move(fromCoords, toCoords);
+                            if (board->hasObstacle(toCoords)) {
+                                board->move(fromCoords, toCoords, MoveType::Capture);
+                            }
+                            else {
+                                board->move(fromCoords, toCoords, MoveType::Normal);
+                            }
                         }
                     }
                 }
@@ -261,7 +265,7 @@ void Controller::gameMoves() {
                             if (prom == 'k' || prom == 'K') {
                                 throw runtime_error("You cannot promote to King");
                             }
-                            board->promotion(fromCoords, toCoords, prom);
+                            board->move(fromCoords, toCoords, MoveType::Promotion, prom);
                         }
                         else {
                             // no promotion

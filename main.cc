@@ -14,4 +14,5 @@ int main () {
   theboard->render();
   Controller ctr{theboard};
   ctr.playGame();
+  delete theboard;
 }

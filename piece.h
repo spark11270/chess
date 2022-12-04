@@ -18,7 +18,7 @@ class Piece {
     std::pair<int, int> coords;
     PieceName type;
     Board *b;  
-    bool isFirstMove;
+    bool isFirstMove = true;
 
     public:
         Piece(Colour color, int row, int col, PieceName type, Board *b);
@@ -31,6 +31,8 @@ class Piece {
         void modifyCoords(std::pair<int,int> &newCoords);
         Colour getColour();
         Board *getTheBoard();
+        bool getIsFirstMove();
+        void setIsFirstMove();
 
         virtual ~Piece() = 0;
 

@@ -176,6 +176,20 @@ void Controller::playGame() {
     }
 }
 
+bool Controller::isEnPassant(pair<int, int> &from, pair<int, int> &to) {
+    // space behind piece
+    shared_ptr<Piece> empty = board->getPieceAt(to);
+    // piece to be captured, right in front
+    shared_ptr<Piece> toCapture = board->getPieceAt(make_pair(to.first, to.second + 1));
+    if (empty != nullptr) return false;
+    cout << "empty" << endl;
+    if (toCapture == nullptr) return false;
+    cout << "capture piece exists" << endl;
+    if (!board->canEP(toCapture, from, to)) return false;
+    cout << "canEP" << endl;
+    return true;
+}
+
 void Controller::gameMoves() {
     string line;
     string command;
@@ -208,7 +222,6 @@ void Controller::gameMoves() {
                     printScore();
                     break;
                 }
-
                 if (board->isWhiteTurn() == true) {
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
@@ -223,8 +236,11 @@ void Controller::gameMoves() {
                         if (!isValid(fromCoords, toCoords)) {
                             throw runtime_error("Invalid move");
                         }
-                        
-                        if (ss >> prom) {
+                        cout << isEnPassant(fromCoords, toCoords) << endl;
+                        if (isEnPassant(fromCoords, toCoords)) {
+                            board->move(fromCoords, toCoords, MoveType::EnPassant);
+                        } 
+                        else if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");
                             }
@@ -237,7 +253,7 @@ void Controller::gameMoves() {
                                 throw runtime_error("You cannot promote to King");
                             }
                            board->move(fromCoords, toCoords, MoveType::Promotion, prom);
-                        }
+                        } 
                         else {
                             // no promotion
                             if (board->hasObstacle(toCoords)) {

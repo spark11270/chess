@@ -44,6 +44,7 @@ public:
     void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom);
     void move(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type = MoveType::Normal, char prom = ' ');
     void undoMove(const Move &m);
+    Move getLastMove(std::shared_ptr<Piece> p);
     bool isCheck(std::pair<int, int> kingPos);
     bool isCheckmate();
     // returns true if has ally at the given position
@@ -56,7 +57,7 @@ public:
     void clear();
     // returns White if white's turn and Black otherwise
     Colour getWhosTurn();
-
+    bool canEP(std::shared_ptr<Piece> pawn, std::pair<int, int> &begin, std::pair<int, int> &end);
     std::vector<std::pair<std::shared_ptr<Piece>, std::pair<int, int>>> getAllValidMoves(bool whiteTurn);
     bool willLeadToCheck(std::pair<int, int> &to);
     // returns the piece of the given position

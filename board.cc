@@ -545,4 +545,6 @@ bool Board::willLeadToCheck(std::pair<int, int> &to) {
     return kingPos.first == to.first && kingPos.second == to.second;
 }
 
-
+std::vector<Move> Board::getTotalMoves() {
+	return totalMoves;
+}

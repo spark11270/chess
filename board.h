@@ -5,10 +5,10 @@
 #include "subject.h"
 #include "colour.h"
 #include "movetype.h"
-
+#include "move.h"
 #include <iostream>
 
-class Move;
+//class Move;
 class Player;
 class Piece;
 class King;
@@ -63,6 +63,9 @@ public:
     std::shared_ptr<Piece> getPieceAt(const std::pair<int, int> &at);
     // set whosturn to the next player
     void nextTurn();
+
+    // getting total moves
+    std::vector<Move> getTotalMoves();
     ~Board();
 };
 

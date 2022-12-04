@@ -71,7 +71,7 @@ Xwindow::~Xwindow() {
 void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
   XSetForeground(d, gc, colours[colour]);
   XFillRectangle(d, w, gc, x, y, width, height);
-  XSetForeground(d, gc, colours[colour]);
+  XSetForeground(d, gc, colours[Black]);
 }
 
 void Xwindow::printMessage(int x, int y, const string& msg, int colour, XFontStruct& f){

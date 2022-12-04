@@ -288,7 +288,7 @@ Move Board::getLastMove(shared_ptr<Piece> p) {
         }
     }
 }
-
+/*
 bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
     shared_ptr<Piece> toCapture = getPieceAt(make_pair(begin.first, end.second));
     if (toCapture == nullptr) return false; // pawn must exists
@@ -302,7 +302,7 @@ bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
     }
     return false;
 }
-
+*/
 void Board::move(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom) {
 
      switch(type) {

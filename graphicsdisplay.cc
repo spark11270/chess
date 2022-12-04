@@ -30,30 +30,54 @@ std::string printPiece(PieceName n) {
 
 // Renders the board to the interface
 void GraphicsDisplay::notify() {
-	int m = 0;
-	int n = 0;
+	int from_x = 0;
+	int from_y = 0;
+	int to_x = 0;
+        int to_y = 0;
 	if (board->getTotalMoves().size()) {
-		m = board->getTotalMoves().back().from.first;
-		n = board->getTotalMoves().back().from.second;
-		std::cout << m << std::endl;
-		std::cout << n << std::endl;
+		from_x = board->getTotalMoves().back().from.first;
+		from_y = board->getTotalMoves().back().from.second;
+		to_x = board->getTotalMoves().back().to.first;
+                to_y = board->getTotalMoves().back().to.second;
 	}
 	for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                         if (board->getBoard()[i][j] != nullptr) { 
 				Colour c = board->getBoard()[i][j]->getColour();
-				if (m && n) {
-					if ((m+n) % 2) {
-						w->fillRectangle(50*(n+1), 50*m, 50, 50, 1);
+				if (from_x && from_y) {
+					if ((from_x+from_y) % 2) {
+						w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 1);
 					} else {
-						w->fillRectangle(50*(n+1), 50*m, 50, 50, 0);
+						w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 0);
 					}
 				}
+			/*	
+				if (to_x && to_y) {
+                                                if ((to_x+to_y) % 2) {
+                                                        w->fillRectangle(50*(to_y), 50*to_x, 50, 50, 1);
+                                                } else {
+                                                        w->fillRectangle(50*(to_y+1), 50*to_x, 50, 50, 0);
+                                                }
+                                        }
+					*/
 				if (c == Colour::Black) {
+					if ((i+j) % 2) {
+                                                        w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
+                                                } else {
+                                                    	w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
+                                                }
+
 					w->drawBigString(65+j*50, i*50+35, printPiece(board->getBoard()[i][j]->getType()), 4);
 				} else {
+                                		if ((i+j) % 2) {
+                                        		w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
+                                		} else {
+                                        		w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
+                                		}
 					w->drawBigString(65+j*50, i*50+35, printPiece(board->getBoard()[i][j]->getType()), 3);
 				}
+
+
 			}
 		}
 	}

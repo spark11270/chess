@@ -223,9 +223,16 @@ void Controller::gameMoves() {
                         if (!isValid(fromCoords, toCoords)) {
                             throw runtime_error("Invalid move");
                         }
+<<<<<<< Updated upstream
                         if (board->canEP(fromCoords, toCoords)) {
+=======
+			/*
+                        cout << isEnPassant(fromCoords, toCoords) << endl;
+                        if (isEnPassant(fromCoords, toCoords)) {
+>>>>>>> Stashed changes
                             board->move(fromCoords, toCoords, MoveType::EnPassant);
                         } 
+			*/
                         else if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");

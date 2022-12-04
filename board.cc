@@ -332,6 +332,9 @@ bool Board::isCheck(pair<int, int> kingPos) {
                 case PieceName::Knight :
                     cout << "Knight moves: " << endl;
                     break;
+                case PieceName::King :
+                    cout << "King moves: " << endl;
+                    break;
             }
             for (auto &m : p->getPosMoves()) {
                 cout << m.first << ", " << m.second << endl;

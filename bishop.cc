@@ -68,7 +68,7 @@ vector<pair<int, int>> Bishop::getPosMoves() {
     pair<int, int> pos3 = make_pair(getCoords().first, getCoords().second);
     pair<int, int> pos4 = make_pair(getCoords().first, getCoords().second);
 
-    for (int i = myPos.first; i < MAXCELL; ++i) {
+    for (int i = getCoords().first; i < MAXCELL; ++i) {
         // check when both x and y are positive
         pos1.first += coord1.first;
         pos1.second += coord1.second;

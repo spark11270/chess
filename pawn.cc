@@ -15,6 +15,19 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
    
     // can move 2 square forwards only if first move
+    if (abs(initial.first - final.first) == abs(initial.second - final.second) && abs(initial.second - final.second) == 1) {
+        // move diagonally
+
+        // if trying to capture
+        if (getTheBoard()->hasObstacle(final)) return true;
+
+        // if trying to enpassant
+        if ((getTheBoard()->hasObstacle(final) == false) && (getTheBoard()->hasOpponent(getColour(), make_pair(initial.first, final.second))) && 
+            (canEP(make_pair(getTheBoard()->getPieceAt(make_pair(initial.first, final.second)))))) {
+                return true;
+            }
+    }
+
     if (isFirstMove == true) { 
         if(getColour() == Colour::Black) {
             if ((initial.first + 2) == final.first) return true;
@@ -56,6 +69,15 @@ vector<pair<int, int>> Pawn::getPosMoves() {
                 moves.push_back(pos);
             }
         }
+        pos.first = getCoords().first - 1;
+        pos.second = getCoords().second - 1;
+        if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+        }
+        pos.second = getCoords().second + 1;
+        if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+        }
     // white moves up
     } else {
         // single move forward
@@ -73,6 +95,15 @@ vector<pair<int, int>> Pawn::getPosMoves() {
             if (isValidMove(getCoords(), pos)) {
                 moves.push_back(pos);
             }
+        }
+        pos.first = getCoords().first - 1;
+        pos.second = getCoords().second - 1;
+        if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
+        }
+        pos.second = getCoords().second + 1;
+        if (isValidMove(getCoords(), pos)) {
+            moves.push_back(pos);
         }
     }
     return moves;

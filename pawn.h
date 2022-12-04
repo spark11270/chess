@@ -3,6 +3,9 @@
 
 #include "piece.h"
 
+#include <iostream>
+#include <utility>
+
 class Pawn : public Piece {
 public:
     Pawn(Colour c, int row, int col, Board *theBoard);

@@ -1,6 +1,6 @@
 #include "pawn.h"
 #include "board.h"
-#include <iostream>
+
 using namespace std;
 
 Pawn::Pawn(Colour c, int row, int col, Board *theBoard) : Piece{c, row, col, PieceName::Pawn, theBoard} {}
@@ -23,12 +23,12 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 
         // if trying to enpassant
         if ((getTheBoard()->hasObstacle(final) == false) && (getTheBoard()->hasOpponent(getColour(), make_pair(initial.first, final.second))) && 
-            (canEP(make_pair(getTheBoard()->getPieceAt(make_pair(initial.first, final.second)))))) {
+            (getTheBoard()->canEP((getTheBoard()->getPieceAt(make_pair(initial.first, final.second)))))) {
                 return true;
             }
     }
 
-    if (isFirstMove == true) { 
+    if (getIsFirstMove() == true) { 
         if(getColour() == Colour::Black) {
             if ((initial.first + 2) == final.first) return true;
         } else {

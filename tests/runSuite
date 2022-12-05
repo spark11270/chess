@@ -1,0 +1,107 @@
+#!/bin/bash
+
+# <------ CHECK FOR ARGUMENT ERRORS ------> #
+
+# Incorrect number of arguments
+if [ $# -ne 3 ]; then
+    echo "ERROR: Incorrect number of arguments." >&2
+    exit 1
+fi
+
+# Suite file does not exist or cannot be read
+if [ ! -r ${1} ]; then
+    echo "ERROR: suite-file ${1} does not exist or cannot be read." >&2
+    exit 1
+fi
+
+# Program to test does not exist or cannot be executed
+if [ ! -x ${2} ]; then
+    echo "ERROR: program ${2} does not exist or cannot be executed." >&2
+    exit 1
+fi
+
+# Program to match does not exist or cannot be executed
+if [ ! -x ${3} ]; then
+    echo "ERROR: program ${3} does not exist or cannot be executed." >&2
+    exit 1
+fi
+
+exitVal=0
+
+# Iterate through each test
+for test in $(cat ${1}); do
+
+    # <------ CHECK FOR FILE ERRORS ------> #
+
+    # .args file exists but cannot be read
+    if [ -e ${test}.args -a ! -r ${test}.args ]; then
+        echo "ERROR: ${test}.args cannot be read" >&2
+        exitVal=1
+    fi
+
+    # .in file exists but cannot be read
+    if [ -e ${test}.in -a ! -r ${test}.in ]; then
+        echo "ERROR: ${test}.in cannot be read" >&2
+        exitVal=1
+    fi
+
+    # Error found, do not execute
+    if [ ${exitVal} -ne 0 ]; then
+        continue
+    fi
+
+    # <------ EXECUTE TESTS ------> #
+
+    prd="$(mktemp /tmp/temp.XXXX)"
+    exp="$(mktemp /tmp/temp.XXXX)"
+
+    # Execute test
+    if [ -e ${test}.args -a -e ${test}.in ]; then
+        ./${2} $(cat ${test}.args) < ${test}.in > ${prd}
+        ./${3} $(cat ${test}.args) < ${test}.in > ${exp}
+    elif [ ! -e ${test}.args -a -e ${test}.in ]; then
+        ./${2} < ${test}.in > ${prd}
+        ./${3} < ${test}.in > ${exp}
+    elif [ -e ${test}.args -a ! -e ${test}.in ]; then
+        ./${2} $(cat ${test}.args) > ${prd}
+        ./${3} $(cat ${test}.args) > ${exp}
+    else
+        ./${2} > ${prd}
+        ./${3} > ${exp}
+    fi
+    
+    # Produced output matches expected output
+    if [ "$(cat ${prd})" = "$(cat ${exp})" ]; then
+        continue
+    fi
+
+    # Produced output does not match expected output
+    echo "Test failed: ${test}"
+
+    echo "Args:"
+
+    if [ -r ${test}.args ]; then 
+        echo "$(cat ${test}.args)"
+    fi
+
+    echo "Input:"
+    if [ -r ${test}.in ]; then
+        echo "$(cat ${test}.in)"
+    fi
+
+    echo "Expected:"
+
+    echo "$(cat ${exp})"
+
+    echo "Actual:"
+
+    if [ ! "$(cat ${prd})" = "" ]; then  
+        echo "$(cat ${prd})"
+    fi
+
+    rm ${prd}
+    rm ${exp}
+
+done
+
+exit ${exitVal}

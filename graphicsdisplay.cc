@@ -53,15 +53,8 @@ void GraphicsDisplay::notify() {
 						w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 0);
 					}
 				}
-		/*	
-				if (board->getTotalMoves().size()) {
-                                                if ((to_x+to_y) % 2) {
-                                                        w->fillRectangle(50*(to_y+1), 50*to_x, 50, 50, 1);
-                                                } else {
-                                                        w->fillRectangle(50*(to_y+1), 50*to_x, 50, 50, 0);
-                                                }
-                                        }
-		*/			
+                               
+                                        	
 				if (c == Colour::Black) {
 					if (to_y == j && to_x == i){
 					if ((i+j) % 2) {
@@ -82,8 +75,15 @@ void GraphicsDisplay::notify() {
 					w->drawBigString(65+j*50, i*50+35, printPiece(board->getBoard()[i][j]->getType()), 3);
 				}
 
-
-			}
+			} else {
+				if ((i+j) % 2) {
+                                                        w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
+                                                } else {
+                                                        w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
+                                                }
+                                        }
+		}
+			/*
 			if (board->getBoard()[0][0] == nullptr) {
 				w->fillRectangle(50*(0+1), 50*0, 50, 50, 0);
 			}
@@ -95,9 +95,9 @@ void GraphicsDisplay::notify() {
                         }
 			if (board->getBoard()[7][0] == nullptr) {
                                 w->fillRectangle(50*(0+1), 50*7, 50, 50, 1);
-                        }
+                        }*/
 		}
-	}
+
 }
 
 // Detach for deleting

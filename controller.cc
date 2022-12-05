@@ -256,10 +256,7 @@ void Controller::gameMoves() {
                         if (!isValid(fromCoords, toCoords)) {
                             throw runtime_error("Invalid move");
                         }
-                        if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
-                        } 
-                        else if (ss >> prom) {
+                        if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");
                             }

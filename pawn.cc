@@ -1,5 +1,6 @@
 #include "pawn.h"
 #include "board.h"
+#include <iostream>
 
 using namespace std;
 
@@ -19,8 +20,7 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 
     // can move 2 square forwards only if first move
     if (abs(initial.first - final.first) == abs(initial.second - final.second) && abs(initial.second - final.second) == 1) {
-        // move diagonally
-
+	    // move diagonally
         // if trying to capture
         if (getTheBoard()->hasObstacle(final)) return true;
 
@@ -31,7 +31,7 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
                 return true;
             }
     }
-
+/*
     if (getIsFirstMove() == true) { 
         if(getColour() == Colour::Black) {
             if ((initial.first + 2) == final.first) return true;
@@ -44,6 +44,36 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
         if ((initial.first + 1) == final.first) return true;
     } else {
         if ((initial.first - 1) == final.first) return true;
+    }
+*/
+    // Jae Test (Diagonal, Backwards)
+    if (getColour() == Colour::White) {
+	    // Going backwards => return false
+	    if ((initial.first - 1) != final.first) {
+		    return false;
+	    // We dealt with pawn on the spot above
+	    // So we look at invalid cases of pawn going forward
+	    } else {
+		    // Going one step forward
+		    if (initial.second == final.second) {
+			    // Return false if obstacle one step forward
+			    if (getTheBoard()->hasObstacle(final)) {
+				    return false;
+			    } else {
+				    return true;
+			    }
+		    } else if ((initial.second == final.second + 1) || (initial.second == final.second - 1)) {
+			    std::cout << "test" << std::endl;
+			    if (getTheBoard()->hasObstacle(final)) {
+				    return true;
+			    } else {
+				    return false;
+			    }
+		    } else {
+			    return false;
+		    }
+	    }
+	    return true;
     }
 
     return false;

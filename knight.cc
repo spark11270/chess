@@ -21,7 +21,8 @@ bool Knight::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
     if (((initial.first - 2) == final.first) && (((initial.second + 1) == final.second) || ((initial.second - 1) == final.second))) return true;
     if (((initial.second - 2) == final.second) && (((initial.first + 1) == final.first) || ((initial.first - 1) == final.first))) return true;
     if (((initial.second + 2) == final.second) && (((initial.first + 1) == final.first) || ((initial.first - 1) == final.first))) return true;
-    if (initial.second == final.second) return true; //move vertically
+    //if (initial.second == final.second) return true; //move vertically
+
 
     return false;
 }

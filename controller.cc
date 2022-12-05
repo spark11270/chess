@@ -125,6 +125,13 @@ void Controller::initGame() {
  }
 
 void Controller::playGame() {
+    cout <<  "Welcome to Chess!" << endl;
+    cout << "Input \"setup\" to enter setup mode." << endl;
+    cout << "Input \"game white-player black-player\" to play a game" << endl;
+    cout << "where \"white-player\" or \"black-player\" can either be:" << endl;
+    cout << "\"human\" or \"computer[1-4]\"." << endl; 
+    cout << endl;
+    
     string command;
     while(cin >> command) {
         try {
@@ -145,13 +152,39 @@ void Controller::playGame() {
             }
             else if (command == "game") {
                 if (doneSetup == false) board->init();
-                inGame = true;
+                
+		
+		inGame = true;
                 string wPlayer, bPlayer;
                 cin >> wPlayer;
-                initPlayer(wPlayer, Colour::White);
                 cin >> bPlayer;
-                initPlayer(bPlayer, Colour::Black);
+
+		// Check for valid player inputs
+		bool validplayerw = false;
+		bool validplayerb = false;
+
+		string p[5] = {"human", "computer1", "computer2", "computer3", "computer4"};
+                for (auto& it : p) {
+			if (wPlayer == it) {
+				validplayerw = true;
+				break;
+			}
+		}
+		if (!validplayerw) throw runtime_error("Please enter a valid player!");
+		
+		for (auto& it : p) {
+                        if (bPlayer == it) {
+				validplayerb = true;
+				break;
+			}
+                }
+		if (!validplayerb) throw runtime_error("Please enter a valid player!");
+
+		// Initialize players
+		initPlayer(wPlayer, Colour::White);
+		initPlayer(bPlayer, Colour::Black);
                 
+		// Initialize interface
 		TextDisplay td{board};
 	//	GraphicsDisplay gd{board};
 		board->render();

@@ -153,7 +153,7 @@ void Controller::playGame() {
                 initPlayer(bPlayer, Colour::Black);
                 
 		TextDisplay td{board};
-		//GraphicsDisplay gd{board};
+	//	GraphicsDisplay gd{board};
 		board->render();
                 
 		gameMoves();

@@ -40,8 +40,6 @@ void GraphicsDisplay::notify() {
 		to_x = board->getTotalMoves().back().to.first;
                 to_y = board->getTotalMoves().back().to.second;
 	}
-	std::cout << from_x << from_y << std::endl;
-	std::cout << to_x << to_y << std::endl;
 	for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                         if (board->getBoard()[i][j] != nullptr) { 

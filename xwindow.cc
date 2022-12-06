@@ -1,5 +1,7 @@
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
+#include <stdio.h>
+#include <stdlib.h>		/* getenv(), etc. */
 #include <iostream>
 #include <cstdlib>
 #include <string>
@@ -33,8 +35,7 @@ Xwindow::Xwindow(int width, int height) {
   // Set up colours.
   XColor xcolour;
   Colormap cmap;
-  char color_vals[10][10]={"white", "black", "red", "green", "blue", "cyan", "yellow", "magenta", "orange", "brown"};
-
+  char color_vals[10][10]={"white", "black", "red", "brown", "blue", "cyan", "yellow", "magenta", "orange", "green"};
   cmap=DefaultColormap(d,DefaultScreen(d));
   for(int i=0; i < 5; ++i) {
       XParseColor(d,cmap,color_vals[i],&xcolour);
@@ -66,6 +67,59 @@ Xwindow::Xwindow(int width, int height) {
 Xwindow::~Xwindow() {
   XFreeGC(d, gc);
   XCloseDisplay(d);
+}
+
+void Xwindow::drawImage(int x, int y, char* bmp) {
+	Pixmap bitmap;
+    /* these variables will contain the dimensions of the loaded bitmap. */
+    unsigned int bitmap_width, bitmap_height;
+    /* these variables will contain the location of the hotspot of the   */
+    /* loaded bitmap.                                                    */
+    int hotspot_x, hotspot_y;
+
+    /* load the bitmap found in the file "icon.bmp", create a pixmap     */
+    /* containing its data in the server, and put its ID in the 'bitmap' */
+    /* variable.                                                         */
+    int rc = XReadBitmapFile(d, w,
+                    bmp,
+		    &bitmap_width, &bitmap_height,
+                             &bitmap,
+                             &hotspot_x, &hotspot_y);
+    /* check for failure or success. */
+    switch (rc) {
+        case BitmapOpenFailed:
+            fprintf(stderr, "XReadBitmapFile - could not open file.\n");
+	    exit(1);
+            break;
+        case BitmapFileInvalid:
+            fprintf(stderr,
+                    "XReadBitmapFile - file doesn't contain a valid bitmap.\n");
+	    exit(1);
+            break;
+        case BitmapNoMemory:
+            fprintf(stderr, "XReadBitmapFile - not enough memory.\n");
+	    exit(1);
+            break;
+    }
+
+    /* start drawing the given pixmap on to our window. */
+   // {
+	    /*
+      int i, j;
+
+      for(i=0; i<6; i++) {
+        for(j=0; j<6; j++) {
+          XCopyPlane(display, bitmap, win, gc,
+                    0, 0,
+                    bitmap_width, bitmap_height,
+                    j*bitmap_width, i*bitmap_height,
+                    1);*/
+	     XCopyPlane(d, bitmap, w, DefaultGC(d, s),
+                    0, 0,
+                    bitmap_width, bitmap_height,
+                    x, y, 1);
+	     XSync(d, False);
+	     XFlush(d);
 }
 
 void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
@@ -107,12 +161,14 @@ void Xwindow::drawBigString(int x, int y, std::string msg, int colour) {
 }
 
 void Xwindow::drawBoard() {
+	/*
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
-			this->fillRectangle((1+(i+1)%2)*50+j*100, 50*i, 50, 50, Xwindow::Black);
-			this->fillRectangle(((i+1)%2)*50+j*100, 50*i, 50, 50, Xwindow::White);
+			this->fillRectangle((1+(i+1)%2)*50+j*100, 50*i, 50, 50, 1);
+			this->fillRectangle(((i+1)%2)*50+j*100, 50*i, 50, 50, 0);
 		}
 	}
+	*/
 	for (int i = 0; i < 8; i++) {
 		std::stringstream stream;
 		stream << 8-i;

@@ -158,7 +158,7 @@ void Controller::playGame() {
                         
                 // Initialize interface
                 TextDisplay td{board};
-                //GraphicsDisplay gd{board};
+                GraphicsDisplay gd{board};
                 board->render();
                         
                 gameMoves();

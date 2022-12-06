@@ -34,7 +34,7 @@ class Piece {
 
         // MODIFIERS
         void setIsFirstMove();
-        void modifyCoords(std::pair<int,int> &newCoords);
+        void modifyCoords(std::pair<int,int> newCoords);
 
         // VIRTUAL
         virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) = 0;

@@ -1,5 +1,12 @@
+setup
++ K d8
++ R h8
++ k h1
+done
+- h1
++ k g1
+done
 game human human
-move e2 e4
-move f7 f5
-move e4 f5
+move d8 f8
+undo
 resign

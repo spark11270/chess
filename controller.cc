@@ -28,7 +28,7 @@ pair<int,int> convertPos(string &pos) {
 
 // -----------------------------------------------------------
 
-Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
+Controller::Controller(Board *board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
 
 void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
@@ -60,6 +60,8 @@ void Controller::initPlayer(const string& player, Colour colour) {
         throw runtime_error("Please enter a valid player: Human / Computer[1-4]");
     }
 }
+
+
 
 void Controller::initGame() {
     string command;
@@ -97,12 +99,11 @@ void Controller::initGame() {
                 if (board->validPawns() == false) {
                     throw runtime_error("You must not have Pawns on first and last row");
                 }
-                if (board->isCheck(board->getKing()->getCoords())) {
-                    if (board->getWhosTurn() == Colour::White) {
-                        throw runtime_error("White King is in check");
-                    } else {
-                        throw runtime_error("Black King is in check");
-                    }
+                if (board->isCheck(Colour::White, board->getWhiteKing()->getCoords())) {
+                    throw runtime_error("White King is in check");
+                }
+                if (board->isCheck(Colour::Black, board->getBlackKing()->getCoords())) {
+                    throw runtime_error("Black King is in check");
                 }
                 doneSetup = true;
                 cout << "EXIT SETUP MODE" << endl;
@@ -119,13 +120,18 @@ void Controller::initGame() {
 
  }
 
+
+
+
 void Controller::playGame() {
     cout <<  "Welcome to Chess!" << endl;
     cout << "Input \"setup\" to enter setup mode." << endl;
     cout << "Input \"game white-player black-player\" to play a game" << endl;
     cout << "where \"white-player\" or \"black-player\" can either be:" << endl;
-    cout << "\"human\" or \"computer[1-4]\"." << endl; 
+    cout << "\"human\" or \"computer[1-3]\"." << endl; 
     cout << endl;
+    TextDisplay td{board};
+    GraphicsDisplay gd{board};
     
     string command;
     while(cin >> command) {
@@ -157,19 +163,19 @@ void Controller::playGame() {
                 initPlayer(bPlayer, Colour::Black);
                         
                 // Initialize interface
-                TextDisplay td{board};
-                GraphicsDisplay gd{board};
                 board->render();
                         
                 gameMoves();
+                printScore();
                         
-                if (!newRound) break;
-                board->clear();
-                doneSetup = false;
-                inGame = false;
-                for (auto &player : players) {
-                    player->resetScore();
-                }
+                if (!newRound) {	
+                    cout << "Bye" << endl;	
+                    break;	
+                }	
+                board->clear();	
+                doneSetup = false;	
+                inGame = false;	
+                playGame();
             }
             else {
                 throw runtime_error("Please enter a valid command: " + command);
@@ -210,6 +216,13 @@ void Controller::gameMoves() {
                 }
                 break;
             }
+            else if (command == "undo") {
+                if (board->moveCount() == 0) {
+                    throw runtime_error("There are no moves to undo");
+                }
+                Move m = board->getLastMove();
+                board->undoMove(m);
+            }
             else if (command == "move") {
                 if (board->isCheckmate()) {
                     cout << "Checkmate! " << endl;
@@ -217,17 +230,30 @@ void Controller::gameMoves() {
                     players[p]->updateScore();
                     break;
                 }
-                if (board->isCheck(board->getKing()->getCoords())) {
+                if (board->isCheck(board->getWhosTurn(), board->getKing()->getCoords())) {
                     if (board->isBlackTurn()) {
                         cout << "Black is in check" << endl;
                     } else {
                         cout << "White is in check" << endl;
                     }
                 }
+                if (board->isStalemate()) {
+                    cout << "Stalemate! " << endl;
+                    int p1 = board->isBlackTurn();
+                    int p2 = !board->isBlackTurn();
+                    players[p1]->updateScore();
+                    players[p2]->updateScore();
+                    break;
+                }
                 if (!board->isBlackTurn()) {
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
-                        players[0]->move(board, uselsssCord, uselsssCord);
+                        try {
+                            players[0]->move(board, uselsssCord, uselsssCord);
+                        } catch (const runtime_error &e) {
+                           cout << "Trying again." << endl;
+                           players[0]->move(board, uselsssCord, uselsssCord);
+                        }
                     }
                     else {
                         ss >> from;
@@ -274,13 +300,18 @@ void Controller::gameMoves() {
                 else {
                     if(players[1]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
-                        players[0]->move(board, uselsssCord, uselsssCord);
+                        players[1]->move(board, uselsssCord, uselsssCord);
                     }
                     else {
                         ss >> from;
                         pair<int, int> fromCoords = convertPos(from);
                         ss >> to;
                         pair<int, int> toCoords = convertPos(to);
+
+                        if (!isValid(fromCoords, toCoords)) {
+                            throw runtime_error("Invalid move");
+                        }
+
                         if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                     throw runtime_error ("You can only promote Pawn");
@@ -325,6 +356,8 @@ void Controller::gameMoves() {
     }
 }
 
+
+
 bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
 
     shared_ptr<Piece> p = board->getPieceAt(from);
@@ -336,6 +369,8 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
 
     return p->isValidMove(from, to);
 }
+
+
 
 void Controller::printScore() {
     cout << "ROUND " << rounds << endl << endl;
@@ -353,16 +388,20 @@ void Controller::printScore() {
     cout << "Black: " << players[1]->getScore() << endl;
     
     char ans;
+    string line;
     cout << "Do you want to play again? [Y/N]" << endl;
-    while (true) {
-        if (cin.eof()) break;
-        cin >> ans;
-        while (cin >> ans) {
-            continue;
-        }
-        if (cin.eof()) break;
-        if (ans == 'Y') newRound = true;
-        if (ans == 'N') newRound = false;
-        cout << "Please either choose Y/N" << endl;
+    while (getline(cin, line)) {	
+    istringstream ss{line};	
+    ss >> ans;	
+    if (ans == 'Y') {	
+        ++rounds;	
+        newRound = true;	
+        break;	
+    } else  if (ans == 'N')  {
+        newRound = false;
+        break;	
+    } else {
+        cout << "Please either choose Y/N" << endl;	
+    }
     }
 }

@@ -49,6 +49,36 @@ std::string printPiece(PieceName n, Colour c) {
 
 // Renders the board to the interface
 void GraphicsDisplay::notify() {
+	int from_x = 0;
+	int from_y = 0;
+	int to_x = 0;
+        int to_y = 0;
+	if (board->getTotalMoves().size()) {
+		// Display capturing first before updating all boards
+		from_x = board->getTotalMoves().back().from.first;
+		from_y = board->getTotalMoves().back().from.second;
+		to_x = board->getTotalMoves().back().to.first;
+                to_y = board->getTotalMoves().back().to.second;
+		int i = to_x;
+		int j = to_y;
+		Colour c = board->getBoard()[i][j]->getColour();
+                PieceName p = board->getBoard()[i][j]->getType();
+                                char arr[6];	
+                                if ((i+j) % 2) {
+                                        strcpy(arr, (printPiece(p, c) + "b.bmp").c_str());
+                                        w->drawImage(50*(j+1), 50*i, arr);
+                                } else {
+                                        strcpy(arr, (printPiece(p, c) + "w.bmp").c_str());
+                                        w->drawImage(50*(j+1), 50*i, arr);
+                                }
+				if ((from_x+from_y) % 2) {
+                                                w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 1);
+                                        } else {
+                                                w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 0);
+                                        }
+	}
+	
+
 	for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                         if (board->getBoard()[i][j] != nullptr) { 

@@ -28,7 +28,7 @@ pair<int,int> convertPos(string &pos) {
 
 // -----------------------------------------------------------
 
-Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false}, rounds{1} {}
+Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
 
 void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
@@ -160,18 +160,16 @@ void Controller::playGame() {
                 TextDisplay td{board};
                 //GraphicsDisplay gd{board};
                 board->render();
-        
-                gameMoves();
-                printScore();
                         
-                if (!newRound) {
-                    cout << "Bye" << endl;
-                    break;
-                }
+                gameMoves();
+                        
+                if (!newRound) break;
                 board->clear();
                 doneSetup = false;
                 inGame = false;
-                playGame();
+                for (auto &player : players) {
+                    player->resetScore();
+                }
             }
             else {
                 throw runtime_error("Please enter a valid command: " + command);
@@ -227,7 +225,7 @@ void Controller::gameMoves() {
                     }
                 }
                 if (!board->isBlackTurn()) {
-                    if (players[0]->getType() == 'c') {
+                    if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         try {
                             players[0]->move(board, uselsssCord, uselsssCord);
@@ -236,54 +234,88 @@ void Controller::gameMoves() {
                            players[0]->move(board, uselsssCord, uselsssCord);
                         }
                     }
-                } else {
-                    if (players[1]->getType() == 'c') {
+                    else {
+                        ss >> from;
+                        pair<int, int> fromCoords = convertPos(from);
+                        ss >> to;
+                        pair<int, int> toCoords = convertPos(to);
+
+                        if (!isValid(fromCoords, toCoords)) {
+                            throw runtime_error("Invalid move");
+                        }
+
+                        if (ss >> prom) {
+                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                                throw runtime_error ("You can only promote Pawn");
+                            }
+                            if (board->getWhosTurn() == Colour::White) {
+                                if (toCoords.first != 0) {
+                                    throw runtime_error ("White has not reached into the enemy's back row");
+                                }
+                            }
+                            if (prom == 'k' || prom == 'K') {
+                                throw runtime_error("You cannot promote to King");
+                            }
+                           board->move(fromCoords, toCoords, prom, MoveType::Promotion);
+                        } 
+                        else {
+                            // no promotion
+                            char dir = board->canCastle(fromCoords, toCoords);
+                            if (dir != ' ') {
+                                board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
+                            }
+                            else if (board->canEP(fromCoords, toCoords)) {
+                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
+                            }
+                            else if (board->hasObstacle(toCoords)) {
+                                board->move(fromCoords, toCoords, ' ', MoveType::Capture);
+                            }
+                            else {
+                                board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
+                            }
+                        }
+                    }
+                }
+                else {
+                    if(players[1]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         players[1]->move(board, uselsssCord, uselsssCord);
                     }
-                }
-                /*--------------------------- MOVE PIECES ------------------------------*/
-                ss >> from;
-                pair<int, int> fromCoords = convertPos(from);
-                ss >> to;
-                pair<int, int> toCoords = convertPos(to);
-
-                if (!isValid(fromCoords, toCoords)) {
-                    throw runtime_error("Invalid move");
-                }
-
-                if (ss >> prom) {
-                    if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
-                        throw runtime_error ("You can only promote Pawn");
-                    }
-                    if (board->getWhosTurn() == Colour::White) {
-                        if (toCoords.first != 0) {
-                            throw runtime_error ("White has not reached into the enemy's back row");
-                        }
-                    } else {
-                        if (toCoords.first != 7) {
-                            throw runtime_error ("Black has not reached into the enemy's back row");
-                        }
-                    }
-                    if (prom == 'k' || prom == 'K') {
-                        throw runtime_error("You cannot promote to King");
-                    }
-                    board->move(fromCoords, toCoords, prom, MoveType::Promotion);
-                } 
-                else {
-                    // no promotion
-                    char dir = board->canCastle(fromCoords, toCoords);
-                    if (dir != ' ') {
-                        board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
-                    }
-                    else if (board->canEP(fromCoords, toCoords)) {
-                    board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
-                    }
-                    else if (board->hasObstacle(toCoords)) {
-                        board->move(fromCoords, toCoords, ' ', MoveType::Capture);
-                    }
                     else {
-                        board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
+                        ss >> from;
+                        pair<int, int> fromCoords = convertPos(from);
+                        ss >> to;
+                        pair<int, int> toCoords = convertPos(to);
+                        if (ss >> prom) {
+                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                                    throw runtime_error ("You can only promote Pawn");
+                            } 
+                            if (board->getWhosTurn() == Colour::Black) {
+                                if (toCoords.first != 7) {
+                                    throw runtime_error ("Black has not reached into the enemy's back row");
+                                }
+                            }
+                            if (prom == 'k' || prom == 'K') {
+                                throw runtime_error("You cannot promote to King");
+                            }
+                            board->move(fromCoords, toCoords, ' ', MoveType::Promotion, prom);
+                        }
+                        else {
+                            // no promotion
+                            char dir = board->canCastle(fromCoords, toCoords);
+                            if (dir != ' ') {
+                                board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
+                            }
+                            else if (board->canEP(fromCoords, toCoords)) {
+                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
+                            }
+                            else if (board->hasObstacle(toCoords)) {
+                                board->move(fromCoords, toCoords, ' ', MoveType::Capture);
+                            }
+                            else {
+                                board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
+                            }
+                        }
                     }
                 }
                 board->render();
@@ -325,23 +357,17 @@ void Controller::printScore() {
     cout << "White: " << players[0]->getScore() << endl;
     cout << "Black: " << players[1]->getScore() << endl;
     
-    string line;
     char ans;
     cout << "Do you want to play again? [Y/N]" << endl;
-    while (getline(cin, line)) {
-        istringstream ss{line};
-        ss >> ans;
-        if (ans == 'Y') {
-            ++rounds;
-            newRound = true;
-            break;
+    while (true) {
+        if (cin.eof()) break;
+        cin >> ans;
+        while (cin >> ans) {
+            continue;
         }
-        else  if (ans == 'N')  {
-            newRound = false;
-            break;
-        }
-        else {
-            cout << "Please either choose Y/N" << endl;
-        }
+        if (cin.eof()) break;
+        if (ans == 'Y') newRound = true;
+        if (ans == 'N') newRound = false;
+        cout << "Please either choose Y/N" << endl;
     }
 }

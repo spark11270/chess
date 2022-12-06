@@ -306,12 +306,12 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
         removePieceAt(end); 
     }
     theBoard[end.first][end.second] = p;
-
     // modify the piece coordinate
     p->modifyCoords(end);
     if (type == MoveType::Castling) {
-        shared_ptr<Piece> rook = getRook(getKing()->getCoords(), dir, whosTurn);
-
+        nextTurn();
+        shared_ptr<Piece> rook = getRook(getKing()->getCoords(), dir, p->getColour());
+        nextTurn();
         pair<int, int> rookPos;
         theBoard[rook->getCoords().first][rook->getCoords().second] = nullptr;
         switch(dir) {
@@ -334,7 +334,7 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
         }
         theBoard[rookPos.first][rookPos.second] = rook;
         rook->modifyCoords(rookPos);
-        Move m{p, begin, end, MoveType::Castling};
+        Move m{rook, begin, end, MoveType::Castling};
         totalMoves.push_back(m);
     } else if (type == MoveType::EnPassant) {
         shared_ptr<Piece> removed = getPieceAt(make_pair(begin.first, end.second)); //opponent's pawn
@@ -436,12 +436,7 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
 }
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType type, char dir) {
-    cout << 1 << endl;
     shared_ptr<Piece> p = getPieceAt(begin);
-    if (p == nullptr) cout << 2 << endl;
-    cout << getPieceAt(begin)->getCoords().first << ", " << getPieceAt(begin)->getCoords().second << endl;
-
-
      switch(type) {
         case MoveType::Normal :
             cout << "Normal" << endl;

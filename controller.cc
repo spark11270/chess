@@ -93,15 +93,12 @@ void Controller::initGame() {
                 }
             }
             else if (command == "done") {
-                cout << 111 << endl;
                 if (board->uniqueKing() == false) {
                     throw runtime_error("You must have one kings for each player");
                 }
-                cout << 222 << endl;
                 if (board->validPawns() == false) {
                     throw runtime_error("You must not have Pawns on first and last row");
                 }
-                cout << 333 << endl;
                 if (board->isCheck(board->getKing()->getCoords())) {
                     if (board->getWhosTurn() == Colour::White) {
                         throw runtime_error("White King is in check");
@@ -110,7 +107,6 @@ void Controller::initGame() {
                     }
                 }
                 board->nextTurn();
-                if (board->getKing() == nullptr) cout << 1 << endl;
                 if (board->isCheck(board->getKing()->getCoords())) {
                     if (board->getWhosTurn() == Colour::White) {
                         throw runtime_error("White King is in check");
@@ -180,8 +176,9 @@ void Controller::playGame() {
                 board->render();
                         
                 gameMoves();
+                printScore();
                         
-                 if (!newRound) {	
+                if (!newRound) {	
                     cout << "Bye" << endl;	
                     break;	
                 }	

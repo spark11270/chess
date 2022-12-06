@@ -229,6 +229,14 @@ void Controller::gameMoves() {
                         cout << "White is in check" << endl;
                     }
                 }
+                if (board->isStalemate()) {
+                    cout << "Stalemate! " << endl;
+                    int p1 = board->isBlackTurn();
+                    int p2 = !board->isBlackTurn();
+                    players[p1]->updateScore();
+                    players[p2]->updateScore();
+                    break;
+                }
                 if (!board->isBlackTurn()) {
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);

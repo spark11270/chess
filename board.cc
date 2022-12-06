@@ -438,6 +438,8 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType type, char dir) {
 
+    shared_ptr<Piece> p = getPieceAt(begin);
+
      switch(type) {
         case MoveType::Normal :
             cout << "Normal" << endl;
@@ -729,33 +731,32 @@ std::vector<Move> Board::getTotalMoves() {
     return totalMoves;
 }
 
-bool isStalemate() {
-    Colour c = whosturn;
-    vector<pair<int, int>> allPosMoves;
-    if (c == Colour::White) {
-        for (auto& piece : whitePieces) {
-            allPosMoves = piece->getPosMoves();
-            if (allPosMoves.empty) {
-                continue;
-            } else {
-                for (auto &move : allPosMoves) {
-                     // check if it's legal move
+bool Board::isStalemate() {
+    Colour c = whosTurn;
+    vector<pair<shared_ptr<Piece>, pair<int, int>>> possibleMoves = getAllValidMoves(!isBlackTurn());
 
-                }
-            }
+    for (auto &m : possibleMoves) {
+        pair<int, int> kingCoords = getKing()->getCoords();
+        pair<int, int> fromCoords = m.first->getCoords();
+        pair<int, int> toCoords = m.second;
+        char dir = canCastle(fromCoords, toCoords);
+        if (dir != ' ') {
+            simulate(fromCoords, toCoords, MoveType::Castling, dir);
         }
+        else if (canEP(fromCoords, toCoords)) {
+            simulate(fromCoords, toCoords, MoveType::EnPassant);
+        }
+        else if (hasObstacle(toCoords)) {
+            simulate(fromCoords, toCoords, MoveType::Capture);
+        }
+        else {
+            simulate(fromCoords, toCoords, MoveType::Normal);
+        }
+        if (!isCheck(kingCoords)) {
+            return false;
+        } 
+        undoMove(totalMoves.back());
     }
-    else {
-        for (auto& piece : whitePieces) {
-            allPosMoves = piece->getPosMoves();
-            if (allPosMoves.empty) {
-                continue;
-            } else {
-                for (auto &move : allPosMoves) {
-                     // check if it's legal move
+    return true;
 
-                }
-            }
-        }
-    }
 }

@@ -12,6 +12,7 @@ GraphicsDisplay::GraphicsDisplay(Board* board) : board{board} {
         board->attach(this);
 }
 
+// Helper for getting bitmap file name
 std::string printPiece(PieceName n, Colour c) {
     if (c == Colour::White) {
         if (n == PieceName::King) {
@@ -42,23 +43,12 @@ std::string printPiece(PieceName n, Colour c) {
             return "p";
         }
     }
+    return "";
 }
 
 
 // Renders the board to the interface
 void GraphicsDisplay::notify() {
-/*
-	int from_x = 0;
-	int from_y = 0;
-	int to_x = 0;
-        int to_y = 0;
-	if (board->getTotalMoves().size()) {
-		from_x = board->getTotalMoves().back().from.first;
-		from_y = board->getTotalMoves().back().from.second;
-		to_x = board->getTotalMoves().back().to.first;
-                to_y = board->getTotalMoves().back().to.second;
-	}
-	*/
 	for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
                         if (board->getBoard()[i][j] != nullptr) { 
@@ -72,46 +62,15 @@ void GraphicsDisplay::notify() {
 					strcpy(arr, (printPiece(p, c) + "w.bmp").c_str());
 					w->drawImage(50*(j+1), 50*i, arr);
 				}
-
-				/*
-				if (board->getTotalMoves().size()) {
-					if ((from_x+from_y) % 2) {
-						w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 1);
-					} else {
-						w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 0);
-					}
-				}
-				if (c == Colour::Black) {
-					if (to_y == j && to_x == i){
-					if ((i+j) % 2) {
-                                                        w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
-                                                } else {
-                                                    	w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
-                                                }
-					}
-					w->drawImage(50*(j+1), 50*i);
-					//w->drawBigString(65+j*50, i*50+35, printPiece(board->getBoard()[i][j]->getType()), 4);
-				} else {
-					if (to_y == j && to_x == i){
-                                  		if ((i+j) % 2) {
-                                        		w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
-                                		} else {
-                                        		w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
-                                		}
-						}
-					w->drawImage(50*(j+1), 50*i);
-					//w->drawBigString(65+j*50, i*50+35, printPiece(board->getBoard()[i][j]->getType()), 3);
-				}
-				*/
 			} else {
 				if ((i+j) % 2) {
-                                                        w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
-                                                } else {
-                                                        w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
-                                                }
-                                        }
+					w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
+				} else {
+					w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
+				}
+			}
 		}
-		}
+	}
 }
 
 // Detach for deleting

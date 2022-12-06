@@ -151,7 +151,7 @@ void Controller::playGame() {
 
                 }     
             }
-            else if (command == "game") {
+	    else if (command == "game") {
                 if (doneSetup == false) board->init();
                 inGame = true;
                 string wPlayer, bPlayer;
@@ -163,7 +163,7 @@ void Controller::playGame() {
                 initPlayer(bPlayer, Colour::Black);
                         
                 // Initialize interface
-                board->render();
+	       	board->render();
                         
                 gameMoves();
                 printScore();

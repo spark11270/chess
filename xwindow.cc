@@ -128,14 +128,14 @@ void Xwindow::fillRectangle(int x, int y, int width, int height, int colour) {
   XSetForeground(d, gc, colours[Black]);
 }
 
-void Xwindow::printMessage(int x, int y, const string& msg, int colour, XFontStruct& f){
+void Xwindow::printMessage(int x, int y, const string& msg, int colour, XFontStruct& xf){
   XSetForeground(d, gc, colours[colour]);
-  XTextItem ti;
-  ti.chars = const_cast<char*>(msg.c_str());
-  ti.nchars = msg.length();
-  ti.delta = 0;
-  ti.font = f.fid;
-  XDrawText(d, w, gc, x, y, &ti, 1);
+  XTextItem xt;
+  xt.chars = const_cast<char*>(msg.c_str());
+  xt.nchars = msg.length();
+  xt.delta = 0;
+  xt.font = xf.fid;
+  XDrawText(d, w, gc, x, y, &xt, 1);
   XSetForeground(d, gc, colours[Black]);
   XFlush(d);
 }
@@ -160,15 +160,14 @@ void Xwindow::drawBigString(int x, int y, std::string msg, int colour) {
 	delete f;
 }
 
+// Draws blank board to display
 void Xwindow::drawBoard() {
-	/*
 	for (int i = 0; i < 8; i++) {
 		for (int j = 0; j < 8; j++) {
 			this->fillRectangle((1+(i+1)%2)*50+j*100, 50*i, 50, 50, 1);
 			this->fillRectangle(((i+1)%2)*50+j*100, 50*i, 50, 50, 0);
 		}
 	}
-	*/
 	for (int i = 0; i < 8; i++) {
 		std::stringstream stream;
 		stream << 8-i;
@@ -176,15 +175,7 @@ void Xwindow::drawBoard() {
 		stream >> s;
 		this->drawBigString(15, 35+i*50, s, Xwindow::Black);
 	}
-	/*
-	std::string alphabet = "ABCDEFGH";
-	int i = 0;
-	for( char c : alphabet) {
-		std::string s(c);
-		this->drawBigString(65+i*50, 435, s);
-		i++;
-	}
-	*/
+
 	this->drawBigString(65+0*50, 435, "A", Xwindow::Black);
 	this->drawBigString(65+1*50, 435, "B", Xwindow::Black);
 	this->drawBigString(65+2*50, 435, "C", Xwindow::Black);

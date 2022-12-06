@@ -384,7 +384,7 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
     shared_ptr<Piece> rook;
     char direction;
     char garbage = ' ';
-
+    Colour c = getPieceAt(begin)->getColour();
     pair<int, int> dir;
      // same row
     if (begin.first == end.first && abs(begin.second - end.second) == 2) {
@@ -392,13 +392,13 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
        if (begin.second > end.second) {
         // moves left
         dir.second = -1;
-        rook = getRook(king->getCoords(), LEFT, whosTurn);
+        rook = getRook(king->getCoords(), LEFT, c);
         direction = LEFT;
        }
        // moves right
        else if (begin.second < end.second) {
         dir.second = 1;
-        rook = getRook(king->getCoords(), RIGHT, whosTurn);
+        rook = getRook(king->getCoords(), RIGHT, c);
         direction = RIGHT;
        }
        else {return garbage;}
@@ -408,29 +408,26 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
         // moves up
         if (begin.first > end.first) {
             dir.first = 1;
-            rook = getRook(king->getCoords(), UP, whosTurn);
+            rook = getRook(king->getCoords(), UP, c);
             direction = UP;
         }
         // moves down
         else if (begin.first < end.first) {
             dir.first = -1;
-            rook = getRook(king->getCoords(), DOWN, whosTurn);
+            rook = getRook(king->getCoords(), DOWN, c);
             direction = DOWN;
         }
         else {return garbage;}
     }
     else {return garbage;}
 
-
     // piece is not king                       king not first move      rook DNE               rook not first move
     if (king->getType() != PieceName::King || !king->getIsFirstMove() || rook == nullptr || !rook->getIsFirstMove()) return garbage;
     
     // check if the position after castling leads to check
-    if (isCheck(end)) return garbage;
 
     pair<int, int> pos = begin;
     for (int i = 0; i < 2; ++i) {
-        if (isCheck(pos)) return garbage;
         pos.first += dir.first;
         pos.second += dir.second;
         if (hasObstacle(pos)) return garbage;

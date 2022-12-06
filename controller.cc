@@ -109,16 +109,16 @@ void Controller::initGame() {
                         throw runtime_error("Black King is in check");
                     }
                 }
-                // board->nextTurn();
-                // if (board->getKing() == nullptr) cout << 1 << endl;
-                // if (board->isCheck(board->getKing()->getCoords())) {
-                //     if (board->getWhosTurn() == Colour::White) {
-                //         throw runtime_error("White King is in check");
-                //     } else {
-                //         throw runtime_error("Black King is in check");
-                //     }
-                // }
-                // board->nextTurn();
+                board->nextTurn();
+                if (board->getKing() == nullptr) cout << 1 << endl;
+                if (board->isCheck(board->getKing()->getCoords())) {
+                    if (board->getWhosTurn() == Colour::White) {
+                        throw runtime_error("White King is in check");
+                    } else {
+                        throw runtime_error("Black King is in check");
+                    }
+                }
+                board->nextTurn();
                 doneSetup = true;
                 cout << "EXIT SETUP MODE" << endl;
                 break;

@@ -3,6 +3,9 @@ setup
 + R h8
 + k h1
 done
+- h1
++ k g1
+done
 game human human
 move d8 f8
 undo

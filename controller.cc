@@ -28,7 +28,7 @@ pair<int,int> convertPos(string &pos) {
 
 // -----------------------------------------------------------
 
-Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
+Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false}, rounds{1} {}
 
 void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
@@ -160,16 +160,18 @@ void Controller::playGame() {
                 TextDisplay td{board};
                 //GraphicsDisplay gd{board};
                 board->render();
-                        
+        
                 gameMoves();
+                printScore();
                         
-                if (!newRound) break;
+                if (!newRound) {
+                    cout << "Bye" << endl;
+                    break;
+                }
                 board->clear();
                 doneSetup = false;
                 inGame = false;
-                for (auto &player : players) {
-                    player->resetScore();
-                }
+                playGame();
             }
             else {
                 throw runtime_error("Please enter a valid command: " + command);
@@ -357,17 +359,23 @@ void Controller::printScore() {
     cout << "White: " << players[0]->getScore() << endl;
     cout << "Black: " << players[1]->getScore() << endl;
     
+    string line;
     char ans;
     cout << "Do you want to play again? [Y/N]" << endl;
-    while (true) {
-        if (cin.eof()) break;
-        cin >> ans;
-        while (cin >> ans) {
-            continue;
+    while (getline(cin, line)) {
+        istringstream ss{line};
+        ss >> ans;
+        if (ans == 'Y') {
+            ++rounds;
+            newRound = true;
+            break;
         }
-        if (cin.eof()) break;
-        if (ans == 'Y') newRound = true;
-        if (ans == 'N') newRound = false;
-        cout << "Please either choose Y/N" << endl;
+        else  if (ans == 'N')  {
+            newRound = false;
+            break;
+        }
+        else {
+            cout << "Please either choose Y/N" << endl;
+        }
     }
 }

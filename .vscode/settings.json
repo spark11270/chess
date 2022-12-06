@@ -62,7 +62,19 @@
     "algorithm": "cpp",
     "__tree": "cpp",
     "map": "cpp",
-    "utility": "cpp"
+    "utility": "cpp",
+    "bit": "cpp",
+    "*.tcc": "cpp",
+    "memory_resource": "cpp",
+    "random": "cpp",
+    "numbers": "cpp",
+    "functional": "cpp",
+    "iterator": "cpp",
+    "ranges": "cpp",
+    "deque": "cpp",
+    "numeric": "cpp",
+    "fstream": "cpp",
+    "cinttypes": "cpp"
   },
   "C_Cpp.errorSquiggles": "Disabled",
   "codetogether.virtualCursorJoin": "sharedVirtualCursor"

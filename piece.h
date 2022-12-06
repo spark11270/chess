@@ -7,33 +7,41 @@
 #include <utility>
 #include <vector>
 
-
-const int MAXCELL = 8; // rows and columns are 0-7
+const int MAXCELL = 8;
 
 class Board;
 
-// Decorator for Cell
 class Piece {
-    Colour colour;
-    std::pair<int, int> coords;
-    PieceName type;
+
     Board *b;  
+    Colour colour;
+    PieceName type;
     bool isFirstMove = true;
+    std::pair<int, int> coords;
 
     public:
-        Piece(Colour color, int row, int col, PieceName type, Board *b);
+        // CONSTRUCTOR
+        Piece(Board *b, Colour c, PieceName type, int row, int col);
 
+        // HELPERS
+        bool outOfBounds(std::pair<int,int> initial, std::pair<int,int> final);
+
+        // ACESSORS
+        Board *getTheBoard();
+        Colour getColour();
+        bool getIsFirstMove();
+        std::pair<int, int> getCoords();
+
+        // MODIFIERS
+        void setIsFirstMove();
+        void modifyCoords(std::pair<int,int> &newCoords);
+
+        // VIRTUAL
         virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) = 0;
         virtual std::vector<std::pair<int, int>> getPosMoves() = 0;
         virtual PieceName getType() = 0;
-        std::pair<int, int> getCoords();
-        void setCoords(int r, int c);
-        void modifyCoords(std::pair<int,int> &newCoords);
-        Colour getColour();
-        Board *getTheBoard();
-        bool getIsFirstMove();
-        void setIsFirstMove();
 
+        // DESTRUCTOR
         virtual ~Piece() = 0;
 
 };

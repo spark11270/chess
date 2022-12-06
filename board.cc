@@ -112,40 +112,40 @@ void Board::addPiece(pair<int, int> coords, char piece) {
     shared_ptr<Piece> thePiece;
     switch(piece) {
         case 'K':
-            thePiece = make_shared<King>(Colour::White, coords.first, coords.second, this);
+            thePiece = make_shared<King>(this, Colour::White, coords.first, coords.second);
             break;
         case 'Q':
-            thePiece = make_shared<Queen>(Colour::White, coords.first, coords.second, this);
+            thePiece = make_shared<Queen>(this, Colour::White, coords.first, coords.second);
             break;
         case 'N':
-            thePiece = make_shared<Knight>(Colour::White, coords.first, coords.second, this);
+            thePiece = make_shared<Knight>(this, Colour::White, coords.first, coords.second);
             break;
         case 'B':
-            thePiece = make_shared<Bishop>(Colour::White, coords.first, coords.second, this);
+            thePiece = make_shared<Bishop>(this, Colour::White, coords.first, coords.second);
             break;
         case 'R':
-            thePiece = make_shared<Rook>(Colour::White, coords.first, coords.second, this);
+            thePiece = make_shared<Rook>(this, Colour::White, coords.first, coords.second);
             break;
         case 'P': 
-            thePiece = make_shared<Pawn>(Colour::White, coords.first, coords.second, this);
+            thePiece = make_shared<Pawn>(this, Colour::White, coords.first, coords.second);
             break;
         case 'k':
-            thePiece = make_shared<King>(Colour::Black, coords.first, coords.second, this);
+            thePiece = make_shared<King>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'q':
-            thePiece = make_shared<Queen>(Colour::Black, coords.first, coords.second, this);
+            thePiece = make_shared<Queen>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'n':
-            thePiece = make_shared<Knight>(Colour::Black, coords.first, coords.second, this);
+            thePiece = make_shared<Knight>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'b':
-            thePiece = make_shared<Bishop>(Colour::Black, coords.first, coords.second, this);
+            thePiece = make_shared<Bishop>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'r':
-            thePiece = make_shared<Rook>(Colour::Black, coords.first, coords.second, this);
+            thePiece = make_shared<Rook>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'p':
-            thePiece = make_shared<Pawn>(Colour::Black, coords.first, coords.second, this);
+            thePiece = make_shared<Pawn>(this, Colour::Black, coords.first, coords.second);
             break;
     }
     if (thePiece->getColour() == Colour::White) {
@@ -223,24 +223,24 @@ bool Board::validPawns() {
 
 void Board::init() {
     // white pieces
-    theBoard[7][0] = make_shared<Rook>(Colour::White, 7, 0, this);
-    theBoard[7][1] = make_shared<Knight>(Colour::White, 7, 1, this);
-    theBoard[7][2] = make_shared<Bishop>(Colour::White, 7, 2, this);
-    theBoard[7][3] = make_shared<Queen>(Colour::White, 7, 3, this);
-    theBoard[7][4] = make_shared<King>(Colour::White, 7, 4, this);
-    theBoard[7][5] = make_shared<Bishop>(Colour::White, 7, 5, this);
-    theBoard[7][6] = make_shared<Knight>(Colour::White, 7, 6, this);
-    theBoard[7][7] = make_shared<Rook>(Colour::White, 7, 7, this);
+    theBoard[7][0] = make_shared<Rook>(this, Colour::White, 7, 0);
+    theBoard[7][1] = make_shared<Knight>(this, Colour::White, 7, 1);
+    theBoard[7][2] = make_shared<Bishop>(this, Colour::White, 7, 2);
+    theBoard[7][3] = make_shared<Queen>(this, Colour::White, 7, 3);
+    theBoard[7][4] = make_shared<King>(this, Colour::White, 7, 4);
+    theBoard[7][5] = make_shared<Bishop>(this, Colour::White, 7, 5);
+    theBoard[7][6] = make_shared<Knight>(this, Colour::White, 7, 6);
+    theBoard[7][7] = make_shared<Rook>(this, Colour::White, 7, 7);
 
     // black pieces
-    theBoard[0][0] = make_shared<Rook>(Colour::Black, 0, 0, this);
-    theBoard[0][1] = make_shared<Knight>(Colour::Black, 0, 1, this);
-    theBoard[0][2] = make_shared<Bishop>(Colour::Black, 0, 2, this);
-    theBoard[0][3] = make_shared<Queen>(Colour::Black, 0, 3, this);
-    theBoard[0][4] = make_shared<King>(Colour::Black, 0, 4, this);
-    theBoard[0][5] = make_shared<Bishop>(Colour::Black, 0, 5, this);
-    theBoard[0][6] = make_shared<Knight>(Colour::Black, 0, 6, this);
-    theBoard[0][7] = make_shared<Rook>(Colour::Black, 0, 7, this);
+    theBoard[0][0] = make_shared<Rook>(this, Colour::Black, 0, 0);
+    theBoard[0][1] = make_shared<Knight>(this, Colour::Black, 0, 1);
+    theBoard[0][2] = make_shared<Bishop>(this, Colour::Black, 0, 2);
+    theBoard[0][3] = make_shared<Queen>(this, Colour::Black, 0, 3);
+    theBoard[0][4] = make_shared<King>(this, Colour::Black, 0, 4);
+    theBoard[0][5] = make_shared<Bishop>(this, Colour::Black, 0, 5);
+    theBoard[0][6] = make_shared<Knight>(this, Colour::Black, 0, 6);
+    theBoard[0][7] = make_shared<Rook>(this, Colour::Black, 0, 7);
 
     for (int i = 0 ; i < MAXCELL; ++i) {
         whitePieces.push_back(theBoard[7][i]);
@@ -249,8 +249,8 @@ void Board::init() {
 
     // pawns
     for (int i = 0; i < MAXCELL; ++i) {
-        theBoard[6][i] = make_shared<Pawn>(Colour::White, 6, i, this);
-        theBoard[1][i] = make_shared<Pawn>(Colour::Black, 1, i, this);
+        theBoard[6][i] = make_shared<Pawn>(this, Colour::White, 6, i);
+        theBoard[1][i] = make_shared<Pawn>(this, Colour::Black, 1, i);
         whitePieces.push_back(theBoard[6][i]);
         blackPieces.push_back(theBoard[1][i]);
     }
@@ -281,6 +281,7 @@ std::shared_ptr<Piece> Board::getKing() {
             }
         }
     }
+    return nullptr;
 }
 
 shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
@@ -467,9 +468,6 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
 
     simulate(begin, end, type, prom, dir);
 
-    // for (auto &m : totalMoves) {
-    //     cout << m.getMoves() << endl;
-    // }
     nextTurn();
 }
 
@@ -575,8 +573,8 @@ void Board::undoMove(const Move& m) {
     totalMoves.pop_back();
 }
 
-bool Board::isWhiteTurn() {
-    if (whosTurn == Colour::White) return true;
+bool Board::isBlackTurn() {
+    if (whosTurn == Colour::Black) return true;
     return false;
 }
 
@@ -599,6 +597,29 @@ bool Board::isCheck(pair<int, int> kingPos) {
             vector<pair<int, int>> moves = p->getPosMoves();
             if ((!moves.empty()) && (name != PieceName::King) && 
                 (count(moves.begin(), moves.end(), kingPos) > 0)) {
+                    switch(name) {
+                    case PieceName::Bishop :
+                        cout << "Bishop" << endl;
+                        break;
+                    case PieceName::Queen :
+                        cout << "Queen" << endl;
+                        break;
+                    case PieceName::Pawn :
+                        cout << "Pawn at " << p->getCoords().first << ", " << p->getCoords().second << " causes check" << endl;
+                        for (auto &m : moves) {
+                            cout << "possible moves: " << endl << m.first << ", " << m.second << endl;
+                        }
+                        break;
+                    case PieceName::Rook :
+                        cout << "Rook" << endl;
+                        break;
+                    case PieceName::Knight :
+                        cout << "Knight" << endl;
+                        break;
+                    case PieceName::King :
+                        cout << "King" << endl;
+                        break;
+                }
                 return true;
             }
         }
@@ -620,14 +641,16 @@ Colour Board::getWhosTurn() {
 }
 
 bool Board::isCheckmate() {
-    if (isCheck(getKing()->getCoords())) {
-        for (auto &cells : getKing()->getPosMoves()) {
-            if (isCheck(cells)) {
-                return true;
-            }
-        }
+    if (whosTurn == Colour::White) {
+        cout << "white" << endl;
+    } else {
+        cout << "black" << endl;
     }
-    return false;
+    if (!isCheck(getKing()->getCoords())) return false;
+    for (auto &cells : getKing()->getPosMoves()) {
+        if (!isCheck(cells)) return false;
+    }
+    return true;
 }
 
 bool Board::hasAlly(Colour c, const pair<int, int> pos) {

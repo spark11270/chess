@@ -38,13 +38,11 @@ void Controller::initPlayer(const string& player, Colour colour) {
             players.push_back(make_unique<Computer>(Colour::White, 1));
         } else if (player == "computer2") {
             players.push_back(make_unique<Computer>(Colour::White, 2));
-        } else if (player == "computer3") {
-            players.push_back(make_unique<Computer>(Colour::White, 3));
         } else {
-            if (player == "computer4") {
-            players.push_back(make_unique<Computer>(Colour::White, 4));
+            if (player == "computer3") {
+                players.push_back(make_unique<Computer>(Colour::White, 3));
             }
-        }
+        } 
     } else if (colour == Colour::Black) {
         if (player == "human") {
             players.push_back(make_unique<Human>(Colour::Black));
@@ -53,12 +51,9 @@ void Controller::initPlayer(const string& player, Colour colour) {
         } else if (player == "computer2") {
             players.push_back(make_unique<Computer>(Colour::Black, 2));
         }
-        else if (player == "computer3") {
-            players.push_back(make_unique<Computer>(Colour::Black, 3));
-        }
         else {
-            if (player == "computer4") {
-            players.push_back(make_unique<Computer>(Colour::Black, 4));
+            if (player == "computer3") {
+                players.push_back(make_unique<Computer>(Colour::Black, 3));
             }
         }
     } else {
@@ -152,45 +147,22 @@ void Controller::playGame() {
             }
             else if (command == "game") {
                 if (doneSetup == false) board->init();
-                
-		
-		inGame = true;
+                inGame = true;
                 string wPlayer, bPlayer;
                 cin >> wPlayer;
                 cin >> bPlayer;
 
-		// Check for valid player inputs
-		bool validplayerw = false;
-		bool validplayerb = false;
-
-		string p[5] = {"human", "computer1", "computer2", "computer3", "computer4"};
-                for (auto& it : p) {
-			if (wPlayer == it) {
-				validplayerw = true;
-				break;
-			}
-		}
-		if (!validplayerw) throw runtime_error("Please enter a valid player!");
-		
-		for (auto& it : p) {
-                        if (bPlayer == it) {
-				validplayerb = true;
-				break;
-			}
-                }
-		if (!validplayerb) throw runtime_error("Please enter a valid player!");
-
-		// Initialize players
-		initPlayer(wPlayer, Colour::White);
-		initPlayer(bPlayer, Colour::Black);
-                
-		// Initialize interface
-		TextDisplay td{board};
-	//	GraphicsDisplay gd{board};
-		board->render();
-                
-		gameMoves();
-                
+                // Initialize players
+                initPlayer(wPlayer, Colour::White);
+                initPlayer(bPlayer, Colour::Black);
+                        
+                // Initialize interface
+                TextDisplay td{board};
+                //GraphicsDisplay gd{board};
+                board->render();
+                        
+                gameMoves();
+                        
                 if (!newRound) break;
                 board->clear();
                 doneSetup = false;
@@ -206,6 +178,11 @@ void Controller::playGame() {
         catch (runtime_error &f) {
             cerr << f.what() << endl;
         } 
+    }
+
+    if (cin.eof()) {
+        printScore();
+        exit(0);
     }
 }
 
@@ -223,26 +200,31 @@ void Controller::gameMoves() {
         istringstream ss{line};
         ss >> command;
             if (command == "resign") {
-                if (board->isWhiteTurn()) {
+                if (!board->isBlackTurn()) {
                     // black resigns
-                    cout << "White Wins!" << endl;
                     players[0]->updateScore();
                 }
                 else {
                     // white resigns
-                    cout << "Black Wins!" << endl;
                     players[1]->updateScore();
                 }
-                printScore();
                 break;
             }
             else if (command == "move") {
-                if (board->isCheck(board->getKing()->getCoords())) {
-                    players[1]->updateScore();
-                    printScore();
+                if (board->isCheckmate()) {
+                    cout << "Checkmate! " << endl;
+                    int p = board->isBlackTurn();
+                    players[p]->updateScore();
                     break;
                 }
-                if (board->isWhiteTurn() == true) {
+                if (board->isCheck(board->getKing()->getCoords())) {
+                    if (board->isBlackTurn()) {
+                        cout << "Black is in check" << endl;
+                    } else {
+                        cout << "White is in check" << endl;
+                    }
+                }
+                if (!board->isBlackTurn()) {
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         players[0]->move(board, uselsssCord, uselsssCord);
@@ -256,6 +238,7 @@ void Controller::gameMoves() {
                         if (!isValid(fromCoords, toCoords)) {
                             throw runtime_error("Invalid move");
                         }
+
                         if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                 throw runtime_error ("You can only promote Pawn");
@@ -348,7 +331,6 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
 
     if (p == nullptr) { return false; }
     if (p->getColour() != board->getWhosTurn()) {
-        string name = "blah";
         throw runtime_error("Wrong player's turn to move");
     }
 
@@ -357,7 +339,16 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
 
 void Controller::printScore() {
     cout << "ROUND " << rounds << endl << endl;
-    cout << "Final Score" << endl;
+    if (players[0]->getScore() > players[1]->getScore()) {
+        cout << "White Wins!" << endl;
+    }
+    else if (players[0]->getScore() == players[1]->getScore()) {
+        cout << "The players tied" << endl;
+    }
+    else {
+        cout << "Black Wins!" << endl;
+    }
+    cout << "Final Score:" << endl;
     cout << "White: " << players[0]->getScore() << endl;
     cout << "Black: " << players[1]->getScore() << endl;
     

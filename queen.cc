@@ -3,94 +3,90 @@
 
 using namespace std;
 
-Queen::Queen(Colour c, int row, int col, Board *theBoard) : Piece(c, row, col, PieceName::Queen, theBoard) {}
+Queen::Queen(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Queen, row, col} {}
+
 
 bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
-    if (final.first >= MAXCELL) return false; // check out of bounds
-    if (final.second >= MAXCELL) return false; // check out of bounds
 
-    if (final.first < 0) return false; // check out of bounds
-    if (final.second < 0) return false; // check out of bounds
-    
-    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
-
-    // my own item in the final
-    if (getTheBoard()->hasAlly(getColour(), final)) return false;
+    // check if move is out of bounds
+    if (outOfBounds(initial, final)) return false;
 
     int start, end;
 
-    // move horizontally
+    // horizontal
     if (initial.first == final.first) {
+
+        // set start and end column based on position
         start = final.second < initial.second ? final.second : initial.second;
         end = final.second < initial.second ? initial.second : final.second;
-
         pair<int, int> tmp = make_pair(final.first, start);
+
+        // check every position the piece moves in for obstacles
         for (int i = start + 1; i < end; ++i) {
             tmp.second = i;
-            if (i != initial.second && getTheBoard()->hasObstacle(tmp)) return false;
+            if (i != initial.second && getTheBoard()->hasObstacle(tmp)) return false;  
         }
 
-        return !getTheBoard()->hasAlly(getColour(), final);
+        return true;
     }
-    // move vertically
+    // vertical
     else if (initial.second == final.second) {
+
+        // set start and end row based on position
         start = final.first < initial.first ? final.first : initial.first;
         end = final.first < initial.first ? initial.first : final.first;
-
         pair<int, int> tmp = make_pair(start, final.second);
+
+        // check every position the piece moves in for obstacles
         for (int i = start + 1; i < end; ++i) {
             tmp.first = i;
             if (i != initial.first && getTheBoard()->hasObstacle(tmp)) return false;
         }
 
-        return !getTheBoard()->hasAlly(getColour(), final);
+        return true;
 
-    } else if (abs(final.second - initial.second) == abs(final.first - initial.first)) {
+    } 
+    // diagonal
+    else if (abs(final.second - initial.second) == abs(final.first - initial.first)) {
+
         int x = 1;
-    int y = 1;
-    if (final.first >= MAXCELL) return false; // check out of bounds
-    if (final.second >= MAXCELL) return false; // check out of bounds
+        int y = 1;
 
-    if (final.first < 0) return false; // check out of bounds
-    if (final.second < 0) return false; // check out of bounds;
-    
-    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
- 
-    // check is there is an ally in the final destination
-    if (getTheBoard()->hasAlly(getColour(), final)) return false;
-    // check if moves diagnoally     
-    if (abs(final.second - initial.second) != abs(final.first - initial.first)) return false; 
-    // check if there is an obstacle on the way
-
-    if ((final.second - initial.second) < 0) {
         // moves in negative x direction
-        x = -1;
-    }
-    if ((final.first - initial.first) < 0) {
-        // moives in negative y direction
-        y = -1;
-    }
+        if ((final.second - initial.second) < 0) {x = -1;}
 
-    pair<int, int> dir = make_pair(y, x); // y = row && x = column
-    pair<int, int> xyCoords = make_pair(initial.first, initial.second);
-
-    for (int i = 1; i < abs(final.second - initial.second); ++i) {
-        xyCoords.first += dir.first;
-        xyCoords.second += dir.second;
-        if(getTheBoard()->hasObstacle(xyCoords)) return false;
-    }
+        // moves in negative y direction
+        if ((final.first - initial.first) < 0) {y = -1;}
+        
+        // y = row && x = column
+        pair<int, int> dir = make_pair(y, x);
+        pair<int, int> xyCoords = make_pair(initial.first, initial.second);
+        
+        // check every position the piece moves in for obstacles
+        for (int i = 1; i < abs(final.second - initial.second); ++i) {
+            xyCoords.first += dir.first;
+            xyCoords.second += dir.second;
+            if(getTheBoard()->hasObstacle(xyCoords)) return false;
+        }
+        
         return true;
     }
+
     return false;
 }
 
+
 vector<pair<int, int>> Queen::getPosMoves() {
+
     vector<pair<int, int>> moves;
 
+    // vertical
     for (int i = 0; i < MAXCELL; ++i) {
         pair<int, int> pos;
         pos.first = i;
         pos.second = getCoords().second;
+
+        // return column excluding the rook
         if (i != getCoords().first) {
             if (isValidMove(getCoords(), pos)) {
                 moves.push_back(pos);
@@ -102,6 +98,8 @@ vector<pair<int, int>> Queen::getPosMoves() {
          pair<int, int> pos;
          pos.first = getCoords().first;
          pos.second = j;
+
+         // return row excluding the rook
         if (j != getCoords().second) {
             if (isValidMove(getCoords(), pos)) {
                 moves.push_back(pos);
@@ -109,6 +107,7 @@ vector<pair<int, int>> Queen::getPosMoves() {
         }
     }
 
+    // diagonal
     pair<int, int> coord1 = make_pair(1, 1);
     pair<int, int> coord2 = make_pair(1, -1);
     pair<int, int> coord3 = make_pair(-1, -1);
@@ -151,5 +150,6 @@ vector<pair<int, int>> Queen::getPosMoves() {
 
     return moves;
 }
+
 
 PieceName Queen::getType() {return PieceName::Queen;}

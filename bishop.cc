@@ -3,68 +3,42 @@
 
 using namespace std;
 
-Bishop::Bishop(Colour c, int row, int col, Board *theBoard) : Piece(c, row, col, PieceName::Bishop, theBoard) {}
+Bishop::Bishop(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Bishop, row, col} {}
 
 bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
+    
+    // check if move is out of bounds
+    if (outOfBounds(initial, final)) return false;
+
+    // check if moves diagonally     
+    if (abs(final.second - initial.second) != abs(final.first - initial.first)) return false;
+
     int x = 1;
     int y = 1;
-    if (final.first >= MAXCELL) return false; // check out of bounds
-    if (final.second >= MAXCELL) return false; // check out of bounds
 
-    if (final.first < 0) return false; // check out of bounds
-    if (final.second < 0) return false; // check out of bounds;
+    // moves in negative x direction
+    if ((final.second - initial.second) < 0) {x = -1;}
+
+    // moves in negative y direction
+    if ((final.first - initial.first) < 0) {y = -1;}
     
-    if ((initial.first == final.first) && (initial.second == final.second)) return false; // you cannot stay in the same position
-    // check is there is an ally in the final destination
-    if (getTheBoard()->hasAlly(getColour(), final)) {
-        return false;
-    }
-    // check if moves diagnoally     
-    if (abs(final.second - initial.second) != abs(final.first - initial.first)) {
-        return false; 
-    }
-
-    if ((final.second - initial.second) < 0) {
-        // moves in negative x direction
-        x = -1;
-    }
-    if ((final.first - initial.first) < 0) {
-        // moives in negative y direction
-        y = -1;
-    }
-
-    pair<int, int> dir = make_pair(y, x); // y = row && x = column
+    // y = row && x = column
+    pair<int, int> dir = make_pair(y, x);
     pair<int, int> xyCoords = make_pair(initial.first, initial.second);
-
+    
+    // check every position the piece moves in for obstacles
     for (int i = 1; i < abs(final.second - initial.second); ++i) {
         xyCoords.first += dir.first;
         xyCoords.second += dir.second;
-        if(getTheBoard()->hasObstacle(xyCoords)) {
-            if (final.first == 5 && final.second == 4) {
-                
-            cout << "has obstacle" << endl;
-        }
-            return false;
-        }
+        if(getTheBoard()->hasObstacle(xyCoords)) return false;
     }
+    
     return true;
 }
 
 vector<pair<int, int>> Bishop::getPosMoves() {
+    
     vector<pair<int, int>> moves;
-
-    // for (int i = 0; i < MAXCELL; i++) {
-    //     for (int j = 0; j < MAXCELL; j++) {
-    //         if ((i - getCoords().first == j - getCoords().second) || (i - getCoords().first == -(j - getCoords().second))) {
-    //             if (i != getCoords().first && j!= getCoords().second) {
-    //                 pair<int, int> pos = make_pair(i, j);
-    //                 if (isValidMove(getCoords(), pos)) {
-    //                     moves.push_back(pos);
-    //                 }
-    //             }
-    //         } 
-    //     }
-    // }
 
     pair<int, int> coord1 = make_pair(1, 1);
     pair<int, int> coord2 = make_pair(1, -1);

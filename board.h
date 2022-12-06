@@ -22,8 +22,8 @@ class Board : public Subject {
 
 public:
     Board();
-    // true if white's turn
-    bool isWhiteTurn();
+    // true if black's turn
+    bool isBlackTurn();
     // set the given player to play first
     void setPlayerFirst(Colour colour);
     // checks if there is a unique king for each player
@@ -45,6 +45,7 @@ public:
     Move getLastMove(std::shared_ptr<Piece> p);
     bool isCheck(std::pair<int, int> kingPos);
     bool isCheckmate();
+    bool isStalemate();
     // returns true if has ally at the given position
     bool hasAlly(Colour c, const std::pair<int, int> pos);
     // returns true if has opponent at the given position

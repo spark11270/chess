@@ -6,8 +6,10 @@
 class Knight : public Piece {
 
 public:
-    Knight(Colour c, int row, int col, Board *theBoard);
+    // CONSTRUCTOR
+    Knight(Board *b, Colour c, int row, int col);
 
+    // OVERRIDE
     virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) override;
     virtual std::vector<std::pair<int, int>> getPosMoves() override;
     PieceName getType() override;

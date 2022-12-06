@@ -2,7 +2,6 @@
 #include "board.h"
 #include "xwindow.h"
 #include <string>
-#include <iostream>
 #include <cstring>
 
 // Adds graphicsdisplay observer to the subject
@@ -63,7 +62,9 @@ void GraphicsDisplay::notify() {
 		int j = to_y;
 		Colour c = board->getBoard()[i][j]->getColour();
                 PieceName p = board->getBoard()[i][j]->getType();
-                                char arr[6];	
+                                char arr[6];
+				
+				// Display Capture 	
                                 if ((i+j) % 2) {
                                         strcpy(arr, (printPiece(p, c) + "b.bmp").c_str());
                                         w->drawImage(50*(j+1), 50*i, arr);
@@ -71,6 +72,7 @@ void GraphicsDisplay::notify() {
                                         strcpy(arr, (printPiece(p, c) + "w.bmp").c_str());
                                         w->drawImage(50*(j+1), 50*i, arr);
                                 }
+				// Fill the previous location of piece with rectangle
 				if ((from_x+from_y) % 2) {
                                                 w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 1);
                                         } else {
@@ -78,9 +80,10 @@ void GraphicsDisplay::notify() {
                                         }
 	}
 	
-
+	// Update board
 	for (int i = 0; i < 8; i++) {
                 for (int j = 0; j < 8; j++) {
+			// Update chess pieces
                         if (board->getBoard()[i][j] != nullptr) { 
 				Colour c = board->getBoard()[i][j]->getColour();
 				PieceName p = board->getBoard()[i][j]->getType();
@@ -92,6 +95,7 @@ void GraphicsDisplay::notify() {
 					strcpy(arr, (printPiece(p, c) + "w.bmp").c_str());
 					w->drawImage(50*(j+1), 50*i, arr);
 				}
+			// Update blank cells
 			} else {
 				if ((i+j) % 2) {
 					w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);

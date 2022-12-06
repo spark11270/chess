@@ -20,16 +20,18 @@ class Xwindow {
   // Available colours.
   enum {White=0, Black, Red, Brown, Blue, Cyan, Yellow, Magenta, Orange, Green};
 
+  // Draws chess pieces from bitmap
   void drawImage(int x, int y, char* bmp);
+
   // Draws a rectangle
   void fillRectangle(int x, int y, int width, int height, int colour);
 
   // Draws a string
-  void printMessage(int x, int y, const std::string& msg, int colour, XFontStruct& f);
+  void printMessage(int x, int y, const std::string& msg, int colour, XFontStruct& xf);
   void drawString(int x, int y, std::string msg);
-
   void drawBigString(int x, int y, std::string msg, int colour);
 
+  // Draws blank board
   void drawBoard();
 };
 

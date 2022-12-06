@@ -535,6 +535,7 @@ void Board::undoMove(const Move& m) {
     // move rook to the right position
     theBoard[m.from.first][m.from.second] = m.moving;
     theBoard[m.to.first][m.to.second] = nullptr;
+    m.moving->modifyCoords(m.from);
         
     }
     if (m.tactic == MoveType::Promotion) {
@@ -631,7 +632,7 @@ bool Board::isCheck(pair<int, int> kingPos) {
     } else {
         for (auto &p : blackPieces) {
             vector<pair<int, int>> moves = p->getPosMoves();
-            printposmoves(moves);
+            // printposmoves(moves);
             if ((!moves.empty()) && (count(moves.begin(), moves.end(), kingPos) > 0)) {
                 return true;
             }

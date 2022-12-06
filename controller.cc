@@ -227,7 +227,12 @@ void Controller::gameMoves() {
                 if (!board->isBlackTurn()) {
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
-                        players[0]->move(board, uselsssCord, uselsssCord);
+                        try {
+                            players[0]->move(board, uselsssCord, uselsssCord);
+                        } catch (const runtime_error &e) {
+                           cout << "Trying again." << endl;
+                           players[0]->move(board, uselsssCord, uselsssCord);
+                        }
                     }
                     else {
                         ss >> from;
@@ -274,7 +279,7 @@ void Controller::gameMoves() {
                 else {
                     if(players[1]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
-                        players[0]->move(board, uselsssCord, uselsssCord);
+                        players[1]->move(board, uselsssCord, uselsssCord);
                     }
                     else {
                         ss >> from;

@@ -357,11 +357,7 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
     // check for if the move will lead to checkmate
     if (isCheck(getKing()->getCoords())) {
         undoMove(totalMoves.back());
-        if (getWhosTurn() == Colour::White) {
-            throw runtime_error("White King is in check");
-        } else {
-            throw runtime_error("Black King is in check");
-        }
+        throw runtime_error("You cannot move your king into check");
     }
     p->setIsFirstMove();
 }

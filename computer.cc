@@ -25,10 +25,6 @@ Computer::Computer(Colour c, int lvl) : Player(c, 0) {
             // prefers avodiing capture and checks
             ai = make_shared<LVL3>();
             break;
-        case 4:
-            // plays sophistircated moves
-            ai = make_shared<LVL1>();
-            break;
     }
 }
 

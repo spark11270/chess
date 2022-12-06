@@ -8,9 +8,8 @@
 using namespace std;
 
 int main () { 
-  Board *theboard = new Board();
+  shared_ptr<Board> theboard = make_shared<Board>();
   theboard->render();
   Controller ctr{theboard};
   ctr.playGame();
-  delete theboard;
 }

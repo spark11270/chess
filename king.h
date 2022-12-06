@@ -7,7 +7,7 @@ class King : public Piece {
 
 public:
     // CONSTRUCTOR
-    King(Board *b, Colour c, int row, int col);
+    King(std::shared_ptr<Board> b, Colour c, int row, int col);
 
     // OVERRIDE
     virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) override;

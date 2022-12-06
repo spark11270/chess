@@ -30,7 +30,7 @@ pair<shared_ptr<Piece>, pair<int, int>> LVL::generateRandomMove( \
 
 
 bool LVL::preferCaptureCheck( \
-  Board *board, \
+  shared_ptr<Board> board, \
   pair<shared_ptr<Piece>, pair<int, int>> &result, \
   vector<pair<shared_ptr<Piece>, pair<int, int>>> possibleMovePairs
 ) {

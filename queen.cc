@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Queen::Queen(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Queen, row, col} {}
+Queen::Queen(shared_ptr<Board> b, Colour c, int row, int col) : Piece{b, c, PieceName::Queen, row, col} {}
 
 
 bool Queen::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {

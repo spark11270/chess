@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Knight::Knight(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Knight, row, col} {}
+Knight::Knight(shared_ptr<Board> b, Colour c, int row, int col) : Piece{b, c, PieceName::Knight, row, col} {}
 
 
 bool Knight::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {

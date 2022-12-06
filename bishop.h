@@ -7,7 +7,7 @@ class Bishop : public Piece {
 
 public:
     // CONSTRUCTOR
-    Bishop(Board *b, Colour c, int row, int col);
+    Bishop(std::shared_ptr<Board> b, Colour c, int row, int col);
 
     // OVERRIDE
     virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) override;

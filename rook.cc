@@ -5,36 +5,32 @@
 
 using namespace std;
 
-Rook:: Rook(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Rook, row, col} {}
+Rook:: Rook(shared_ptr<Board> b, Colour c, int row, int col) : Piece{b, c, PieceName::Rook, row, col} {}
 
 bool Rook::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)  {
-    if (final.first >= MAXCELL) return false;
-    if (final.second >= MAXCELL) return false;
 
-    if (final.first < 0) return false; // check out of bounds
-    if (final.second < 0) return false; // check out of bounds
-
-    if (initial.first == final.first && initial.second == final.second) return false;
-
-    int start, end;
+    if (outOfBounds(initial, final)) return false;
 
     // move horizontally
     if (initial.first == final.first) {
-        start = final.second < initial.second ? final.second : initial.second;
-        end = final.second < initial.second ? initial.second : final.second;
+
+        int start = final.second < initial.second ? final.second : initial.second;
+        int end = final.second < initial.second ? initial.second : final.second;
 
         pair<int, int> tmp = make_pair(final.first, start);
         for (int i = start + 1; i < end; ++i) {
             tmp.second = i;
-            if (i != initial.second && getTheBoard()->hasObstacle(tmp)) return false;
+            if (i != initial.second && getTheBoard()->hasObstacle(tmp)) {
+                return false;
+            }
         }
 
         return !getTheBoard()->hasAlly(getColour(), final);
     }
     // move vertically
     else if (initial.second == final.second) {
-        start = final.first < initial.first ? final.first : initial.first;
-        end = final.first < initial.first ? initial.first : final.first;
+        int start = final.first < initial.first ? final.first : initial.first;
+        int end = final.first < initial.first ? initial.first : final.first;
 
         pair<int, int> tmp = make_pair(start, final.second);
         for (int i = start + 1; i < end; ++i) {

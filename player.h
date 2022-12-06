@@ -3,6 +3,7 @@
 
 #include "colour.h"
 #include <string>
+#include <memory>
 
 class King;
 class Board;
@@ -21,7 +22,7 @@ public:
 
     void updateScore(); // increment score
     void resetScore();
-    virtual void move(Board *board, std::pair<int, int> from, std::pair<int, int> to) = 0;
+    virtual void move(std::shared_ptr<Board> board, std::pair<int, int> from, std::pair<int, int> to) = 0;
 };
 
 #endif

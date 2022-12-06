@@ -28,7 +28,7 @@ pair<int,int> convertPos(string &pos) {
 
 // -----------------------------------------------------------
 
-Controller::Controller(Board *board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
+Controller::Controller(shared_ptr<Board> board) : board{board}, inGame{false}, doneSetup{false}, rounds{0}, canUndo{false} {}
 
 void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
@@ -131,7 +131,7 @@ void Controller::playGame() {
     cout << "\"human\" or \"computer[1-3]\"." << endl; 
     cout << endl;
     TextDisplay td{board};
-    //GraphicsDisplay gd{board};
+    GraphicsDisplay gd{board};
     
     string command;
     while(cin >> command) {
@@ -164,7 +164,7 @@ void Controller::playGame() {
                         
                 // Initialize interface
 	       	    board->render();
-                cout << "ROUND " << rounds << endl << endl;
+                cout << "ROUND " << rounds << endl;       
                 gameMoves();
                 printScore();
                         
@@ -215,23 +215,35 @@ void Controller::gameMoves() {
                 if (board->moveCount() == 0) {
                     throw runtime_error("There are no moves to undo");
                 }
+                if (!canUndo) {
+                    throw runtime_error("You can only undo once");
+                }
+                if (board->isBlackTurn() && players[0]->getType() == 'c') {
+                    throw runtime_error("You cannot undo computer moves");
+                }
+                if (!board->isBlackTurn() && players[1]->getType() == 'c') {
+                    throw runtime_error("You cannot undo computer moves");
+                }
+                canUndo = false;
                 Move m = board->getLastMove();
                 board->undoMove(m);
                 board->render();
+                cout << "Please enter the new move commain:" << endl;
             }
             else if (command == "move") {
                 if (board->isCheckmate()) {
                     cout << "Checkmate! " << endl;
                     int p = board->isBlackTurn();
-                    if (p) { // if black's turn
+                    if (p) {
                         cout << "White wins." << endl;
-                    } else {
+                    }
+                    else {
                         cout << "Black wins." << endl;
                     }
                     players[p]->updateScore();
+                    
                     break;
                 }
-                cout << board->getKing()->getCoords().first << ", " << board->getKing()->getCoords().second << endl;
                 if (board->isCheck(board->getWhosTurn(), board->getKing()->getCoords())) {
                     if (board->isBlackTurn()) {
                         cout << "Black is in check" << endl;
@@ -347,6 +359,7 @@ void Controller::gameMoves() {
                         }
                     }
                 }
+                canUndo = true;
                 board->render();
             }
             else {
@@ -369,7 +382,6 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
     if (p->getColour() != board->getWhosTurn()) {
         throw runtime_error("Wrong player's turn to move");
     }
-    cout << p->isValidMove(from, to) << endl;
     return p->isValidMove(from, to);
 }
 

@@ -14,15 +14,16 @@ class Board;
 class Move;
 
 class Controller {
-    Board *board;
+    std::shared_ptr<Board> board;
     std::vector<std::unique_ptr<Player>> players;
     bool inGame;
     bool doneSetup;
     int rounds;
     bool newRound;
+    bool canUndo;
 
 public:
-    Controller(Board* board);
+    Controller(std::shared_ptr<Board> board);
     void initPlayer(const std::string& player, Colour colour);
     bool isValid(const std::pair<int, int> from, const std::pair<int, int> to);
     void initGame();

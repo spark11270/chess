@@ -19,7 +19,7 @@ class Computer : public Player {
         char getType() override;
         std::shared_ptr<LVL> getAI();
 
-        void move(Board *board, std::pair<int, int> from, std::pair<int, int> to) override;
+        void move(std::shared_ptr<Board> board, std::pair<int, int> from, std::pair<int, int> to) override;
 };
 
 #endif

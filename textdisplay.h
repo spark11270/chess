@@ -6,11 +6,11 @@
 #include "board.h"
 
 class TextDisplay : public Observer {
-	Board *board;
+	std::shared_ptr<Board> board;
 	std::ostream &out = std::cout;
 	
 	public:
-		TextDisplay(Board* board);
+		TextDisplay(std::shared_ptr<Board> board);
 		void notify() override;
 		~TextDisplay();
 };	

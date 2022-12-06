@@ -22,11 +22,11 @@ class LVL {
       std::vector<std::pair<std::shared_ptr<Piece>, std::pair<int, int>>> possibleMovePairs);
 
     bool preferCaptureCheck( \
-      Board *board, \
+      std::shared_ptr<Board> board, \
       std::pair<std::shared_ptr<Piece>, std::pair<int, int>> &result, \
       std::vector<std::pair<std::shared_ptr<Piece>, std::pair<int, int>>> possibleMovePairs);
 
-    virtual std::pair<std::pair<int, int>, std::pair<int, int>> getAIMove(Board *board) = 0;
+    virtual std::pair<std::pair<int, int>, std::pair<int, int>> getAIMove(std::shared_ptr<Board> board) = 0;
 };
 
 #endif

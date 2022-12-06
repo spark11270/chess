@@ -5,11 +5,11 @@
 #include "xwindow.h"
 
 class GraphicsDisplay : public Observer {
-	Board *board;
+	std::shared_ptr<Board> board;
 	Xwindow *w;
 	
 	public:
-		GraphicsDisplay(Board* board);
+		GraphicsDisplay(std::shared_ptr<Board> board);
 		void notify() override;
 		~GraphicsDisplay();
 };	

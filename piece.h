@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <memory>
 
 const int MAXCELL = 8;
 
@@ -13,7 +14,7 @@ class Board;
 
 class Piece {
 
-    Board *b;  
+    std::shared_ptr<Board> b;  
     Colour colour;
     PieceName type;
     int mcount = 0;
@@ -21,13 +22,13 @@ class Piece {
 
     public:
         // CONSTRUCTOR
-        Piece(Board *b, Colour c, PieceName type, int row, int col);
+        Piece(std::shared_ptr<Board> b, Colour c, PieceName type, int row, int col);
 
         // HELPERS
         bool outOfBounds(std::pair<int,int> initial, std::pair<int,int> final);
 
         // ACESSORS
-        Board *getTheBoard();
+        std::shared_ptr<Board> getTheBoard();
         Colour getColour();
         int getNumMoves();
         std::pair<int, int> getCoords();

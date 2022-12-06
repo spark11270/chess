@@ -7,7 +7,7 @@ using namespace std;
 
 LVL3::LVL3() {}
 
-pair<pair<int, int>, pair<int, int>> LVL3::getAIMove(Board *board) {
+pair<pair<int, int>, pair<int, int>> LVL3::getAIMove(shared_ptr<Board> board) {
   vector<pair<shared_ptr<Piece>, pair<int, int>>> myMovePairs = board->getAllValidMoves(!board->isBlackTurn());
   vector<pair<shared_ptr<Piece>, pair<int, int>>> opponentMovePairs = board->getAllValidMoves(board->isBlackTurn());
   

@@ -4,11 +4,13 @@
 #include <string>
 #include <cstring>
 
+using namespace std;
+
 // Adds graphicsdisplay observer to the subject
-GraphicsDisplay::GraphicsDisplay(Board* board) : board{board} {
-        w = new Xwindow(450, 450);
-	w->drawBoard();
-        board->attach(this);
+GraphicsDisplay::GraphicsDisplay(shared_ptr<Board>board) : board{board} {
+    w = new Xwindow(450, 450);
+    w->drawBoard();
+    board->attach(this);
 }
 
 // Helper for getting bitmap file name

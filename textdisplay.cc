@@ -47,7 +47,7 @@ char printPiece(PieceName n, Colour c) {
 }
 
 // Adds textdisplay observer to the subject
-TextDisplay::TextDisplay(Board* board) : board{board} {
+TextDisplay::TextDisplay(shared_ptr<Board> board) : board{board} {
 	board->attach(this);
 }
 

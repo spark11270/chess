@@ -12,6 +12,6 @@ char Human::getType() {
     return 'h';
 }
 
-void Human::move(Board *board, std::pair<int, int> from, std::pair<int, int> to) {
+void Human::move(shared_ptr<Board> board, std::pair<int, int> from, std::pair<int, int> to) {
     board->move(from, to);
 }

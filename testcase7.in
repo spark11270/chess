@@ -1,0 +1,10 @@
+setup
++ K d8
++ B h8
++ k a2
++ P a6
+done
+game human human
+move d8 f8
+undo
+resign

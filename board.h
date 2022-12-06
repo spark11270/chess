@@ -13,7 +13,7 @@ class Player;
 class Piece;
 class King;
 
-class Board : public Subject {
+class Board : public Subject, public std::enable_shared_from_this<Board> {
     std::vector<std::vector<std::shared_ptr<Piece>>> theBoard{8, std::vector<std::shared_ptr<Piece>>{8}};
     std::vector<std::shared_ptr<Piece>> whitePieces;
     std::vector<std::shared_ptr<Piece>> blackPieces;
@@ -21,7 +21,6 @@ class Board : public Subject {
     Colour whosTurn = Colour::White;
 
 public:
-    Board();
     // true if black's turn
     bool isBlackTurn();
     // set the given player to play first

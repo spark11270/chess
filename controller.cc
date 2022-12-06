@@ -131,7 +131,7 @@ void Controller::playGame() {
     cout << "\"human\" or \"computer[1-3]\"." << endl; 
     cout << endl;
     TextDisplay td{board};
-    //GraphicsDisplay gd{board};
+    GraphicsDisplay gd{board};
     
     string command;
     while(cin >> command) {

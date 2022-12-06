@@ -61,12 +61,12 @@ bool King::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 vector<pair<int, int>> King::getPosMoves() {
     vector<pair<int, int>> moves;
     pair<int, int> init = getCoords();
-
     // vertical
     pair<int, int> pos = make_pair(init.first + 1, init.second);
     if (isValidMove(init, pos)) {
         moves.push_back(pos);
     }
+
     pos = make_pair(init.first - 1, init.second);
     if (isValidMove(init, pos)) {
         moves.push_back(pos);
@@ -125,7 +125,9 @@ vector<pair<int, int>> King::getPosMoves() {
     if (isValidMove(init, pos)) {
         moves.push_back(pos);
     }
-
+    for (auto &m : moves) {
+        cout << m.first << m.second << endl;
+    }
     return moves;
 }
 

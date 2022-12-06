@@ -1,0 +1,10 @@
+setup
++ K d7
++ R f6
++ k h1
+done
+game human human
+move f6 f5
+move h1 g1
+move f1x
+resign

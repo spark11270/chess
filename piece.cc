@@ -42,7 +42,7 @@ void Piece::setIsFirstMove() {
 }
 
 
-void Piece::modifyCoords(pair<int,int> &newCoords) {
+void Piece::modifyCoords(pair<int,int> newCoords) {
     coords.first = newCoords.first;
     coords.second = newCoords.second;
 }

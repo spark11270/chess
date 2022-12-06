@@ -42,7 +42,7 @@ public:
     void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom = ' ', char dir = ' ');
     void move(std::pair<int, int> &begin, std::pair<int, int> &end, char prom = ' ', MoveType type = MoveType::Normal,  char dir = ' ');
     void undoMove(const Move &m);
-    Move getLastMove(std::shared_ptr<Piece> p);
+    Move getLastMove();
     bool isCheck(std::pair<int, int> kingPos);
     bool isCheckmate();
     bool isStalemate();
@@ -68,6 +68,7 @@ public:
 
     // getting total moves
     std::vector<Move> getTotalMoves();
+    int moveCount();
     ~Board();
 };
 

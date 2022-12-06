@@ -40,6 +40,13 @@ void printPiece(shared_ptr<Piece> &piece) {
     }
 }
 
+void printMoves(vector<pair<shared_ptr<Piece>, pair<int, int>>> &moves) {
+    for (auto &move : moves) {
+        printPiece(move.first);
+        cout << move.second.first << ", " << move.second.second << endl;
+    }
+}
+
 void printPieces(vector<shared_ptr<Piece>> pieces) {
     for (auto &piece: pieces) {
         printPiece(piece);
@@ -290,12 +297,10 @@ shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
 
 void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom, char dir) {
     shared_ptr<Piece> p = getPieceAt(begin);
-    if (p->getType() == PieceName::King) cout <<"king" << endl;
     shared_ptr<Piece> captured = getPieceAt(end);
 
     // remove the piece
     theBoard[begin.first][begin.second] = nullptr;
-    
     // add the piece
     if (getPieceAt(end) != nullptr) {
         removePieceAt(end); 
@@ -304,7 +309,6 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
 
     // modify the piece coordinate
     p->modifyCoords(end);
-
     if (type == MoveType::Castling) {
         shared_ptr<Piece> rook = getRook(getKing()->getCoords(), dir, whosTurn);
 
@@ -357,13 +361,10 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
     }
 }
 
-Move Board::getLastMove(shared_ptr<Piece> p) {
-    for (auto &m : totalMoves) {
-        if (m.moving == p) {
-            return m;
-        }
-    }
+Move Board::getLastMove() {
+    return totalMoves.back();
 }
+
 bool Board::canEP(pair<int, int> &begin, pair<int, int> &end) {
     shared_ptr<Piece> toCapture = getPieceAt(make_pair(begin.first, end.second));
     if (toCapture == nullptr) return false; // pawn must exist
@@ -438,8 +439,11 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
 }
 
 void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType type, char dir) {
-
+    cout << 1 << endl;
     shared_ptr<Piece> p = getPieceAt(begin);
+    if (p == nullptr) cout << 2 << endl;
+    cout << getPieceAt(begin)->getCoords().first << ", " << getPieceAt(begin)->getCoords().second << endl;
+
 
      switch(type) {
         case MoveType::Normal :
@@ -460,7 +464,7 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
     }
 
     simulate(begin, end, type, prom, dir);
-    shared_ptr<Piece> p = getPieceAt(end);
+
     // check for if the move will lead to checkmate
     if (isCheck(getKing()->getCoords())) {
         undoMove(totalMoves.back());
@@ -470,59 +474,72 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
     nextTurn();
 }
 
+
 void Board::undoMove(const Move& m) {
     if (m.tactic == MoveType::Normal) {
         theBoard[m.from.first][m.from.second] = m.moving;
-        theBoard[m.to.first][m.to.second] = nullptr;
+        theBoard[m.to.first][m.to.second] = nullptr;      
     }
     if (m.tactic == MoveType::EnPassant) {
         theBoard[m.from.first][m.from.second] = m.moving;
         theBoard[m.to.first][m.to.second] = nullptr;
+
         shared_ptr<Piece> tmp = m.captured;
+        // modify the coordinate for m.captured
+        pair<int, int> tmpCoords = m.captured->getCoords();
+        theBoard[tmpCoords.first][tmpCoords.second] = m.captured;
+
         if (tmp->getColour() == Colour::White) {
             whitePieces.push_back(tmp);
         }
         else {
             blackPieces.push_back(tmp);
         }
+
     }
     if (m.tactic == MoveType::Castling) {
         if (m.to.first == m.from.first) {
             // horizontal castling
-            if ((m.to.second - m.to.second) < 0) {
+            if ((m.to.second - m.from.second) < 0) {
                 // rook moved to the left
 
-                // move king to the right
+                // move king to the left
                 shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first, m.to.second + 1));
                 theBoard[m.to.first][m.to.second + 1] = nullptr;
                 theBoard[m.to.first][m.to.second - 1] = king;
+                king->modifyCoords(make_pair(m.to.first, m.to.second - 1));
             }
             else {
                 // rook moved to the right
 
-                // move king to the left
+                // move king to the right
                 shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first, m.to.second - 1));
                 theBoard[m.to.first][m.to.second - 1] = nullptr;
                 theBoard[m.to.first][m.to.second + 1] = king;
+                king->modifyCoords(make_pair(m.to.first, m.to.second + 1));
             }
         }
         else {
+            // vertical casting (m.to.second == m.from.second)
             if ((m.to.first - m.from.first) < 0) {
                 // rook moved down
+
+                // move king down
                 shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first - 1, m.to.second));
-                theBoard[m.to.first + 1][m.to.second] = nullptr;
-                theBoard[m.to.first - 1][m.to.second] = king;
+                theBoard[m.to.first - 1][m.to.second] = nullptr;
+                theBoard[m.to.first + 1][m.to.second] = king;
+                king->modifyCoords(make_pair(m.to.first + 1, m.to.second));
             }
             else {
                 // rook moved up
 
                 // move king up two squares
                 shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first + 1, m.to.second));
-                theBoard[m.to.first - 1][m.to.second] = nullptr;
-                theBoard[m.to.first + 1][m.to.second] = king;
+                theBoard[m.to.first + 1][m.to.second] = nullptr;
+                theBoard[m.to.first - 1][m.to.second] = king;
+                king->modifyCoords(make_pair(m.to.first - 1, m.to.second));
             }
         }
-
     // move rook to the right position
     theBoard[m.from.first][m.from.second] = m.moving;
     theBoard[m.to.first][m.to.second] = nullptr;
@@ -542,26 +559,34 @@ void Board::undoMove(const Move& m) {
         }
         else {
             removePieceAt(m.to);
-            theBoard[m.to.first][m.to.first] = nullptr;
-            if (m.moving->getColour() == Colour::White) {
-                addPiece(m.from, 'P');
-            }
-            else {
-                addPiece(m.from, 'p');
-            }
+
             shared_ptr<Piece> tmp = m.captured;
-            if (tmp->getColour() == Colour::White) {
-                whitePieces.push_back(tmp);
-            }
-            else {
+            pair<int, int> capCoords = m.captured->getCoords();
+            // modify coords for the captured piece
+            theBoard[capCoords.first][capCoords.second] = tmp;
+
+            if (m.moving->getColour() == Colour::White) {
+                // promoted piece is white hence captured piece is black
+                addPiece(m.from, 'P');
                 blackPieces.push_back(tmp);
+            } else {
+                // promoted piece is black hence captured piece is white
+                addPiece(m.from, 'p');
+                whitePieces.push_back(tmp);
             }
         }
     }
     if (m.tactic == MoveType::Capture) {
+        // modify coords for the moving piece
         theBoard[m.from.first][m.from.second] = m.moving;
         theBoard[m.to.first][m.to.second] = nullptr;
+
         shared_ptr<Piece> tmp = m.captured;
+        pair<int, int> capCoords = m.captured->getCoords();
+        // modify coords for the captured piece
+        theBoard[capCoords.first][capCoords.second] = tmp;
+
+        // push back to the pieces
         if (tmp->getColour() == Colour::White) {
             whitePieces.push_back(tmp);
         }
@@ -569,6 +594,7 @@ void Board::undoMove(const Move& m) {
             blackPieces.push_back(tmp);
         }
     }
+    m.moving->modifyCoords(make_pair(m.from.first,m.from.second));
     totalMoves.pop_back();
 }
 
@@ -589,45 +615,32 @@ void Board::setPlayerFirst(Colour colour) {
     }
 }
 
+void printposmoves(vector<pair<int, int>> moves) {
+    for (auto &move : moves) {
+        cout << move.first << ", " << move.second << endl;
+    }
+}
+
+bool contains(vector<pair<int, int>> moves, pair<int, int> move) {
+    for (auto& m : moves) {
+        if (m.first == move.first && m.second == move.second) return true;
+    }
+    return false;
+}
+
 bool Board::isCheck(pair<int, int> kingPos) {
-    if (whosTurn == Colour::Black)   {
+    if (whosTurn == Colour::Black)  {
         for (auto &p : whitePieces) {
-            PieceName name = p->getType();
             vector<pair<int, int>> moves = p->getPosMoves();
-            if ((!moves.empty()) && (name != PieceName::King) && 
-                (count(moves.begin(), moves.end(), kingPos) > 0)) {
-                    switch(name) {
-                    case PieceName::Bishop :
-                        cout << "Bishop" << endl;
-                        break;
-                    case PieceName::Queen :
-                        cout << "Queen" << endl;
-                        break;
-                    case PieceName::Pawn :
-                        cout << "Pawn at " << p->getCoords().first << ", " << p->getCoords().second << " causes check" << endl;
-                        for (auto &m : moves) {
-                            cout << "possible moves: " << endl << m.first << ", " << m.second << endl;
-                        }
-                        break;
-                    case PieceName::Rook :
-                        cout << "Rook" << endl;
-                        break;
-                    case PieceName::Knight :
-                        cout << "Knight" << endl;
-                        break;
-                    case PieceName::King :
-                        cout << "King" << endl;
-                        break;
-                }
+            if ((!moves.empty()) && (count(moves.begin(), moves.end(), kingPos) > 0)) {
                 return true;
             }
         }
     } else {
         for (auto &p : blackPieces) {
-            PieceName name = p->getType();
             vector<pair<int, int>> moves = p->getPosMoves();
-            if ((!moves.empty()) && (name != PieceName::King) && 
-                (count(moves.begin(), moves.end(), kingPos) > 0)) {
+            printposmoves(moves);
+            if ((!moves.empty()) && (count(moves.begin(), moves.end(), kingPos) > 0)) {
                 return true;
             }
         }
@@ -731,12 +744,14 @@ std::vector<Move> Board::getTotalMoves() {
     return totalMoves;
 }
 
-bool Board::isStalemate() {
-    Colour c = whosTurn;
-    vector<pair<shared_ptr<Piece>, pair<int, int>>> possibleMoves = getAllValidMoves(!isBlackTurn());
+int Board::moveCount() {
+    return totalMoves.size();
+}
 
+bool Board::isStalemate() {
+    vector<pair<shared_ptr<Piece>, pair<int, int>>> possibleMoves = getAllValidMoves(!isBlackTurn());
+    //printMoves(possibleMoves);
     for (auto &m : possibleMoves) {
-        pair<int, int> kingCoords = getKing()->getCoords();
         pair<int, int> fromCoords = m.first->getCoords();
         pair<int, int> toCoords = m.second;
         char dir = canCastle(fromCoords, toCoords);
@@ -752,10 +767,14 @@ bool Board::isStalemate() {
         else {
             simulate(fromCoords, toCoords, MoveType::Normal);
         }
+        pair<int, int> kingCoords = getKing()->getCoords();
         if (!isCheck(kingCoords)) {
+            undoMove(totalMoves.back());
+            // there is a possible move
             return false;
-        } 
-        undoMove(totalMoves.back());
+        } else {
+            undoMove(totalMoves.back());
+        }
     }
     return true;
 

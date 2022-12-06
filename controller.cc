@@ -93,12 +93,15 @@ void Controller::initGame() {
                 }
             }
             else if (command == "done") {
+                cout << 111 << endl;
                 if (board->uniqueKing() == false) {
                     throw runtime_error("You must have one kings for each player");
                 }
+                cout << 222 << endl;
                 if (board->validPawns() == false) {
                     throw runtime_error("You must not have Pawns on first and last row");
                 }
+                cout << 333 << endl;
                 if (board->isCheck(board->getKing()->getCoords())) {
                     if (board->getWhosTurn() == Colour::White) {
                         throw runtime_error("White King is in check");
@@ -106,6 +109,16 @@ void Controller::initGame() {
                         throw runtime_error("Black King is in check");
                     }
                 }
+                // board->nextTurn();
+                // if (board->getKing() == nullptr) cout << 1 << endl;
+                // if (board->isCheck(board->getKing()->getCoords())) {
+                //     if (board->getWhosTurn() == Colour::White) {
+                //         throw runtime_error("White King is in check");
+                //     } else {
+                //         throw runtime_error("Black King is in check");
+                //     }
+                // }
+                // board->nextTurn();
                 doneSetup = true;
                 cout << "EXIT SETUP MODE" << endl;
                 break;
@@ -132,7 +145,7 @@ void Controller::playGame() {
     cout << "\"human\" or \"computer[1-4]\"." << endl; 
     cout << endl;
     TextDisplay td{board};
-    GraphicsDisplay gd{board};
+    //GraphicsDisplay gd{board};
     
     string command;
     while(cin >> command) {
@@ -215,6 +228,13 @@ void Controller::gameMoves() {
                     players[1]->updateScore();
                 }
                 break;
+            }
+            else if (command == "undo") {
+                if (board->moveCount() == 0) {
+                    throw runtime_error("There are no moves to undo");
+                }
+                Move m = board->getLastMove();
+                board->undoMove(m);
             }
             else if (command == "move") {
                 if (board->isCheckmate()) {

@@ -57,6 +57,7 @@ shared_ptr<Piece> Board::getRook(pair<int,int> kingPos, char kingDir, Colour c) 
     if (c == Colour::Black) {
         for (auto &piece : blackPieces) {
             if (piece->getType() == PieceName::Rook) {
+                
                 if (kingDir == UP) {
                     if (piece->getCoords().first < kingPos.first && piece->getCoords().second == kingPos.second) {
                         return piece;
@@ -80,6 +81,7 @@ shared_ptr<Piece> Board::getRook(pair<int,int> kingPos, char kingDir, Colour c) 
         }
     } else {
         for (auto &piece : whitePieces) {
+
             if (piece->getType() == PieceName::Rook) {
                 if (kingDir == UP) {
                     if (piece->getCoords().first < kingPos.first && piece->getCoords().second == kingPos.second) {
@@ -312,30 +314,30 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
         //nextTurn();
         shared_ptr<Piece> rook = getRook(getKing()->getCoords(), dir, p->getColour());
         //nextTurn();
-        cout << isBlackTurn() << endl;
-        pair<int, int> rookPos;
+        pair<int, int> rook_0 = rook->getCoords();
+        pair<int, int> rook_f;
         theBoard[rook->getCoords().first][rook->getCoords().second] = nullptr;
         switch(dir) {
             // move rook one left of king
             case RIGHT:
-                rookPos = make_pair(end.first, end.second - 1);
+                rook_f = make_pair(end.first, end.second - 1);
                 break;
             // move rook one right of king
             case LEFT:
-                rookPos = make_pair(end.first, end.second + 1);
+                rook_f = make_pair(end.first, end.second + 1);
                 break;
             // move rook one down of king
             case UP:
-                rookPos = make_pair(end.first + 1, end.second);
+                rook_f = make_pair(end.first + 1, end.second);
                 break;
             // move rook one right of king
             case DOWN:
-                rookPos = make_pair(end.first - 1, end.second);
+                rook_f = make_pair(end.first - 1, end.second);
                 break;
         }
-        theBoard[rookPos.first][rookPos.second] = rook;
-        rook->modifyCoords(rookPos);
-        Move m{rook, begin, end, MoveType::Castling};
+        theBoard[rook_f.first][rook_f.second] = rook;
+        rook->modifyCoords(rook_f);
+        Move m{rook, rook_0, rook_f, MoveType::Castling};
         totalMoves.push_back(m);
     } else if (type == MoveType::EnPassant) {
         shared_ptr<Piece> removed = getPieceAt(make_pair(begin.first, end.second)); //opponent's pawn
@@ -348,10 +350,12 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
         // promotion + capture
         if (captured != nullptr) {
             Move m{captured, p, begin, end, MoveType::Promotion};
+            totalMoves.push_back(m);
         }
         // normal promotion
         else {
             Move m{p, begin, end, MoveType::Promotion};
+            totalMoves.push_back(m);
         }
     } else if (type == MoveType::Capture) {
         Move m{captured, p, begin, end, MoveType::Capture};
@@ -393,46 +397,43 @@ char Board::canCastle(pair<int, int> begin, pair<int, int> end) {
        if (begin.second > end.second) {
         // moves left
         dir.second = -1;
-        rook = getRook(king->getCoords(), LEFT, c);
         direction = LEFT;
        }
        // moves right
        else if (begin.second < end.second) {
         dir.second = 1;
-        rook = getRook(king->getCoords(), RIGHT, c);
-        direction = RIGHT;
-       }
+        direction = RIGHT;       
+        }
        else {return garbage;}
-    }
-    else if (begin.second == end.second && abs(begin.first - end.first) == 2) {
+    } else if (begin.second == end.second && abs(begin.first - end.first) == 2) {
         dir.second = 0;
         // moves up
         if (begin.first > end.first) {
-            dir.first = 1;
-            rook = getRook(king->getCoords(), UP, c);
+            dir.first = -1;
             direction = UP;
         }
         // moves down
         else if (begin.first < end.first) {
-            dir.first = -1;
-            rook = getRook(king->getCoords(), DOWN, c);
+            dir.first = 1;
             direction = DOWN;
         }
         else {return garbage;}
+    } else {
+        return garbage;
     }
-    else {return garbage;}
-
+    rook = getRook(king->getCoords(), direction, c);
+ 
     // piece is not king                       king not first move      rook DNE               rook not first move
-    if (king->getType() != PieceName::King || !king->getIsFirstMove() || rook == nullptr || !rook->getIsFirstMove()) return garbage;
+    if (king->getType() != PieceName::King || (king->getNumMoves() != 0) || rook == nullptr || (rook->getNumMoves() != 0)) return garbage;
     
     // check if the position after castling leads to check
-
     pair<int, int> pos = begin;
     for (int i = 0; i < 2; ++i) {
         pos.first += dir.first;
-        pos.second += dir.second;
+        pos.second += dir.second; 
         if (hasObstacle(pos)) return garbage;
     }
+
     return direction;
 }
 
@@ -458,18 +459,12 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
 
     simulate(begin, end, type, prom, dir);
 
-    if (p->getType() == PieceName::Rook) {
-        for (auto &p : p->getPosMoves()) {
-            cout << p.first << ", " << p.second << endl;
-        }
-    }
-
     // check for if the move will lead to checkmate
     if (isCheck(whosTurn, getKing()->getCoords())) {
         undoMove(totalMoves.back());
-        throw runtime_error("You cannot move your king into" );
+        throw runtime_error("You cannot move your king into check");
     }
-    p->setIsFirstMove();
+    p->addMoves();
     nextTurn();
 }
 
@@ -504,6 +499,7 @@ void Board::undoMove(const Move& m) {
 
                 // move king to the left
                 shared_ptr<Piece> king = getPieceAt(make_pair(m.to.first, m.to.second + 1));
+                cout << m.to.first << m.to.second + 1 << endl;
                 theBoard[m.to.first][m.to.second + 1] = nullptr;
                 theBoard[m.to.first][m.to.second - 1] = king;
                 king->modifyCoords(make_pair(m.to.first, m.to.second - 1));
@@ -596,6 +592,7 @@ void Board::undoMove(const Move& m) {
     }
     m.moving->modifyCoords(make_pair(m.from.first,m.from.second));
     totalMoves.pop_back();
+    m.moving->decrementMoves();
 }
 
 bool Board::isBlackTurn() {
@@ -639,7 +636,6 @@ bool Board::isCheck(Colour c, pair<int, int> kingPos) {
     } else {
         for (auto &p : blackPieces) {
             vector<pair<int, int>> moves = p->getPosMoves();
-            // printposmoves(moves);
             if ((!moves.empty()) && (count(moves.begin(), moves.end(), kingPos) > 0)) {
                 return true;
             }
@@ -653,11 +649,7 @@ Colour Board::getWhosTurn() {
 }
 
 bool Board::isCheckmate() {
-    if (whosTurn == Colour::White) {
-        cout << "white" << endl;
-    } else {
-        cout << "black" << endl;
-    }
+    if 
     if (!isCheck(whosTurn, getKing()->getCoords())) return false;
     for (auto &cells : getKing()->getPosMoves()) {
         if (!isCheck(whosTurn, cells)) return false;
@@ -748,9 +740,10 @@ int Board::moveCount() {
     return totalMoves.size();
 }
 
+
 bool Board::isStalemate() {
     vector<pair<shared_ptr<Piece>, pair<int, int>>> possibleMoves = getAllValidMoves(!isBlackTurn());
-    //printMoves(possibleMoves);
+    printMoves(possibleMoves);
     for (auto &m : possibleMoves) {
         pair<int, int> fromCoords = m.first->getCoords();
         pair<int, int> toCoords = m.second;
@@ -768,12 +761,10 @@ bool Board::isStalemate() {
             simulate(fromCoords, toCoords, MoveType::Normal);
         }
         pair<int, int> kingCoords = getKing()->getCoords();
+        undoMove(totalMoves.back());
         if (!isCheck(whosTurn, kingCoords)) {
-            undoMove(totalMoves.back());
             // there is a possible move
             return false;
-        } else {
-            undoMove(totalMoves.back());
         }
     }
     return true;

@@ -93,6 +93,7 @@ vector<pair<int, int>> Queen::getPosMoves() {
             }
         }
     }
+
     // horizontal
      for (int j = 0; j < MAXCELL; ++j) {
          pair<int, int> pos;

@@ -16,7 +16,7 @@ class Piece {
     Board *b;  
     Colour colour;
     PieceName type;
-    bool isFirstMove = true;
+    int mcount = 0;
     std::pair<int, int> coords;
 
     public:
@@ -29,12 +29,13 @@ class Piece {
         // ACESSORS
         Board *getTheBoard();
         Colour getColour();
-        bool getIsFirstMove();
+        int getNumMoves();
         std::pair<int, int> getCoords();
 
         // MODIFIERS
-        void setIsFirstMove();
         void modifyCoords(std::pair<int,int> newCoords);
+        void addMoves();
+        void decrementMoves();
 
         // VIRTUAL
         virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) = 0;

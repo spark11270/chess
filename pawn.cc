@@ -25,7 +25,7 @@ bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
         // cannot capture opponent going forwards
         if (b->hasOpponent(curr, final)) return false;
         // if first move
-        if (getIsFirstMove()) {
+        if (getNumMoves() == 0) {
             if (abs(final.first - initial.first) == 2) return true;
         }
         // does not move forward by 1
@@ -60,7 +60,7 @@ vector<pair<int, int>> Pawn::getPosMoves() {
         }
 
         // can move 2 square forwards only if first move
-        if (getIsFirstMove() == true) { 
+        if (getNumMoves() == 0) { 
             pos = make_pair(init.first + 2, init.second);
             if (isValidMove(init, pos)) {
                 moves.push_back(pos);
@@ -84,7 +84,7 @@ vector<pair<int, int>> Pawn::getPosMoves() {
         }
 
         // can move 2 square forwards only if first move
-        if (getIsFirstMove() == true) { 
+        if (getNumMoves() == 0) { 
             pos = make_pair(init.first - 2, init.second);
             if (isValidMove(init, pos)) {
                 moves.push_back(pos);

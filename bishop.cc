@@ -24,7 +24,7 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
     
     // y = row && x = column
     pair<int, int> dir = make_pair(y, x);
-    pair<int, int> xyCoords = make_pair(initial.first, initial.second);
+    pair<int, int> xyCoords = initial;
     
     // check every position the piece moves in for obstacles
     for (int i = 1; i < abs(final.second - initial.second); ++i) {
@@ -37,7 +37,7 @@ bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)
 }
 
 vector<pair<int, int>> Bishop::getPosMoves() {
-    
+
     vector<pair<int, int>> moves;
 
     pair<int, int> coord1 = make_pair(1, 1);
@@ -45,12 +45,13 @@ vector<pair<int, int>> Bishop::getPosMoves() {
     pair<int, int> coord3 = make_pair(-1, -1);
     pair<int, int> coord4 = make_pair(-1, 1);
     
-    pair<int, int> pos1 = make_pair(getCoords().first, getCoords().second);
-    pair<int, int> pos2 = make_pair(getCoords().first, getCoords().second);
-    pair<int, int> pos3 = make_pair(getCoords().first, getCoords().second);
-    pair<int, int> pos4 = make_pair(getCoords().first, getCoords().second);
+    pair<int, int> pos1 = getCoords();
+    pair<int, int> pos2 = getCoords();
+    pair<int, int> pos3 = getCoords();
+    pair<int, int> pos4 = getCoords();
 
     for (int i = getCoords().first; i < MAXCELL; ++i) {
+
         // check when both x and y are positive
         pos1.first += coord1.first;
         pos1.second += coord1.second;
@@ -78,6 +79,7 @@ vector<pair<int, int>> Bishop::getPosMoves() {
         if (isValidMove(getCoords(), pos4)) {
             moves.push_back(pos4);
         }
+
     }
 
     return moves;

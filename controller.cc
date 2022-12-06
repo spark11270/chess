@@ -131,7 +131,7 @@ void Controller::playGame() {
     cout << "\"human\" or \"computer[1-3]\"." << endl; 
     cout << endl;
     TextDisplay td{board};
-    GraphicsDisplay gd{board};
+    //GraphicsDisplay gd{board};
     
     string command;
     while(cin >> command) {
@@ -163,8 +163,8 @@ void Controller::playGame() {
                 initPlayer(bPlayer, Colour::Black);
                         
                 // Initialize interface
-	       	board->render();
-                        
+	       	    board->render();
+                cout << "ROUND " << rounds << endl << endl;
                 gameMoves();
                 printScore();
                         
@@ -184,11 +184,6 @@ void Controller::playGame() {
         catch (runtime_error &f) {
             cerr << f.what() << endl;
         } 
-    }
-
-    if (cin.eof()) {
-        printScore();
-        exit(0);
     }
 }
 
@@ -222,14 +217,21 @@ void Controller::gameMoves() {
                 }
                 Move m = board->getLastMove();
                 board->undoMove(m);
+                board->render();
             }
             else if (command == "move") {
                 if (board->isCheckmate()) {
                     cout << "Checkmate! " << endl;
                     int p = board->isBlackTurn();
+                    if (p) { // if black's turn
+                        cout << "White wins." << endl;
+                    } else {
+                        cout << "Black wins." << endl;
+                    }
                     players[p]->updateScore();
                     break;
                 }
+                cout << board->getKing()->getCoords().first << ", " << board->getKing()->getCoords().second << endl;
                 if (board->isCheck(board->getWhosTurn(), board->getKing()->getCoords())) {
                     if (board->isBlackTurn()) {
                         cout << "Black is in check" << endl;
@@ -245,6 +247,7 @@ void Controller::gameMoves() {
                     players[p2]->updateScore();
                     break;
                 }
+
                 if (!board->isBlackTurn()) {
                     if(players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
@@ -366,23 +369,13 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
     if (p->getColour() != board->getWhosTurn()) {
         throw runtime_error("Wrong player's turn to move");
     }
-
+    cout << p->isValidMove(from, to) << endl;
     return p->isValidMove(from, to);
 }
 
 
 
 void Controller::printScore() {
-    cout << "ROUND " << rounds << endl << endl;
-    if (players[0]->getScore() > players[1]->getScore()) {
-        cout << "White Wins!" << endl;
-    }
-    else if (players[0]->getScore() == players[1]->getScore()) {
-        cout << "The players tied" << endl;
-    }
-    else {
-        cout << "Black Wins!" << endl;
-    }
     cout << "Final Score:" << endl;
     cout << "White: " << players[0]->getScore() << endl;
     cout << "Black: " << players[1]->getScore() << endl;

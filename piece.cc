@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Piece::Piece(Board *b, Colour c, PieceName type, int row, int col) : b{b}, colour{c}, type{type}, isFirstMove{true}, coords{make_pair(row, col)} {}
+Piece::Piece(Board *b, Colour c, PieceName type, int row, int col) : b{b}, colour{c}, type{type}, mcount{0}, coords{make_pair(row, col)} {}
 
 
 bool Piece::outOfBounds(pair<int,int> initial, pair<int,int> final) {
@@ -30,15 +30,12 @@ Board *Piece::getTheBoard() {return b;}
 Colour Piece::getColour() {return colour;}
 
 
-bool Piece::getIsFirstMove() {return isFirstMove;}
+int Piece::getNumMoves() {return mcount;}
 
 
 pair<int, int> Piece::getCoords() {return coords;}
 
 
-void Piece::setIsFirstMove() {
-    isFirstMove = false;
-}
 
 
 void Piece::modifyCoords(pair<int,int> newCoords) {
@@ -46,5 +43,12 @@ void Piece::modifyCoords(pair<int,int> newCoords) {
     coords.second = newCoords.second;
 }
 
+void Piece::addMoves() {
+    ++mcount;
+}
+
+void Piece::decrementMoves() {
+    --mcount;
+}
 
 Piece::~Piece() {};

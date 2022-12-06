@@ -10,11 +10,7 @@ bool King::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     if (outOfBounds(initial, final)) return false;
 
     if (getTheBoard()->canCastle(initial, final) != ' ') {
-        // checks if king moves 2 square vertically
-        if ((abs(initial.first - final.first) == 2) && (initial.second == final.second)) return true;
-        // checks if king moves 2 square horizontally
-        if ((abs(initial.second - final.second) == 2) && (initial.first = final.first)) return true;
-        return false;
+        return true;
     }
 
     // vertical

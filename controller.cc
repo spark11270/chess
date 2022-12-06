@@ -61,6 +61,8 @@ void Controller::initPlayer(const string& player, Colour colour) {
     }
 }
 
+
+
 void Controller::initGame() {
     string command;
     while(cin >> command) {
@@ -118,6 +120,9 @@ void Controller::initGame() {
     }
 
  }
+
+
+
 
 void Controller::playGame() {
     cout <<  "Welcome to Chess!" << endl;
@@ -330,6 +335,8 @@ void Controller::gameMoves() {
     }
 }
 
+
+
 bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
 
     shared_ptr<Piece> p = board->getPieceAt(from);
@@ -341,6 +348,8 @@ bool Controller::isValid(const pair<int, int> from, const pair<int, int> to) {
 
     return p->isValidMove(from, to);
 }
+
+
 
 void Controller::printScore() {
     cout << "ROUND " << rounds << endl << endl;

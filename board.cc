@@ -309,9 +309,10 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
     // modify the piece coordinate
     p->modifyCoords(end);
     if (type == MoveType::Castling) {
-        nextTurn();
+        //nextTurn();
         shared_ptr<Piece> rook = getRook(getKing()->getCoords(), dir, p->getColour());
-        nextTurn();
+        //nextTurn();
+        cout << isBlackTurn() << endl;
         pair<int, int> rookPos;
         theBoard[rook->getCoords().first][rook->getCoords().second] = nullptr;
         switch(dir) {
@@ -457,8 +458,14 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
 
     simulate(begin, end, type, prom, dir);
 
+    if (p->getType() == PieceName::Rook) {
+        for (auto &p : p->getPosMoves()) {
+            cout << p.first << ", " << p.second << endl;
+        }
+    }
+
     // check for if the move will lead to checkmate
-    if (isCheck(getKing()->getCoords())) {
+    if (isCheck(whosTurn, getKing()->getCoords())) {
         undoMove(totalMoves.back());
         throw runtime_error("You cannot move your king into" );
     }
@@ -621,8 +628,8 @@ bool contains(vector<pair<int, int>> moves, pair<int, int> move) {
     return false;
 }
 
-bool Board::isCheck(pair<int, int> kingPos) {
-    if (whosTurn == Colour::Black)  {
+bool Board::isCheck(Colour c, pair<int, int> kingPos) {
+    if (c == Colour::Black)  {
         for (auto &p : whitePieces) {
             vector<pair<int, int>> moves = p->getPosMoves();
             if ((!moves.empty()) && (count(moves.begin(), moves.end(), kingPos) > 0)) {
@@ -651,9 +658,9 @@ bool Board::isCheckmate() {
     } else {
         cout << "black" << endl;
     }
-    if (!isCheck(getKing()->getCoords())) return false;
+    if (!isCheck(whosTurn, getKing()->getCoords())) return false;
     for (auto &cells : getKing()->getPosMoves()) {
-        if (!isCheck(cells)) return false;
+        if (!isCheck(whosTurn, cells)) return false;
     }
     return true;
 }
@@ -761,7 +768,7 @@ bool Board::isStalemate() {
             simulate(fromCoords, toCoords, MoveType::Normal);
         }
         pair<int, int> kingCoords = getKing()->getCoords();
-        if (!isCheck(kingCoords)) {
+        if (!isCheck(whosTurn, kingCoords)) {
             undoMove(totalMoves.back());
             // there is a possible move
             return false;
@@ -771,4 +778,22 @@ bool Board::isStalemate() {
     }
     return true;
 
+}
+
+shared_ptr<Piece> Board::getBlackKing() {
+    for (auto &p : blackPieces) {
+        if (p->getType() == PieceName::King) {
+            return p;
+        }
+    }
+    return nullptr;
+}
+
+shared_ptr<Piece> Board::getWhiteKing() {
+    for (auto &p : whitePieces) {
+        if (p->getType() == PieceName::King) {
+            return p;
+        }
+    }
+    return nullptr;
 }

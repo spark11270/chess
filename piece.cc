@@ -16,7 +16,6 @@ bool Piece::outOfBounds(pair<int,int> initial, pair<int,int> final) {
 
     // must not move to the same spot
     if (initial.first == final.first && initial.second == final.second) return true;
-
     // check if the last position contains one of the player's pieces
     if (b->hasAlly(colour, final)) return true;
 

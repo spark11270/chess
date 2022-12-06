@@ -37,13 +37,15 @@ public:
     std::vector<std::vector<std::shared_ptr<Piece>>> getBoard();
     // returns the position of the King of the given colour
     std::shared_ptr<Piece> getKing();
+    std::shared_ptr<Piece> getBlackKing();
+    std::shared_ptr<Piece> getWhiteKing();
     void addPiece(std::pair<int, int> pos, char c);
     void removePieceAt(std::pair<int, int> from);
     void simulate(std::pair<int, int> &begin, std::pair<int, int> &end, MoveType type, char prom = ' ', char dir = ' ');
     void move(std::pair<int, int> &begin, std::pair<int, int> &end, char prom = ' ', MoveType type = MoveType::Normal,  char dir = ' ');
     void undoMove(const Move &m);
     Move getLastMove();
-    bool isCheck(std::pair<int, int> kingPos);
+    bool isCheck(Colour c, std::pair<int, int> kingPos);
     bool isCheckmate();
     bool isStalemate();
     // returns true if has ally at the given position

@@ -28,7 +28,7 @@ pair<int,int> convertPos(string &pos) {
 
 // -----------------------------------------------------------
 
-Controller::Controller(Board* board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
+Controller::Controller(Board *board) : board{board}, inGame{false}, doneSetup{false}, rounds{0} {}
 
 void Controller::initPlayer(const string& player, Colour colour) {
     if (colour == Colour::White) {
@@ -99,22 +99,12 @@ void Controller::initGame() {
                 if (board->validPawns() == false) {
                     throw runtime_error("You must not have Pawns on first and last row");
                 }
-                if (board->isCheck(board->getKing()->getCoords())) {
-                    if (board->getWhosTurn() == Colour::White) {
-                        throw runtime_error("White King is in check");
-                    } else {
-                        throw runtime_error("Black King is in check");
-                    }
+                if (board->isCheck(Colour::White, board->getWhiteKing()->getCoords())) {
+                    throw runtime_error("White King is in check");
                 }
-                board->nextTurn();
-                if (board->isCheck(board->getKing()->getCoords())) {
-                    if (board->getWhosTurn() == Colour::White) {
-                        throw runtime_error("White King is in check");
-                    } else {
-                        throw runtime_error("Black King is in check");
-                    }
+                if (board->isCheck(Colour::Black, board->getBlackKing()->getCoords())) {
+                    throw runtime_error("Black King is in check");
                 }
-                board->nextTurn();
                 doneSetup = true;
                 cout << "EXIT SETUP MODE" << endl;
                 break;
@@ -138,7 +128,7 @@ void Controller::playGame() {
     cout << "Input \"setup\" to enter setup mode." << endl;
     cout << "Input \"game white-player black-player\" to play a game" << endl;
     cout << "where \"white-player\" or \"black-player\" can either be:" << endl;
-    cout << "\"human\" or \"computer[1-4]\"." << endl; 
+    cout << "\"human\" or \"computer[1-3]\"." << endl; 
     cout << endl;
     TextDisplay td{board};
     //GraphicsDisplay gd{board};
@@ -240,7 +230,7 @@ void Controller::gameMoves() {
                     players[p]->updateScore();
                     break;
                 }
-                if (board->isCheck(board->getKing()->getCoords())) {
+                if (board->isCheck(board->getWhosTurn(), board->getKing()->getCoords())) {
                     if (board->isBlackTurn()) {
                         cout << "Black is in check" << endl;
                     } else {
@@ -317,6 +307,11 @@ void Controller::gameMoves() {
                         pair<int, int> fromCoords = convertPos(from);
                         ss >> to;
                         pair<int, int> toCoords = convertPos(to);
+
+                        if (!isValid(fromCoords, toCoords)) {
+                            throw runtime_error("Invalid move");
+                        }
+
                         if (ss >> prom) {
                             if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
                                     throw runtime_error ("You can only promote Pawn");

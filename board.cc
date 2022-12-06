@@ -290,6 +290,7 @@ shared_ptr<Piece> Board::getPieceAt(const pair<int, int> &at) {
 
 void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, char prom, char dir) {
     shared_ptr<Piece> p = getPieceAt(begin);
+    if (p->getType() == PieceName::King) cout <<"king" << endl;
     shared_ptr<Piece> captured = getPieceAt(end);
 
     // remove the piece
@@ -459,14 +460,13 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
     }
 
     simulate(begin, end, type, prom, dir);
-
+    shared_ptr<Piece> p = getPieceAt(end);
     // check for if the move will lead to checkmate
     if (isCheck(getKing()->getCoords())) {
         undoMove(totalMoves.back());
         throw runtime_error("You cannot move your king into" );
     }
     p->setIsFirstMove();
-
     nextTurn();
 }
 

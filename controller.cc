@@ -227,7 +227,7 @@ void Controller::gameMoves() {
                     }
                 }
                 if (!board->isBlackTurn()) {
-                    if(players[0]->getType() == 'c') {
+                    if (players[0]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         try {
                             players[0]->move(board, uselsssCord, uselsssCord);
@@ -236,88 +236,54 @@ void Controller::gameMoves() {
                            players[0]->move(board, uselsssCord, uselsssCord);
                         }
                     }
-                    else {
-                        ss >> from;
-                        pair<int, int> fromCoords = convertPos(from);
-                        ss >> to;
-                        pair<int, int> toCoords = convertPos(to);
-
-                        if (!isValid(fromCoords, toCoords)) {
-                            throw runtime_error("Invalid move");
-                        }
-
-                        if (ss >> prom) {
-                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
-                                throw runtime_error ("You can only promote Pawn");
-                            }
-                            if (board->getWhosTurn() == Colour::White) {
-                                if (toCoords.first != 0) {
-                                    throw runtime_error ("White has not reached into the enemy's back row");
-                                }
-                            }
-                            if (prom == 'k' || prom == 'K') {
-                                throw runtime_error("You cannot promote to King");
-                            }
-                           board->move(fromCoords, toCoords, prom, MoveType::Promotion);
-                        } 
-                        else {
-                            // no promotion
-                            char dir = board->canCastle(fromCoords, toCoords);
-                            if (dir != ' ') {
-                                board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
-                            }
-                            else if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
-                            }
-                            else if (board->hasObstacle(toCoords)) {
-                                board->move(fromCoords, toCoords, ' ', MoveType::Capture);
-                            }
-                            else {
-                                board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
-                            }
-                        }
-                    }
-                }
-                else {
-                    if(players[1]->getType() == 'c') {
+                } else {
+                    if (players[1]->getType() == 'c') {
                         pair<int, int> uselsssCord = make_pair(-1, -1);
                         players[1]->move(board, uselsssCord, uselsssCord);
                     }
+                }
+                /*--------------------------- MOVE PIECES ------------------------------*/
+                ss >> from;
+                pair<int, int> fromCoords = convertPos(from);
+                ss >> to;
+                pair<int, int> toCoords = convertPos(to);
+
+                if (!isValid(fromCoords, toCoords)) {
+                    throw runtime_error("Invalid move");
+                }
+
+                if (ss >> prom) {
+                    if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
+                        throw runtime_error ("You can only promote Pawn");
+                    }
+                    if (board->getWhosTurn() == Colour::White) {
+                        if (toCoords.first != 0) {
+                            throw runtime_error ("White has not reached into the enemy's back row");
+                        }
+                    } else {
+                        if (toCoords.first != 7) {
+                            throw runtime_error ("Black has not reached into the enemy's back row");
+                        }
+                    }
+                    if (prom == 'k' || prom == 'K') {
+                        throw runtime_error("You cannot promote to King");
+                    }
+                    board->move(fromCoords, toCoords, prom, MoveType::Promotion);
+                } 
+                else {
+                    // no promotion
+                    char dir = board->canCastle(fromCoords, toCoords);
+                    if (dir != ' ') {
+                        board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
+                    }
+                    else if (board->canEP(fromCoords, toCoords)) {
+                    board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
+                    }
+                    else if (board->hasObstacle(toCoords)) {
+                        board->move(fromCoords, toCoords, ' ', MoveType::Capture);
+                    }
                     else {
-                        ss >> from;
-                        pair<int, int> fromCoords = convertPos(from);
-                        ss >> to;
-                        pair<int, int> toCoords = convertPos(to);
-                        if (ss >> prom) {
-                            if (board->getPieceAt(fromCoords)->getType() != PieceName::Pawn) {
-                                    throw runtime_error ("You can only promote Pawn");
-                            } 
-                            if (board->getWhosTurn() == Colour::Black) {
-                                if (toCoords.first != 7) {
-                                    throw runtime_error ("Black has not reached into the enemy's back row");
-                                }
-                            }
-                            if (prom == 'k' || prom == 'K') {
-                                throw runtime_error("You cannot promote to King");
-                            }
-                            board->move(fromCoords, toCoords, ' ', MoveType::Promotion, prom);
-                        }
-                        else {
-                            // no promotion
-                            char dir = board->canCastle(fromCoords, toCoords);
-                            if (dir != ' ') {
-                                board->move(fromCoords, toCoords, ' ', MoveType::Castling, dir);
-                            }
-                            else if (board->canEP(fromCoords, toCoords)) {
-                            board->move(fromCoords, toCoords, ' ', MoveType::EnPassant);
-                            }
-                            else if (board->hasObstacle(toCoords)) {
-                                board->move(fromCoords, toCoords, ' ', MoveType::Capture);
-                            }
-                            else {
-                                board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
-                            }
-                        }
+                        board->move(fromCoords, toCoords, ' ' , MoveType::Normal);
                     }
                 }
                 board->render();

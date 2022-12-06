@@ -354,12 +354,6 @@ void Board::simulate(pair<int, int> &begin, pair<int, int> &end, MoveType type, 
         Move m{p, begin, end};
         totalMoves.push_back(m);
     }
-    // check for if the move will lead to checkmate
-    if (isCheck(getKing()->getCoords())) {
-        undoMove(totalMoves.back());
-        throw runtime_error("You cannot move your king into check");
-    }
-    p->setIsFirstMove();
 }
 
 Move Board::getLastMove(shared_ptr<Piece> p) {
@@ -463,6 +457,13 @@ void Board::move(pair<int, int> &begin, pair<int, int> &end, char prom, MoveType
     }
 
     simulate(begin, end, type, prom, dir);
+
+    // check for if the move will lead to checkmate
+    if (isCheck(getKing()->getCoords())) {
+        undoMove(totalMoves.back());
+        throw runtime_error("You cannot move your king into" );
+    }
+    p->setIsFirstMove();
 
     nextTurn();
 }
@@ -726,4 +727,35 @@ bool Board::willLeadToCheck(std::pair<int, int> &to) {
 
 std::vector<Move> Board::getTotalMoves() {
     return totalMoves;
+}
+
+bool isStalemate() {
+    Colour c = whosturn;
+    vector<pair<int, int>> allPosMoves;
+    if (c == Colour::White) {
+        for (auto& piece : whitePieces) {
+            allPosMoves = piece->getPosMoves();
+            if (allPosMoves.empty) {
+                continue;
+            } else {
+                for (auto &move : allPosMoves) {
+                     // check if it's legal move
+
+                }
+            }
+        }
+    }
+    else {
+        for (auto& piece : whitePieces) {
+            allPosMoves = piece->getPosMoves();
+            if (allPosMoves.empty) {
+                continue;
+            } else {
+                for (auto &move : allPosMoves) {
+                     // check if it's legal move
+
+                }
+            }
+        }
+    }
 }

@@ -88,16 +88,15 @@ void Xwindow::drawImage(int x, int y, char* bmp) {
     /* check for failure or success. */
     switch (rc) {
         case BitmapOpenFailed:
-            fprintf(stderr, "XReadBitmapFile - could not open file.\n");
+        cerr << "XReadBitmapFile - could not open file." << endl;
 	    exit(1);
             break;
         case BitmapFileInvalid:
-            fprintf(stderr,
-                    "XReadBitmapFile - file doesn't contain a valid bitmap.\n");
+            cerr << "XReadBitmapFile - file doesn't contain a valid bitmap." << endl;
 	    exit(1);
             break;
         case BitmapNoMemory:
-            fprintf(stderr, "XReadBitmapFile - not enough memory.\n");
+            cerr << "XReadBitmapFile - not enough memory." << endl;
 	    exit(1);
             break;
     }

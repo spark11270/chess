@@ -27,6 +27,7 @@ class Xwindow {
   void fillRectangle(int x, int y, int width, int height, int colour);
 
   // Draws a string
+  void drawStringFont(int x, int y, std::string msg, std::string font, int colour);
   void printMessage(int x, int y, const std::string& msg, int colour, XFontStruct& xf);
   void drawString(int x, int y, std::string msg);
   void drawBigString(int x, int y, std::string msg, int colour);

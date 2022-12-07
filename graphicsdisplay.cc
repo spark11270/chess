@@ -7,9 +7,10 @@
 using namespace std;
 
 // Adds graphicsdisplay observer to the subject
-GraphicsDisplay::GraphicsDisplay(shared_ptr<Board>board) : board{board} {
-    w = new Xwindow(450, 450);
-    w->drawBoard();
+GraphicsDisplay::GraphicsDisplay(shared_ptr<Board>board) : board{board}, w{450, 450} {
+    //w = new Xwindow(450, 450);
+    //w = std::make_unique<Xwindow(450, 450);
+    //w.drawBoard();
     board->attach(this);
 }
 
@@ -54,6 +55,7 @@ void GraphicsDisplay::notify() {
 	int from_y = 0;
 	int to_x = 0;
         int to_y = 0;
+	w.drawBigString(65+0*50, 435, "A", Xwindow::Black);
 	if (board->getTotalMoves().size()) {
 		// Display capturing first before updating all boards
 		from_x = board->getTotalMoves().back().from.first;
@@ -69,16 +71,16 @@ void GraphicsDisplay::notify() {
 				// Display Capture 	
                                 if ((i+j) % 2) {
                                         strcpy(arr, (printPiece(p, c) + "b.bmp").c_str());
-                                        w->drawImage(50*(j+1), 50*i, arr);
+                                        w.drawImage(50*(j+1), 50*i, arr);
                                 } else {
                                         strcpy(arr, (printPiece(p, c) + "w.bmp").c_str());
-                                        w->drawImage(50*(j+1), 50*i, arr);
+                                        w.drawImage(50*(j+1), 50*i, arr);
                                 }
 				// Fill the previous location of piece with rectangle
 				if ((from_x+from_y) % 2) {
-                                                w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 1);
+                                                w.fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 1);
                                         } else {
-                                                w->fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 0);
+                                                w.fillRectangle(50*(from_y+1), 50*from_x, 50, 50, 0);
                                         }
 	}
 	
@@ -92,17 +94,17 @@ void GraphicsDisplay::notify() {
 				char arr[6];
 				if ((i+j) % 2) {
 					strcpy(arr, (printPiece(p, c) + "b.bmp").c_str());
-					w->drawImage(50*(j+1), 50*i, arr);
+					w.drawImage(50*(j+1), 50*i, arr);
 				} else {
 					strcpy(arr, (printPiece(p, c) + "w.bmp").c_str());
-					w->drawImage(50*(j+1), 50*i, arr);
+					w.drawImage(50*(j+1), 50*i, arr);
 				}
 			// Update blank cells
 			} else {
 				if ((i+j) % 2) {
-					w->fillRectangle(50*(j+1), 50*i, 50, 50, 1);
+					w.fillRectangle(50*(j+1), 50*i, 50, 50, 1);
 				} else {
-					w->fillRectangle(50*(j+1), 50*i, 50, 50, 0);
+					w.fillRectangle(50*(j+1), 50*i, 50, 50, 0);
 				}
 			}
 		}

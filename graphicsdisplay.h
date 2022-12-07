@@ -6,7 +6,7 @@
 
 class GraphicsDisplay : public Observer {
 	std::shared_ptr<Board> board;
-	Xwindow *w;
+	Xwindow w;
 	
 	public:
 		GraphicsDisplay(std::shared_ptr<Board> board);

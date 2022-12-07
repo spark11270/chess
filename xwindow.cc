@@ -145,19 +145,30 @@ void Xwindow::drawString(int x, int y, std::string msg) {
 }
 
 void Xwindow::drawBigString(int x, int y, std::string msg, int colour) {
-	int width = 450;
+/*	int width = 450;
 	int height = 450;
 	std::ostringstream name;
 	name << "-*-helvetica-bold-r-*-*-*-240-" << width/5 << "-" << height/5 << "-*-*-*-*";
-	XFontStruct * f = XLoadQueryFont(d, name.str().c_str());	
+	XFontStruct* f = XLoadQueryFont(d, name.str().c_str());	
 
         if ( f == nullptr ){
                 f = XLoadQueryFont(d, "6x13");
         }
 
-
-	printMessage(x, y, msg, colour, *f);
-	delete f;
+	//drawStringFont(x, y, msg, name.str(), colour);
+	//printMessage(x, y, msg, colour, f);
+	//delete f;i
+	XSetForeground(d, gc, colours[colour]);
+  XTextItem xt;
+  xt.chars = const_cast<char*>(msg.c_str());
+  xt.nchars = msg.length();
+  xt.delta = 0;
+  xt.font = f->fid;
+  XDrawText(d, w, gc, x, y, &xt, 1);
+  XSetForeground(d, gc, colours[Black]);
+  XFlush(d);
+  delete f;
+*/
 }
 
 // Draws blank board to display
@@ -173,9 +184,9 @@ void Xwindow::drawBoard() {
 		stream << 8-i;
 		std::string s;
 		stream >> s;
-		this->drawBigString(15, 35+i*50, s, Xwindow::Black);
+		//this->drawString(15, 35+i*50, s);
 	}
-
+/*
 	this->drawBigString(65+0*50, 435, "A", Xwindow::Black);
 	this->drawBigString(65+1*50, 435, "B", Xwindow::Black);
 	this->drawBigString(65+2*50, 435, "C", Xwindow::Black);
@@ -183,6 +194,6 @@ void Xwindow::drawBoard() {
 	this->drawBigString(65+4*50, 435, "E", Xwindow::Black);
 	this->drawBigString(65+5*50, 435, "F", Xwindow::Black);
 	this->drawBigString(65+6*50, 435, "G", Xwindow::Black);
-	this->drawBigString(65+7*50, 435, "H", Xwindow::Black);
+	this->drawBigString(65+7*50, 435, "H", Xwindow::Black);*/
 }
 	

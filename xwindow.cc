@@ -102,18 +102,6 @@ void Xwindow::drawImage(int x, int y, char* bmp) {
             break;
     }
 
-    /* start drawing the given pixmap on to our window. */
-   // {
-	    /*
-      int i, j;
-
-      for(i=0; i<6; i++) {
-        for(j=0; j<6; j++) {
-          XCopyPlane(display, bitmap, win, gc,
-                    0, 0,
-                    bitmap_width, bitmap_height,
-                    j*bitmap_width, i*bitmap_height,
-                    1);*/
 	     XCopyPlane(d, bitmap, w, DefaultGC(d, s),
                     0, 0,
                     bitmap_width, bitmap_height,
@@ -196,4 +184,3 @@ void Xwindow::drawBoard() {
 	this->drawBigString(65+6*50, 435, "G", Xwindow::Black);
 	this->drawBigString(65+7*50, 435, "H", Xwindow::Black);*/
 }
-	

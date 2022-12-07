@@ -20,4 +20,3 @@ void Subject::notifyObservers() {
         ob->notify();
     }
 }
-

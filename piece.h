@@ -47,4 +47,5 @@ class Piece {
         virtual ~Piece() = 0;
 
 };
+
 #endif

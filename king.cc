@@ -3,7 +3,7 @@
 
 using namespace std;
 
-King::King(shared_ptr<Board> b, Colour c, int row, int col) : Piece{b, c, PieceName::King, row, col} {}
+King::King(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::King, row, col} {}
 
 bool King::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 
@@ -91,3 +91,5 @@ vector<pair<int, int>> King::getPosMoves() {
 }
 
 PieceName King::getType() {return PieceName::King;}
+
+King::~King() {}

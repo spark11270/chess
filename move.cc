@@ -36,3 +36,5 @@ string Move::getMoves() {
         return "None";
     }
 }
+
+Move::~Move() {}

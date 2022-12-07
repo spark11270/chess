@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Bishop::Bishop(shared_ptr<Board> b, Colour c, int row, int col) : Piece{b, c, PieceName::Bishop, row, col} {}
+Bishop::Bishop(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Bishop, row, col} {}
 
 bool Bishop::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
     
@@ -86,3 +86,5 @@ vector<pair<int, int>> Bishop::getPosMoves() {
 }
 
 PieceName Bishop::getType() {return PieceName::Bishop;}
+
+Bishop::~Bishop() {}

@@ -410,3 +410,5 @@ void Controller::printScore() {
     }
     }
 }
+
+Controller::~Controller() {}

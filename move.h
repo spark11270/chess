@@ -20,6 +20,7 @@ class Move {
         Move(std::shared_ptr<Piece> moving, std::pair<int, int>& from, std::pair<int, int>& to, MoveType tactic = MoveType::Normal);
         Move(std::shared_ptr<Piece> captured, std::shared_ptr<Piece> moving, std::pair<int, int>& from, std::pair<int, int>& to, MoveType tactic = MoveType::Normal);
         std::string getMoves();
+        ~Move();
 };
 
 #endif

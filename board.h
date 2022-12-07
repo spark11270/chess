@@ -13,7 +13,7 @@ class Player;
 class Piece;
 class King;
 
-class Board : public Subject, public std::enable_shared_from_this<Board> {
+class Board : public Subject {
     std::vector<std::vector<std::shared_ptr<Piece>>> theBoard{8, std::vector<std::shared_ptr<Piece>>{8}};
     std::vector<std::shared_ptr<Piece>> whitePieces;
     std::vector<std::shared_ptr<Piece>> blackPieces;

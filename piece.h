@@ -14,7 +14,7 @@ class Board;
 
 class Piece {
 
-    std::shared_ptr<Board> b;  
+    Board *b;  
     Colour colour;
     PieceName type;
     int mcount = 0;
@@ -22,13 +22,13 @@ class Piece {
 
     public:
         // CONSTRUCTOR
-        Piece(std::shared_ptr<Board> b, Colour c, PieceName type, int row, int col);
+        Piece(Board *b, Colour c, PieceName type, int row, int col);
 
         // HELPERS
         bool outOfBounds(std::pair<int,int> initial, std::pair<int,int> final);
 
         // ACESSORS
-        std::shared_ptr<Board> getTheBoard();
+        Board *getTheBoard();
         Colour getColour();
         int getNumMoves();
         std::pair<int, int> getCoords();

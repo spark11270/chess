@@ -3,12 +3,12 @@
 
 using namespace std;
 
-Pawn::Pawn(shared_ptr<Board> b, Colour c, int row, int col) : Piece{b, c, PieceName::Pawn, row, col} {}
+Pawn::Pawn(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Pawn, row, col} {}
 
 
 bool Pawn::isValidMove(std::pair<int, int> initial, std::pair<int, int> final) {
 
-    shared_ptr<Board> b = getTheBoard();
+    Board *b = getTheBoard();
     Colour curr = getColour();
 
     // check if move is out of bounds
@@ -102,5 +102,6 @@ vector<pair<int, int>> Pawn::getPosMoves() {
     return moves;
 }
 
-
 PieceName Pawn::getType() {return PieceName::Pawn;}
+
+Pawn::~Pawn() {}

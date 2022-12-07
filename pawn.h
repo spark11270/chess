@@ -10,12 +10,13 @@ class Pawn : public Piece {
 
 public:
     // CONSTRUCTOR
-    Pawn(std::shared_ptr<Board> b, Colour c, int row, int col);
+    Pawn(Board *b, Colour c, int row, int col);
 
     // OVERRIDE
     virtual bool isValidMove(std::pair<int, int> initial, std::pair<int, int> final) override;
     virtual std::vector<std::pair<int, int>> getPosMoves() override;
     PieceName getType() override;
+    ~Pawn();
 };
 
 #endif

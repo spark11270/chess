@@ -11,7 +11,7 @@ class Board;
 class LVL1 : public LVL {
   public:
     LVL1();
-    std::pair<std::pair<int, int>, std::pair<int, int>> getAIMove(std::shared_ptr<Board> board) override;
+    std::pair<std::pair<int, int>, std::pair<int, int>> getAIMove(Board *board) override;
 };
 
 #endif

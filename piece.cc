@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Piece::Piece(shared_ptr<Board> b, Colour c, PieceName type, int row, int col) : b{b}, colour{c}, type{type}, mcount{0}, coords{make_pair(row, col)} {}
+Piece::Piece(Board *b, Colour c, PieceName type, int row, int col) : b{b}, colour{c}, type{type}, mcount{0}, coords{make_pair(row, col)} {}
 
 
 bool Piece::outOfBounds(pair<int,int> initial, pair<int,int> final) {
@@ -24,7 +24,7 @@ bool Piece::outOfBounds(pair<int,int> initial, pair<int,int> final) {
 }
 
 
-shared_ptr<Board> Piece::getTheBoard() {return b;}
+Board *Piece::getTheBoard() {return b;}
 
 
 Colour Piece::getColour() {return colour;}

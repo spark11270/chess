@@ -30,6 +30,7 @@ public:
     void gameMoves();
     void playGame();
     void printScore();
+    ~Controller();
 };
 
 #endif

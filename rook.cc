@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Rook:: Rook(shared_ptr<Board> b, Colour c, int row, int col) : Piece{b, c, PieceName::Rook, row, col} {}
+Rook:: Rook(Board *b, Colour c, int row, int col) : Piece{b, c, PieceName::Rook, row, col} {}
 
 bool Rook::isValidMove(std::pair<int, int> initial, std::pair<int, int> final)  {
 
@@ -71,3 +71,5 @@ vector<pair<int, int>> Rook::getPosMoves() {
 }
 
 PieceName Rook::getType() {return PieceName::Rook;}
+
+Rook::~Rook() {}

@@ -8,7 +8,7 @@
 using namespace std;
 
 int main () { 
-  shared_ptr<Board> theboard = make_shared<Board>();
+  std::shared_ptr<Board> theboard = make_shared<Board>();
   theboard->render();
   Controller ctr{theboard};
   ctr.playGame();

@@ -112,40 +112,40 @@ void Board::addPiece(pair<int, int> coords, char piece) {
     shared_ptr<Piece> thePiece;
     switch(piece) {
         case 'K':
-            thePiece = make_shared<King>(shared_from_this(), Colour::White, coords.first, coords.second);
+            thePiece = make_shared<King>(this, Colour::White, coords.first, coords.second);
             break;
         case 'Q':
-            thePiece = make_shared<Queen>(shared_from_this(), Colour::White, coords.first, coords.second);
+            thePiece = make_shared<Queen>(this, Colour::White, coords.first, coords.second);
             break;
         case 'N':
-            thePiece = make_shared<Knight>(shared_from_this(), Colour::White, coords.first, coords.second);
+            thePiece = make_shared<Knight>(this, Colour::White, coords.first, coords.second);
             break;
         case 'B':
-            thePiece = make_shared<Bishop>(shared_from_this(), Colour::White, coords.first, coords.second);
+            thePiece = make_shared<Bishop>(this, Colour::White, coords.first, coords.second);
             break;
         case 'R':
-            thePiece = make_shared<Rook>(shared_from_this(), Colour::White, coords.first, coords.second);
+            thePiece = make_shared<Rook>(this, Colour::White, coords.first, coords.second);
             break;
         case 'P': 
-            thePiece = make_shared<Pawn>(shared_from_this(), Colour::White, coords.first, coords.second);
+            thePiece = make_shared<Pawn>(this, Colour::White, coords.first, coords.second);
             break;
         case 'k':
-            thePiece = make_shared<King>(shared_from_this(), Colour::Black, coords.first, coords.second);
+            thePiece = make_shared<King>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'q':
-            thePiece = make_shared<Queen>(shared_from_this(), Colour::Black, coords.first, coords.second);
+            thePiece = make_shared<Queen>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'n':
-            thePiece = make_shared<Knight>(shared_from_this(), Colour::Black, coords.first, coords.second);
+            thePiece = make_shared<Knight>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'b':
-            thePiece = make_shared<Bishop>(shared_from_this(), Colour::Black, coords.first, coords.second);
+            thePiece = make_shared<Bishop>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'r':
-            thePiece = make_shared<Rook>(shared_from_this(), Colour::Black, coords.first, coords.second);
+            thePiece = make_shared<Rook>(this, Colour::Black, coords.first, coords.second);
             break;
         case 'p':
-            thePiece = make_shared<Pawn>(shared_from_this(), Colour::Black, coords.first, coords.second);
+            thePiece = make_shared<Pawn>(this, Colour::Black, coords.first, coords.second);
             break;
     }
     if (thePiece->getColour() == Colour::White) {
@@ -223,24 +223,24 @@ bool Board::validPawns() {
 
 void Board::init() {
     // white pieces
-    theBoard[7][0] = make_shared<Rook>(shared_from_this(), Colour::White, 7, 0);
-    theBoard[7][1] = make_shared<Knight>(shared_from_this(), Colour::White, 7, 1);
-    theBoard[7][2] = make_shared<Bishop>(shared_from_this(), Colour::White, 7, 2);
-    theBoard[7][3] = make_shared<Queen>(shared_from_this(), Colour::White, 7, 3);
-    theBoard[7][4] = make_shared<King>(shared_from_this(), Colour::White, 7, 4);
-    theBoard[7][5] = make_shared<Bishop>(shared_from_this(), Colour::White, 7, 5);
-    theBoard[7][6] = make_shared<Knight>(shared_from_this(), Colour::White, 7, 6);
-    theBoard[7][7] = make_shared<Rook>(shared_from_this(), Colour::White, 7, 7);
+    theBoard[7][0] = make_shared<Rook>(this, Colour::White, 7, 0);
+    theBoard[7][1] = make_shared<Knight>(this, Colour::White, 7, 1);
+    theBoard[7][2] = make_shared<Bishop>(this, Colour::White, 7, 2);
+    theBoard[7][3] = make_shared<Queen>(this, Colour::White, 7, 3);
+    theBoard[7][4] = make_shared<King>(this, Colour::White, 7, 4);
+    theBoard[7][5] = make_shared<Bishop>(this, Colour::White, 7, 5);
+    theBoard[7][6] = make_shared<Knight>(this, Colour::White, 7, 6);
+    theBoard[7][7] = make_shared<Rook>(this, Colour::White, 7, 7);
 
     // black pieces
-    theBoard[0][0] = make_shared<Rook>(shared_from_this(), Colour::Black, 0, 0);
-    theBoard[0][1] = make_shared<Knight>(shared_from_this(), Colour::Black, 0, 1);
-    theBoard[0][2] = make_shared<Bishop>(shared_from_this(), Colour::Black, 0, 2);
-    theBoard[0][3] = make_shared<Queen>(shared_from_this(), Colour::Black, 0, 3);
-    theBoard[0][4] = make_shared<King>(shared_from_this(), Colour::Black, 0, 4);
-    theBoard[0][5] = make_shared<Bishop>(shared_from_this(), Colour::Black, 0, 5);
-    theBoard[0][6] = make_shared<Knight>(shared_from_this(), Colour::Black, 0, 6);
-    theBoard[0][7] = make_shared<Rook>(shared_from_this(), Colour::Black, 0, 7);
+    theBoard[0][0] = make_shared<Rook>(this, Colour::Black, 0, 0);
+    theBoard[0][1] = make_shared<Knight>(this, Colour::Black, 0, 1);
+    theBoard[0][2] = make_shared<Bishop>(this, Colour::Black, 0, 2);
+    theBoard[0][3] = make_shared<Queen>(this, Colour::Black, 0, 3);
+    theBoard[0][4] = make_shared<King>(this, Colour::Black, 0, 4);
+    theBoard[0][5] = make_shared<Bishop>(this, Colour::Black, 0, 5);
+    theBoard[0][6] = make_shared<Knight>(this, Colour::Black, 0, 6);
+    theBoard[0][7] = make_shared<Rook>(this, Colour::Black, 0, 7);
 
     for (int i = 0 ; i < MAXCELL; ++i) {
         whitePieces.push_back(theBoard[7][i]);
@@ -249,8 +249,8 @@ void Board::init() {
 
     // pawns
     for (int i = 0; i < MAXCELL; ++i) {
-        theBoard[6][i] = make_shared<Pawn>(shared_from_this(), Colour::White, 6, i);
-        theBoard[1][i] = make_shared<Pawn>(shared_from_this(), Colour::Black, 1, i);
+        theBoard[6][i] = make_shared<Pawn>(this, Colour::White, 6, i);
+        theBoard[1][i] = make_shared<Pawn>(this, Colour::Black, 1, i);
         whitePieces.push_back(theBoard[6][i]);
         blackPieces.push_back(theBoard[1][i]);
     }

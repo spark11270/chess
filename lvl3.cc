@@ -39,3 +39,5 @@ pair<pair<int, int>, pair<int, int>> LVL3::getAIMove(shared_ptr<Board> board) {
 
   return converter(generateRandomMove(myMovePairs));
 }
+
+LVL3::~LVL3() {}
